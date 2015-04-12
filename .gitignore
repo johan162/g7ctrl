@@ -1,0 +1,71 @@
+# Object files
+*.o
+
+# Libraries
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.so
+*.so.*
+
+# Executables
+*.out
+
+# Autoconf/Automake and build files
+Makefile.in
+Makefile
+config.h.in
+config.h
+ChangeLog
+aclocal.m4
+.deps
+*.Po
+stamp-h1
+autom4te.cache
+ar-lib
+compile
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+missing
+config.log
+config.status
+nbproject
+
+# Files not tracked (built fron sources)
+docs/manual/out
+docs/manual/out/html
+docs/manpages/g7ctrl.1
+docs/manpages/g7ctrl.1.html
+docs/manpages/g7ctrl.1.pdf
+docs/manpages/g7sh.1
+docs/manpages/g7sh.1.html
+docs/manpages/g7sh.1.pdf
+src/shell/g7sh
+src/g7ctrl
+src/buildnumber.txt
+src/shell/buildnumber.txt
+src/configmake.h
+
+
+# Created XSL files (from .in)
+chunk.xsl
+common.xsl
+epub.xsl
+fo.xsl
+html.fancycmd.xsl
+html.xsl
+website.xsl
+
+# Misc created files (from .in)
+deb.init.conf
+deb.init.d
+g7ctrl.conf.template
+g7ctrl.service
+suse.init.d
+ubuntu.init.d
+

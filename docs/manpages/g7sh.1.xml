@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: g7sh.1.xml 754 2015-03-02 07:18:03Z ljp $ -->
+<?oxygen RNGSchema="http://www.oasis-open.org/docbook/xml/5.0/rng/docbook.rng" type="xml"?>
+<article
+    xmlns="http://docbook.org/ns/docbook"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="5.0">
+    <title>g7sh</title>
+    <refentry
+        xml:id="g7sh">
+        <info>
+            <author>
+                <personname>
+                    <firstname>Johan</firstname>
+                    <surname>Persson</surname>
+                </personname>
+                <email>johan162@gmail.com</email>
+                <contrib>Main author and maintainer</contrib>
+            </author>
+        </info>
+        <refmeta>
+            <refentrytitle>g7sh</refentrytitle>
+            <manvolnum>1</manvolnum>
+            <refmiscinfo
+                class="version">@VERSION@</refmiscinfo>
+            <refmiscinfo
+                class="source">http://sourceforge.net/projects/g7ctrl/</refmiscinfo>
+            <refmiscinfo
+                class="manual">http://sourceforge.net/projects/g7ctrl/docs/</refmiscinfo>
+        </refmeta>
+        <refnamediv>
+            <refname>g7sh</refname>
+            <refpurpose>Command line shell to interface g7ctrl daemon</refpurpose>
+        </refnamediv>
+        <refsynopsisdiv
+            xml:id="g7sh.synopsis">
+            <title>Synopsis</title>
+            <cmdsynopsis>
+                <command>g7sh</command>
+                <arg
+                    choice="opt">options...</arg>
+            </cmdsynopsis>
+        </refsynopsisdiv>
+        <refsect1
+            xml:id="g7sh.description">
+            <title>Description</title>
+            <para>The <citerefentry>
+                    <refentrytitle>g7sh</refentrytitle>
+                    <manvolnum>1</manvolnum>
+                </citerefentry> is a command line shell meant to interface the
+                    <command>g7ctrl</command> daemon. The program offers full command line editing
+                (emulating <command>emacs</command> command set) as well as history. This makes it
+                the preferred way to interface with the daemon for the full feature set. The
+                alternative command line way is to connect directly to the daemon port using for
+                example <command>telnet</command> or <command>nc</command>, however this is only
+                recommended for troubleshooting purposes.</para>
+            <para>The shell can be run either on the same server as the daemon in which case it can
+                simply be started with</para>
+            <para>
+                <screen>$>g7sh</screen>
+            </para>
+            <para>or it can be run on a different computer in which case the
+                    <command>g7ctrl</command> server (and optionally the command TCP/IP port) must
+                be specified either on the command line as </para>
+            <para>
+                <screen>$> g7sh -s 192.168.010</screen>
+            </para>
+            <para>or by storing the server and port setting in the <command>g7ctrl</command> config
+                file that is reused by the shell. If the config file can not be found in the common
+				place (i.e. /etc/g7ctrl/g7ctrl.conf) then the shell
+				will look for a shell specific config file "<filename>.g7sh</filename>" in the users 
+				home directory. Command line argument will however always override any ini file
+				setting.</para>
+        </refsect1>
+        <refsect1
+            xml:id="g7sh.options">
+            <title>Arguments</title>
+            <para>The following command line arguments are supported when starting the shell</para>
+            <variablelist>
+                <varlistentry>
+                    <term><option>-s</option>, <option>--server</option>
+                        <emphasis>IP-address</emphasis></term>
+                    <listitem>
+                        <para>Specify the server that is running <command>g7ctrl</command>. Default
+                            value is <emphasis role="italic">localhost</emphasis></para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><option>-p</option>, <option>--port</option>
+                        <emphasis>TCP/IP cmd port</emphasis></term>
+                    <listitem>
+                        <para>TCP/IP port where the <command>g7ctrl</command> server is listening.
+                            If the shell is run on the same server as the daemon then the port will
+                            be automatically determined from the <command>g7ctrl</command> config
+                            file. </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><option>-h</option>, <option>--help</option></term>
+                    <listitem>
+                        <para>Print a short help and exit.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><option>-v</option>, <option>--version</option></term>
+                    <listitem>
+                        <para>Print program version information and exit.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><option>-e</option>, <option>--exec</option>
+                        <emphasis>"command-string"</emphasis></term>
+                    <listitem>
+                        <para>Execute the given commands and terminate. Multiple commands are
+                            separetaed with a semicolon ";"</para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect1>
+        <refsect1>
+            <title>Using the shell as a login shell</title>
+            <para>One possible way to use the shell is to use it as a <emphasis role="italic"
+                >system login shell</emphasis>. In this way it will be possible to login
+                directly to the server by using, for example, <command>ssh</command> and connecting
+                as a dedicated user who uses <command>g7sh</command> as default login shell.</para>
+            <para>In order to do this there are two things that must be done:</para>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>Add a new user to the server and specify <command>g7sh</command> as
+                            the login shell. This is done by adding a line in the
+                            <filename>/etc/passwd</filename> file. For example as</para>
+                        <para>
+                            <screen>g7m:x:0:0:g7ctrl shell user:/home/g7ctrl:/usr/bin/g7sh </screen>
+                        </para>
+                        <para>The above line creates a new user called <emphasis role="italic"
+                            >pvr</emphasis> which uses <command>g7sh</command> as login shell.
+                            (The '<emphasis role="italic">x</emphasis>' in the password field
+                            indicates that the system is using shadow passwords.). You can also use
+                            the system tools  you are comfortable with in order to create a new
+                            user.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Allow <command>g7sh</command> to be used as system shell by adding it
+                            to the list of allowed system shells in
+                            '<filename>/etc/shells</filename>'</para>
+                    </listitem>
+                </orderedlist>
+            </para>
+        </refsect1>
+        
+        
+        <refsect1
+            xml:id="g7sh.files">
+            <title>Files</title>
+            <variablelist>
+                <varlistentry>
+                    <term><filename>/etc/g7ctrl/g7ctrl.conf</filename></term>
+                    <listitem>
+                        <para>Default configuration file</para>
+                    </listitem>
+                </varlistentry>
+				<varlistentry>
+                    <term><filename>~/.g7shrc</filename></term>
+                    <listitem>
+                        <para>Default configuration file if <filename>/etc/g7ctrl/g7ctrl.conf</filename> does not exist</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><filename>~/.g7ctrl_history</filename></term>
+                    <listitem>
+                        <para>Stores the history of previous commands</para>
+                    </listitem>
+                </varlistentry>				
+            </variablelist>
+        </refsect1>
+        <refsect1>
+            <title>Resources</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>SourceForge:
+                            &lt;<uri>http://sourceforge.net/projects/g7ctrl/</uri>></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </refsect1>
+        <refsect1>
+            <title>Known defects</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>Limited line editing and history function on Apple OSX due to
+                            different terminal behavior and no native readline library support. Full
+                            support requires the installation of GNU libreadline if built on OSX. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </refsect1>
+        <refsect1>
+            <title>Author</title>
+            <para>Written and maintained by Johan Persson
+                &lt;<email>johan162@gmail.com</email>></para>
+        </refsect1>
+        <refsect1>
+            <title>Copyright</title>
+            <para>Free use of this software is granted under the terms of the <acronym>GNU</acronym> General Public
+                License (GPL v3)., see the file COPYING included in the distribution archive for
+                details.</para>
+        </refsect1>
+        <refsect1
+            xml:id="g7sh.seealso">
+            <title>See also</title>
+            <para><citerefentry>
+                    <refentrytitle>g7ctrl</refentrytitle>
+                    <manvolnum>1</manvolnum>
+                  </citerefentry>
+			</para>
+        </refsect1>
+    </refentry>
+</article>

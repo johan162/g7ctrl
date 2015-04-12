@@ -1,0 +1,288 @@
+$Id: TODO 954 2015-04-10 19:14:10Z ljp $
+This is a list of features planned as backlog activities in reverse chronological order.
+
+
+Planned for v4.1.0 [NOT STARTED]
+--------------------------------
+TAGLINE: 
+
+Backlog:
+- Establish infrastructure for localization of messages
+- Verify that device connected is really GM7 tracker (by checking sysfs  
+  information /sys/class/tty/.. for model id and manufacturer) 
+- Improved USB handling (detection of GM7 device using manufacturer and device iD)
+- Add /udev rules to detect GM7 device automatically instead of inotify()
+  Device seems to use the following settings:
+
+    # Info from
+    # udevadm info --query=all --name=/dev/ttyACM0
+    P: /devices/pci0000:00/0000:00:1d.1/usb7/7-1/7-1:1.0/tty/ttyACM0
+    N: ttyACM0
+    S: serial/by-id/usb-03eb_6130-if00
+    S: serial/by-path/pci-0000:00:1d.1-usb-0:1:1.0
+    E: DEVLINKS=/dev/serial/by-id/usb-03eb_6130-if00 /dev/serial/by-path/pci-0000:00:1d.1-usb-0:1:1.0
+    E: DEVNAME=/dev/ttyACM0
+    E: DEVPATH=/devices/pci0000:00/0000:00:1d.1/usb7/7-1/7-1:1.0/tty/ttyACM0
+    E: ID_BUS=usb
+    E: ID_MM_CANDIDATE=1
+    E: ID_MODEL=6130
+    E: ID_MODEL_ENC=6130
+    E: ID_MODEL_ID=6130
+    E: ID_PATH=pci-0000:00:1d.1-usb-0:1:1.0
+    E: ID_PATH_TAG=pci-0000_00_1d_1-usb-0_1_1_0
+    E: ID_REVISION=0110
+    E: ID_SERIAL=03eb_6130
+    E: ID_TYPE=generic
+    E: ID_USB_DRIVER=cdc_acm
+    E: ID_USB_INTERFACES=:020201:0a0000:
+    E: ID_USB_INTERFACE_NUM=00
+    E: ID_VENDOR=03eb
+    E: ID_VENDOR_ENC=03eb
+    E: ID_VENDOR_FROM_DATABASE=Atmel Corp.
+    E: ID_VENDOR_ID=03eb
+    E: MAJOR=166
+    E: MINOR=0
+    E: SUBSYSTEM=tty
+    E: TAGS=:systemd:
+    E: USEC_INITIALIZED=39333429206
+
+Done:
+- <empty>
+
+
+Planned for v4.0.0 [NOT STARTED]
+--------------------------------
+Backlog:
+- Add built-in Web-interface for device configure and tracking data handling
+  -- Add micro-web server
+  -- Theme handling based on CSS
+  -- Should use responsive design and asynchronous Javscript
+  
+
+Done:
+- <empty>
+
+
+Planned for v3.3.0 [NOT STARTED]
+--------------------------------
+Backlog:
+- Add option to return all command replies in structured JSON format
+
+Done:
+- <empty>
+
+
+
+Planned for v3.2.1 [NOT STARTED]
+--------------------------------
+Backlog:
+- Add minimap to last location mail template
+- Add option to scale minimap images for higher resolution
+- Add note in manual about logrotate
+- Make buildnumber into a timestamp instead
+- Make it possible for Google 24h API ban end time to survive server restart
+
+
+Done:
+- <empty>
+
+
+
+Planned for v3.2.0 [**COMPLETED]
+--------------------------------
+Backlog:
+- <empty>
+
+Done:
+- Add json DB export option to documentation
+- Add documentation of new config options in relation to minimaps
+- Code cleanup and coverity check
+- Add documentation for ".cachestat"
+- Add option to include a minimap in the notification mail on where the
+  tracker currently is in order to avoid having to follow the link to Google.
+- Add documentation in the manual for Google API key handling and application
+- Add missing doc for config options
+- Add unicode drawing of tables for nice output
+- Handle system with binaries for compression program in non-standard locations
+- Document .table command
+- Investigate why we cannot parse Gelookup for address:
+  Geocache MISS (59.478771,15.382076)
+  ** Failed to parse service reply for address (lat=59.478771, lon=15.382076)
+  ** Reverse geolocation lookup failed for (59.478771,15.382076)
+  (Resolved: Does not have a street address)
+- Add option to print head of last positions in DB to screen
+- Add proper table output for db head and db tail
+- Rework all table output to only use unitable module
+- Check that address lookup can be used when importing locations over USB from
+  device.
+- Add Google API key to config file
+- Improve capacity to handle large data sent back from the server to the shell
+- Add command ".ratereset"
+- Add mail notification when 24 API limit has been reached
+
+
+Planned for v3.1.0 [**COMPLETED]
+--------------------------------
+Backlog:
+- <empty>
+
+Done:
+- Update documentation for new ".target", ".lc" and ".ld" commands.
+- Change the .use command. Proposed new syntax
+  ".target x"    to connect to target device at usb index 'x'
+                 the index can be ssen by listing all connected
+  ".usb x"       USB devices with command ".ld"
+                 The default when a command client is connected
+                 will be "usb 0" (The first connected device)
+- Do a clean exit in GNU readline if the shell is terminated by user with C-C
+- Make device target a per client setting (larger refactoring)
+- Make it possible to handle multiple USB client connected to the server
+- Make the .lc command only list command clients
+- Add .ld command that only lists connected device and shows the active connection
+- Updated docs and help texts
+- Accept multiple device commands on command line with the '-e' option
+- Store the geocache on file when the daemon shuts down
+- Add automatically updated code statistics in technical section of the manual
+- Add information about the Geo cache saved file
+- Update utility build script documentation
+- Add reading Dev ID for OSX version of connect agent
+- (remove .ld and replace with .target without argument in analogue with how .usb works
+- Investigate feasibility to switch ports on account on receiving SIGHUP 
+  Conclusion: Not worth the extra complexity. Change of listening ports will require restart
+  of daemon.
+- Add help for new .usb and .target commands for the online "help"
+- Add documentation for "@@" non-interactive functions
+- Add command "get address" which is similar to "get loc" but will return 
+  the corresponding street address as returned by Google maps for the
+  current location.
+- Add option to specify commands with argument to the "-e" option for command 
+  shell to allow its use in off-line batch processing.
+- Add documentation for multiple USB
+  
+
+Planned for v3.0.0 [**COMPLETED]
+--------------------------------
+Backlog:
+- Empty.
+
+
+Done:
+- Change directory structure for all files and data to more closely follow LSB
+- Re-read Config file on receiving SIGHUP signal (except changing listening port)
+- Add JSON export of DB
+- Improve lockfile handing according to LSB
+
+
+
+Planned for v2.3.0 [**COMPLETED]
+--------------------------------
+TAGLINE: 
+
+Backlog:
+- Empty
+
+Done:
+- Add handling of GFEN events 50-99
+- Add downloading of records over GPRS
+
+
+
+Planned for v3.0.0 [**COMPLETED]
+--------------------------------
+Backlog:
+- <empty>
+
+Done:
+- Add JSON DB export
+- Fix so that the daemon better uses FHS standard for daemons
+- Restructure config file to be able to do reload on-the-fly  
+- Don't install the emulator in normal builds
+- Review the config files to change the location of installed files
+
+
+Planned for v2.2.0 [**COMPLETED]
+--------------------------------
+TAGLINE: 
+Make it possible to fully use OS X as deployment and build platform and
+add smart reverse Geolocation lookup. Improve cross platform stability
+on the USB/Serial port handling.
+
+Backlog:
+- Fix installation conflict on Debian if trying to install when there already
+  have been on installation2
+
+
+Done:
+- Add full OS X support for both daemon and USB
+- Add reverse Geolocation address handling
+- Fix build scripts for XML documentation to better cope with different build
+  systems.
+- Handle daemon startup/shutdown scripts for new Debian/Ubuntu
+
+
+
+
+Planned for v2.1.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Communication to device over GPRS and show device reply in plain
+         text.
+
+Backlog:
+ - <empty>
+
+Done:
+- Make it possible to have finer select which records are exported and mailed as 
+  attachment on date and/or device id
+- More consistent handling of command reply
+- Clean up command sending/receiving
+- Communicate TO device over GPRS
+- Add automatic tagging of commands to recognize proper responses
+- Document ".use"
+- Add detailed help for all server commands
+- Add optional interpretation of command replies so that for example the reply
+  get lowbatt, "0,0" translates to :
+       Report action: Disable
+            VIP Mask: 0
+- Add preset templates for power management
+- Run through Coverity and fix warnings
+
+
+
+
+Planned for v2.0.1 [**COMPLETED]
+--------------------------------
+TAGLINE: Optimize DB, nick names, add geo fence event command and fix all
+remaining standard commands. Under the hood preparation for 
+communication to device over GPRS.
+
+
+Backlog:
+- <empty>
+
+Done:
+- Add command ".lc" - List active connections
+- Optimize DB storage
+- Add option to connect a nick-name to a specific device id which is used in
+  for example mail and DB exports
+- Break up time disjoint events with user selectable cut-off time into multiple 
+  track-segments in GPX export
+- Add commands 
+    "get batt" = Get battery voltage
+- Sort "help" commands
+- Refactor download of locations
+- Refactor mid level read from device
+- Refactor nick name handling
+- Implement gfevt
+- Make it possible to specify usage of xz or gz compression for mailing GPX file
+  in config.
+- Improve build handling on systems not having "links" installed
+- GPRS: If new incoming connection is from a device that has an old connection
+  remove old connection immediately (without waiting for it to timeout)
+- Check DB version
+- Dynamic IP address for device is kept up to date when GPRS connection exists
+  this is the first half of handling commands over GPRS.
+- Design and add geofence numbered events handling
+
+
+
+<EOF>

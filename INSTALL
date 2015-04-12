@@ -1,0 +1,128 @@
+# Quick guide to Installing
+
+*If you are already familiar with GNU autotools the following should be sufficient to get
+started.*
+
+**NOTE:** The manual contain an even more detailed description on how to build, run and
+configure the daemon.
+
+## Quick start
+
+The daemon is configured with a standard autoconf / automake build system and if downloaded
+as a tar ball can be built using the standard spell
+
+    $ ./configure && make
+    $ su
+    $ <enter root password>
+    $ make install
+
+The above uses the default locations which should be fine for most installations. For
+a detailed description on configuration options runt "configure --help"
+
+If downloaded directly from the repository you need to have a working autoconf / automake
+setup in order to re-create the build environment.
+”For ease of use there are a few utility scripts that can help setup a full build
+environment. They are
+
+  1. *bldscripts/bootstrap-deb.sh*, For use with a debian based system such as Ubuntu or
+  Linux Mint
+
+  2. *bldscripts/bootstrap.sh*, For use with RPM based system such as SuSE Linux
+
+The above scripts will install all necessary packages to recreate a full build environament.
+If you already have a working build environament you can instead just run the
+*basic-bootstrap.sh* script which only runs "autoreconf --install --symlink" to
+
+
+# installation guide
+
+The package has some mandatory and some optional pre-requirements that needs to be
+in order to build the package.
+
+
+## Mandatory pre-requirements
+
+- Development version of "libreadline"
+- Development version of "libpthread"
+- Development version of "libpcre"
+- Development version of "libsqlite3"
+
+All the development libraries above are common libraries supplied by all modern
+GNU/Linux distributions.
+
+
+## Optional pre-requirements
+
+In order to re-generate the documentation (which is written in the XML schema
+Docbook5) as manpages, HTML and ´PDF a full working DocBook5 environment must
+exist. However, it is perfectly possible to build the library without a full
+DocBook5 setup and in that case a set of pre-rendered documentations (included
+in the distribution of this package) will be installed.
+
+
+## Automatic bootstrapping
+
+In order to make it really simple to build the daemon the package includes
+two bootstrap scripts. "bootstrap.sh" and "bootstrap-deb.sh" in the "bldscripts/"
+directory. These are intended to be run just after the package has been downloaded.
+These scripts will try to installed all necessary pre-requisite (including DocBook5)
+in order to create a full build environment.
+
+- "bootstrap.sh" Is intended for OpenSuSE and has been tested on v12.3 as well as 13.1
+- "bootstrap-deb.sh" Is intended for Debian based distributions such as Linux Mint,
+   Elementary, Ubuntu.
+
+
+## Building the package
+
+The package makes use of the standard GNU automake/autoconf toolset which makes
+building the package straightforward. Unpack the tar ball and change into the
+corresponding directory and type:
+
+    ./configure && make -j4
+
+NOTE: It is common to initially get some errors when running configure about missing
+libraries. The error messages should be descriptive enough to indicate which library
+is missing. To correct a missing library please install the corresponding "-dev" package
+of the missing library. So for example if you get an error about missing "readline" library
+please install the "libreadline-dev" package (or similar named package for your distribution)
+
+After a successful build all that is needed is to install the package. This must be done
+with root privileges as
+
+    sudo make install
+
+### Adjusting the configuration of the package
+
+The "configure" scripts supports some additional arguments that will for example
+allow you to customize where the package is installed and where its configuration file
+should go. Please see "configure --help" for a list of options. Major options are
+also detailed in the INSTALL file.
+
+
+3. Running the daemon
+=====================
+
+Before starting the daemon you should make suer that the daemons configuration file
+suits your setup. By default a template for the the configuration file will be installed into
+"/etc/g7ctrl/g7ctrl.conf.template". Start by copying the template to get a proper
+configuration file with the command (as root)
+
+    cd /etc/g7ctrl && mv g7ctrl.conf.template g7ctrl.conf
+
+The open "g7ctrl.conf" in your favorite editor and go through all the settings.
+
+When you are happy with the settings the daemon can just be started (as root) by typing
+
+    g7ctrl
+
+This will start the service as a daemon (unless this is disabled in the config file).
+The daemon will run as the specified user (in the config file).
+
+It is possible to give command line arguments to the daemon when it is started and
+in that case any parameters given on the command line will override the corresponding
+argument in the config file. So for example running
+
+    g7ctrl -d n -V 3
+
+will start the service NOT as a daemon and use level 3 logging (include debug messages).

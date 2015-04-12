@@ -1,0 +1,17 @@
+GM7 Last Received Location
+
+http://maps.google.com/maps?q=[LAT],[LONG]
+
+ Device: [NICK_DEVID]
+   Date: [DATETIME]
+    Lat: [LAT]          Lon: [LONG]
+  Speed: [SPEED]
+Heading: [HEADING]
+
+Server information
+------------------
+Server: [SERVERNAME]  Local time: [SERVERTIME]
+
+Ver: [DAEMONVERSION]
+
+

@@ -1,0 +1,9 @@
+# Readme
+
+This directory contains the command shell. The command sheel makes
+it easy to interact with the tracker daemon fron the command line.
+Once installed the shell is started with
+
+    g7sh
+
+See man (1) g7sh for more details.

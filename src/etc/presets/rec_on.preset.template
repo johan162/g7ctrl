@@ -1,0 +1,6 @@
+#Track position to device memory at specified time intervals
+#This records the device positions to internal memory at 1 min
+#intervals. The position will be stored whether or not a recent
+#GPS fix has been acquired. The recording is stopped by giving the
+#rec_off preset command.
+rec(1,[RECTIME_SEC],0,0,1,15)

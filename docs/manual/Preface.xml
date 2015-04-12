@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: Preface.xml 889 2015-03-22 23:40:36Z ljp $">
+    <title>Preface</title>
+    <para>This is a short guide through a particular software that interacts with a technology that
+        almost seamlessly has seeped in to our daily life in a way that very few could have
+        predicted even just ten years ago. Satellite position technology is probably one of the most
+        sophisticated and advanced technologies in common use today. It builds on a theoretical
+        framework so complex that there is no single person that knows all the necessary technology
+        in its entirety. The particulars are head spinning even for those of us that claim technical
+        expertise in small parts of the system. Yet, this human feat of science and engineering is
+        in use by ten-year old´s to find there friends or by their parents making sure the kids is
+        safely home after school. A truly remarkable achievement but not without risks as we shall
+        see later on.</para>
+    <para>As a child I remember seeing a movie where the hero was chasing the bad guys from a
+        distance by looking at a blinking dot on green phosphorous screen (although I didn't know it
+        was phosphor at the time) and I was entirely convinced that such technologies were in the
+        hands of the "spy world". Unfortunately that was not true, it was only film-magic. The
+        technology available then did not make such a device practical possible. The only distant
+        positioning technology at that time was through radio-triangulation (or radar) like what was
+        later used and in fact enforced by commercial shipping, the Decca system, which was
+        eventually shut down in the early 2000. </para>
+    <para>It is only in the last couple of years that such - once film-only-magic technology - has
+        become available as a consumer product by combining different technology strands into one
+        unit. In fact a modern GPS tracking device is the successful merge of three major technology
+        tracks. The satellite navigational system, the digital radio communication (made financially
+        possible by the mobile phone explosion) and the internet and its use of a packet switching
+        network based on the TCP/IP protocol stack. The development of these three technology track
+        together with its supporting technologies has literally made use of much the science
+        progress made in the last three hundred years. Specialist mathematical areas like Galois
+        theory and BCH error correcting code made reliable communication possible, the relativity
+        theory told us how to compensate when talking to satellites, chemical and physical
+        engineering pioneered in the 19:th century made it possible to construct everything from
+        batteries to rocket fuel and more. </para>
+    <para>Most people do not think about such thing when checking Google Maps for how to find that
+        special café in Paris which their favourite magazine recommended (only to discover that they
+        were not the only one reading that recommendation). Neither should they, but I cannot
+        personally help wonder how it comes that those of us working in research and science have
+        done such an utterly poor job of marketing. Asking any person on the main street over the
+        age of thirty it is a very high probability that he or she has heard of people like
+        Hemingway, Jean-Paul Sartre, Doris Lessing, Lord Byron, Edgar Allan Poe, Yates and other
+        humanists and writers even if he or she has never read anything by these authors.</para>
+    <para>However, if asking the same question but replacing the names with the likes such as Sophus
+        Lie, Niels-Henrik Abel, Emmy Noether, Alexis Hocquenghem, Leonard Euler, Carl F. Gauss or
+        Dennis Ritchie very few (if any) have ever heard of them. One of the few exceptions is A.
+        Einstein but then mostly as a caricature of a an absent-minded old professor in gray hair. </para>
+    <para>I find this asymmetry sad. </para>
+    <para>While Hemingway without doubt wrote some great books he has not had the impact on the
+        everyday life of people in any way that comes even close to the way the latter names have
+        had (without most people knowing it) </para>
+    <para>Coming back to GPS technology and its rapid commoditization which actually poses a risk
+        that few people are fully aware of. The rapid fall in cost (after the GPS system was
+        released to the civil market by the US military - but only after congress threatened to kill
+        of the entire program due to cost) has tempted many manufacturer to replace older proven
+        technology with cheap mass-market GPS receivers in places not easily guessed. So was the
+        fact for example when the British navy commissioned a ship that specifically should be fully
+        functional with no GPS. During the tests when the GPS signal was jammed their sonar suddenly
+        stopped working. It turned out that the manufacturer of the sonar equipment had made use of
+        a GPS receiver inside the sonar (which nobody had thought of) since it was so cheap that
+        they practically got it for free. </para> 
+    <para>It is therefore worth giving some thoughts about the risk of satellite communication and
+        the dependency we as a society in a very short time has built up on this technology. Even
+        though getting the wrong position from your stolen car is not helpful it is also hardly a
+        life and death situation either. However, a false position for an airplane in mid-air flight
+        can cause some fairly interesting situations most people want to avoid. </para>
+    <para>What you first realize looking a bit deeper into satellite navigation is that this is a
+        scaringly fragile technology. With equipment that can (almost) be purchased at the closest
+        Wall-Mart for the cost of a better dinner you can interfere with equipment worth billions of
+        dollars. The current GPS system was never truly designed to be a technology able to robustly
+        run the world to the extent we have now come to rely on as the following two recent stories
+        illustrates.</para>
+    <para>In 2011 Newark airport in the USA experienced sporadic problem with their GPS system to
+        the extent that it was forced to divert airplanes to other airports or put them in long
+        holding positions until the airports GPS system was back online (and double checked). The
+        technicians and the manufacture spent months of trying to pinpoint the problem without
+        success. The problem was randomly occurring and no pattern could be discovered. As the
+        suspicion of sabotage grew the police was contacted and a massive surveillance operation was
+        put in place to discover any outside influence of the airport system. The problem continued
+        but no unauthorized personal was discovered. As a last resort the team set up cameras on the
+        highway outside the airport and started filming all cars driving there. After a couple of
+        months with some more disturbances the police started a painfully detailed analysis of the
+        films in the hope of detecting some patterns correlating with the disturbances.</para>
+    <para>The pattern was found. With the films it was clear that a specific truck had been driving
+        close to the airport every time the GPS signal was lost. The police concluded that this was
+        deliberate sabotage and set up a massive operation to intercept the presumed terrorist(s).
+        After some time the same truck was spotted and the truck was forced to stop and the driver
+        immediately detained (with some mild persuasion we can assume).</para>
+    <para>So what had happened, was this in fact the work of domestic terrorists? No, not at all 
+        that exciting, the truth was much more mundane. 
+        The driver was working for a company that had put in GPS
+        tracking devices in all its trucks. Furthermore the drivers were told not to drive there
+        trucks home and keep to recommended routes and speeds. This particular driver did not like
+        that policy and that the owners wold be able to see exactly how and where he had been driving and as a
+        result he had purchased a $99.99 GPS jammer so he could drive his truck without the company
+        knowing exactly where and when. Without him knowing it the jammer was more powerful than he
+        realized so that whenever he was in the vicinity of the airport the jammer also interfered
+        with the highly sensitive equipment in the airport. </para>
+    <para>In this story the driver obviously had no malicious intent towards the airport and he was
+        later released. However that is not always the case.</para>
+    <para>The airport in Soul - South Korea - did experience problem with the traffic systems GPS in
+        april-may 2012. Investigations (and satellite surveillance) concluded that directed GPS
+        antennas had been constructed in North Korea in the Kaesong area (only ~10km from the
+        border). The construction had no other discernible purpose than to interfere with the GPS in
+        the airport in Soul. This is black mail on large scale and there is absolutely nothing
+        (legally) to do about it. </para>
+    <para>So even if the GPS tracker makes for a great anti-theft device for the average "joy-rider"
+        you should probably not just yet throw away your lock and key. It might also be a good idea
+        to teach you existing or future kids how to use a map &amp; compass and not just trust that
+        Google maps will always be available (or accurate)!</para>
+    <para>  </para>
+    <para><emphasis role="bold">Happy tracking!</emphasis></para>
+    <para>Johan Persson</para>
+    <para>@ <emphasis role="italic">N 59.655070, E 14.867005</emphasis></para>
+    <para>August 2014</para>
+    <para><emphasis role="italic">(Third printing may 2015 to match new features in
+            v3.2.x)</emphasis></para>
+    <para> </para>
+    <section>
+        <title>Acknowledgement</title>
+        <para>I would like to express my gratitude to <emphasis role="bold">GPSER Sweden
+                AB</emphasis> (<link xlink:href="http://gpser.se/">http://gpser.se/</link>) who
+            provided the details of the GM7 communication protocol without this project would not
+            have been possible.</para>
+    </section>
+</section>
+

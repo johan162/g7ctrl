@@ -1,0 +1,20 @@
+# Readme
+
+This package contains a Unix/Linux service (a.k.a. daemon) that is intended to
+be used together with the GM7 GPS Tracker. The daemon has primarily two functions.
+
+1. Listen on a specified TCP/IP port (the device port) for location and event
+   reports sent by the tracker. For details on the operation of the daemon see
+   man (1) g7ctrl. All Event received by the daemon are stored in an
+   sqlite3 database.
+
+2. Control and configure the tracker over either a USB cable connection or a
+   GPRS link.
+
+The daemon supports both the full command set of the GM7 tracker as well as a
+rich set of commands to control the dameon itself and manipulate the received
+locations updates.
+
+To interact with the dameon the package also comes with a command shell
+*g7sh* which supports full line editing capabilities and easy access to the
+daemon. See man (1) g7sh for more information.

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    -File         $Id$
+    -Author       Johan Persson, johan162@gmail.com
+    
+    Relax-NG XML Schema For exported event database. (See http://www.relaxng.org)
+
+-->
+
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <ref name="event_export"></ref>
+    </start>
+    
+    <define name="event_export">
+        <element name="event_export">
+            <interleave>
+                <attribute name="version" ><data type="string" /></attribute>
+                <attribute name="exportdate" ><data type="date" /> </attribute>
+                <attribute name="creator"><data type="string"></data></attribute>
+            </interleave>
+            <ref name="boundaries" />
+            <zeroOrMore>
+                <ref name="locevent" />
+            </zeroOrMore>
+        </element>
+    </define>
+    
+    <define name="boundaries">
+        <element name="bounds">
+            <interleave>
+                <attribute name="minlat"><data type="float"></data></attribute>
+                <attribute name="maxlat"><data type="float"></data></attribute>
+                <attribute name="minlon"><data type="float"></data></attribute>
+                <attribute name="maxlon"><data type="float"></data></attribute>
+            </interleave>
+        </element>
+    </define>
+    
+    <define name="locevent">
+        <element name="locevent">
+            <attribute name="id" ><data type="int" /></attribute>
+            <interleave>
+                <ref name="key" />
+                <ref name="timestamp" />
+                <ref name="deviceid" />
+                <ref name="location" />
+                <ref name="speed" />
+                <ref name="heading" />
+                <ref name="elevation" />
+                <ref name="satellite" />
+                <ref name="voltage" />
+                <ref name="attachbutt" />
+            </interleave>
+        </element>        
+    </define>
+    
+    <define name="key">
+        <element name="key"><data type="int" /></element>
+    </define>
+    
+    <define name="timestamp">
+        <element name="timestamp"><data type="int"/></element>
+    </define>
+    
+    <define name="deviceid">
+        <element name="deviceid" ><data type="string"/> </element>
+    </define>
+    
+    <define name="location">
+        <element name="location">
+            <interleave>
+                <attribute name="lat" />
+                <attribute name="long" />
+            </interleave>
+        </element>
+    </define>
+    
+    <define name="speed">
+        <element name="speed"> <data type="int" /> </element>
+    </define>
+    
+    <define name="satellite">
+        <element name="satellite"><data type="int" /></element>
+    </define>
+    
+    <define name="heading">
+        <element name="heading"><data type="int"/></element>
+    </define>
+    
+    <define name="elevation">
+        <element name="elevation"><data type="int" /></element>
+    </define>
+    
+    <define name="voltage">
+        <element name="voltage"><data type="int" /></element>
+    </define>
+    
+    <define name="attachbutt">
+        <element name="attachbutt"><data type="boolean" /></element>
+    </define>
+</grammar>

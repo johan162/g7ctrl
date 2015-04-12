@@ -1,0 +1,22 @@
+Tracker Connection Established
+
+Tracker
+-------
+
+    ID: [NICK_DEVID]
+IP Adr: [CLIENT_IP]
+
+
+Server
+------
+
+      Name: [SERVERNAME]  
+Local time: [SERVERTIME]
+
+
+Daemon
+------
+
+Ver: [DAEMONVERSION]
+
+

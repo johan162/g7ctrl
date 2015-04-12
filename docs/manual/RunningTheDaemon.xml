@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section  xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: RunningTheDaemon.xml 921 2015-04-06 15:09:59Z ljp $" xml:id="section.running-the-daemon" >
+    <title>Running the daemon</title>
+    <para>Once installed it is time to start the daemon. This can be done in a number of ways as the
+        following sections will show.</para>
+    <section>
+        <title>Running the server, starting and stopping.</title>
+        <para>While strictly speaking not necessary the server should normally be started by the
+                <literal>root</literal> user. As soon as the server doesn't need
+                <literal>root</literal> privileges it will switch to run as the user specified in
+            the configuration file, by default this is the user <emphasis>g7ctrl</emphasis> if the
+            configuration file has not been changed. This user should for security reasons not be
+            the 'root' user. This user should be a system user without login shell. Such a user can
+            normally be created by running the command '<emphasis>useradd</emphasis>'. (If the
+            daemon is installed via the RPM package this user will be automatically created).</para>
+        <para>If your system supports the command <command>useradd</command> then start by changing
+            to root and add the user as so</para>
+        <screen>$> useradd -r g7ctrl</screen>
+        <para>
+            <note>
+                <para>The user created must normally belong to the group <literal>dialout</literal>
+                    on most system in order to have access to the <acronym>USB</acronym>-serial
+                    device.</para>
+            </note>
+        </para>
+        <para>Then to start the server as root using the default settings the simplest way is to
+            just call</para>
+        <screen>sudo g7ctrl</screen>
+        <para>In order to stop the server and allow it to do a clean shutdown the
+                <literal>SIGINT</literal> (or <literal>SIGSTOP</literal>) signal should be sent to
+            the process running the server (assuming <command>g7ctrl</command> has been started as a
+            daemon). The distribution includes two support scripts to help with this. This can of
+            course also be done manually as (and reading the pid number from the standard
+            pid-file)</para>
+        <para>
+            <screen>sudo kill -SIGINT `cat /var/run/g7ctrl/g7ctrl.pid`</screen>
+        </para>
+        <para>Please note the "<code>`</code>" backward slashes.</para>
+        <para>While testing the server it is also possible to start the daemon as a "normal" user.
+            As a test start the daemon from command line for example as</para>
+        <para>
+            <screen>$g7ctrl -dN -V3 -lstdout</screen>
+        </para>
+        <para>The commands will start the application on the terminal <code>-dN</code> (not as a
+            daemon), with maximum logging (<code>-V3</code>) and print the log file directly to the
+            terminal (<code>-lstdout</code>).   This is a good way to do the initial testing since
+            any problem can usually be quickly seen in the log. Note that when the daemon is not
+            started as the root user it can not switch to the daemon user specified in the
+            configuration file. </para>
+        <para>Once the testing is completed the daemon can be setup to be started at the same time
+            as the server. Depending on the system this can done in a few different ways as the
+            following two sections show.</para>
+    </section>
+    <section>
+        <title>For system using old style <filename>init.d</filename></title>
+        <para>To start the daemon automatically the installation will install two utility scripts.
+            The first script will be installed in "<filename>/etc/init.d/g7ctrl</filename>" and
+            follows the normal guidelines for a "<filename>init.d</filename>" service start/stopping
+            script according to <acronym>LSB</acronym> (Linux Standard Base). Using this script to
+            start the server is then simply a matter of calling</para>
+        <screen>sudo /etc/init.d/g7ctrl start</screen>
+        <para>(or its alias <command>rcg7ctrl</command>) is given. The start-up script also supports
+            the "<literal>restart</literal>" and "<literal>status</literal>" options.</para>
+        <para>If the server gives the error message : "<emphasis>Server can not be started. See
+                system log</emphasis>" then more information about the details of the problem can be
+            found in the system log, normally <filename>/var/log/messages</filename>. The most
+            common reason for this message is that the daemon is already running. </para>
+        <para>To stop the server give the command (as root)</para>
+        <screen>sudo /etc/init.d/g7ctrl stop</screen>
+        <para>Since the <literal>init.d</literal> system has been abandoned in most modern system
+            the <literal>init.d</literal> scripts will then be automatically redirected to the
+            corresponding <literal>systemd</literal> service. In that case it is better to just use
+            the <literal>systemd</literal> service directly as the following section shows.</para>
+    </section>
+    <section>
+        <title>Using systemd</title>
+        <para>If your system makes use of <literal>systemd</literal> then the second utility script
+            will be installed as a <literal>systemd</literal> service. The configuration script will
+            automatically figure out if your system supports this. In this case the daemon can be
+            directly controlled via the usual <command>systemctl</command> command as whown below.
+            See <command>man systemctl</command> for details.</para>
+        <para>
+            <screen>sudo systemctl stop g7ctrl.service</screen>
+        </para>
+        <para>
+            <screen>sudo systemctl start g7ctrl.service</screen>
+        </para>
+        <para>
+            <note>
+                <para>The <literal>g7ctrl</literal> service needs to first be enabled after the
+                    initial installation with</para>
+                <para>
+                    <screen>sudo systemctl enable g7ctrl.service</screen>
+                </para>
+            </note>
+        </para>
+        <para>If your system does not have the command <command>systemctl</command> then it is not
+            using the <literal>systemd</literal> setup.</para>
+    </section>
+    <section>
+        <title>Using upstart</title>
+        <para>Newer version of Debian and Ubuntu now uses "<literal>upstart</literal>" to manage
+            daemons. The build system fylly supports this and after the usual "<command>sudo make
+                install</command>" the daemon could be controlled by</para>
+        <para>
+            <screen>sudo start g7ctrl
+sudo stop g7ctrl
+sudo status g7ctrl</screen>
+        </para>
+        <para>or alternatively by</para>
+        <para>
+            <screen>sudo service g7ctrl start
+sudo service g7ctrl stop
+sudo service g7ctrl status</screen>
+        </para>
+        <para>
+            <note>
+                <para>The configuration files a restored in
+                        <filename>/etc/init/g7ctrl.conf</filename></para>
+            </note>
+        </para>
+        <para>
+            <note>
+                <para>Upstart will be deprecated by Ubuntu from around 2016 and support for this
+                    will officially end with the release of version 4.0.0</para>
+            </note>
+        </para>
+    </section>
+    <section>
+        <title>Command line argument</title>
+        <para>Command line argument will override the corresponding settings in the configuration
+            file. The daemon supports the following arguments in short and long format:</para>
+        <para>
+            <variablelist>
+                <varlistentry>
+                    <term><emphasis role="bold">-d [n|y], --daemon=[n|y]</emphasis></term>
+                    <listitem>
+                        <para>Detach the program from the controlling terminal, a.k.a. running as a
+                            daemon</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-h, --help</emphasis></term>
+                    <listitem>
+                        <para>Print help</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-i file, --inifile=file</emphasis></term>
+                    <listitem>
+                        <para>Use specified file for configuration</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-l logfile, --logfile=file</emphasis></term>
+                    <listitem>
+                        <para>Specify the name of the logfile. A special value of
+                                "<literal>stdout</literal>" can be used to print directly to
+                            terminal</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-p n, --cmdport=n</emphasis></term>
+                    <listitem>
+                        <para>Specify <acronym>TCP/IP</acronym> port number for command listener</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-s n, --stty=n</emphasis></term>
+                    <listitem>
+                        <para>Specify what <literal>ttyACM&lt;n></literal> device to use when
+                            connecting over USB to device</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-t n, --trkport=n</emphasis></term>
+                    <listitem>
+                        <para>Specify TCP/IP port number for receiving tracker updates</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-V n, --verbose=n</emphasis></term>
+                    <listitem>
+                        <para>Specify verbose level for logging. 1=Show warnings and errors, 2=add
+                            notices, 3=add debugging output</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">-v, --version</emphasis></term>
+                    <listitem>
+                        <para>Print version information and exit</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">--pidfile=file</emphasis></term>
+                    <listitem>
+                        <para>Specify PID lock file to be used. By default this is
+                            <filename>/var/run/g7ctrl/g7ctrl.pid</filename> so if the daemon is
+                            not started as root it must be specified since only root has access to
+                            <filename>/var/run</filename>.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">--datadir=directory</emphasis></term>
+                    <listitem>
+                        <para>Specify directory for static data files (default,is
+                                <filename>/usr/share/g7ctrl</filename>)  that are shipped with the
+                            daemon.</para>
+                    </listitem>
+                </varlistentry>                    
+                <varlistentry>
+                    <term><emphasis role="bold">--dbdir=directory</emphasis></term>
+                    <listitem>
+                        <para>Specify directory for dynamic data files (default,is
+                                <filename>/var/lib/g7ctrl</filename>) the dynamic data files
+                            currently used are the database and the cache file for retrived address
+                            lookup from coordinates.</para>
+                    </listitem>
+                </varlistentry>                    
+            </variablelist>
+        </para>
+        <para>The default settings in the distribution corresponds running the daemon as</para>
+        <para>
+            <screen>g7ctrl -i "/etc/g7ctrl/g7ctrl.conf" -d Y -s 0 -p 3100 -t 3400 \
+-l "/var/log/g7ctrl/g7ctrl.log" V 2 --pidfile="/var/run/g7ctrl/g7ctrl.pid" \
+--dbdir="/var/lib/g7ctrl" --datadir="/usr/share/g7ctrl"</screen>
+        </para>
+    </section>
+    <section>
+        <title>Verifying that the daemon is running</title>
+        <para>
+            <tip>
+                <para>Since the configuration file at installation time specifies that the
+                    connection to the daemon is password protected you most likely need to look at
+                    the configuration file (<filename>/etc/g7ctrl/g7ctrl.conf)</filename> to confirm
+                    (or change) the password currently in use.</para>
+            </tip>
+        </para>
+        <para>Once the server is running an easy way to connect to the server is by using the
+                '<command>nc</command>' (net-cat) command this allows connecting to a specific port
+            on any named server. Assuming that the <emphasis>g7ctrl</emphasis> server is running on
+            localhost the following command will connect to the daemon (assuming the default command
+            port 3100 has not been changed in the configuration-file (e.g.
+                <filename>/etc/g7ctrl/g7ctrl.conf</filename>) or by a command line argument).</para>            
+        <screen>$> nc localhost 3100</screen>            
+        <para>After a successful connection the server will reply with a short information message.
+            The full returned information message at the connection time should look something
+            similar to the following (the version and build numbers might however differ):</para>
+        <screen>GM7 Server version 3.0.0 (build 150109-13)
+</screen>
+        <para>If password protection (see <xref linkend="section.security"/> ) the welcome
+            message is not be shown until the correct password has been specified. Instead when
+            password protection is enabled the connection sequence looks like this</para>
+        
+        <screen>$> nc localhost 9300
+Password:<emphasis role="bold">xxxxxxx</emphasis>
+GM7 Server version 3.0.0 (build 150109-13)
+</screen>
+        
+        <para>This means that the correct server password has to be given before the welcome
+            message is seen. The server is now ready to accept commands on this
+            connection.</para>
+        <para>To test the server you could for example give the internal server command
+                "<command>.ver</command>" (please note the "<literal>.</literal>" at the beginning!)
+            which will again prompt out the version of the daemon.</para>
+        <para>To disconnect to the server just type '<command>exit</command>'</para>
+        <para>
+            <tip>
+                <para>The best way to connect to the daemon is to use the supplied command shell
+                        "<command>g7sh</command>" which supports full editing and history as well as
+                    knowledge of the daemon command protocol to make it a more pleasant experience
+                    than connecting "raw" to the daemon of the <acronym>TCP/IP</acronym>
+                    socket.</para>
+            </tip>
+        </para>
+        <section>
+            <title>Simulating an active tracker</title>
+        <para>A final check is to simulate an active tracker that connects to the daemon. You should
+                use this to verify that all setups are correct and that you receive an event mail.
+                This is done by using the "<command>nc</command>" command to send a "fake" location
+                update to the dameon in the saem manner as the tracker does. The following commadn
+                line assumes that the utility program "<command>nc</command>" is installed and that
+                the command is issued on the same server as where the daemon is running (otherwise
+                just replace "<literal>localhost</literal>" with the proper server address.</para>
+        <para>
+            <screen>$> printf "3000000010,20131211002222,14.959445,53.366545,0,0,0,0,34,3.99V,0\r\n" | \
+nc localhost 3400</screen>
+        </para>
+        <para>The command above will simulate an active tracker with ID
+                    <literal>3000000010</literal> that sends the "<literal>Wake up Event</literal>".
+                If the daemon configuration is set to send mails you should now check that you have
+                received the event mail after a short while.</para>
+            <para>If this does not work as expected then look at the log file (normally
+                    <filename>/var/log/g7ctrl/g7ctrl.log</filename>)  for clues why this is not
+                working.. </para>
+        </section>
+    </section>
+    <section xml:id="section.security">
+        <title>Security</title>
+        <para>In order to prevent unauthorized access to the server the server have a basic
+            plain-text password protection. This means that a password can be configured to be used
+            before a client can start giving command to the daemon. The password is set in the
+            configuration-file.</para>
+        <para>The setting whether password should be used or not and the actual password is
+            specified in the configuration-file. </para>
+        <para>The configuration uses the same password for all clients. Since the password is stored
+            in plain text format the configuration file should have restricted access. </para>
+        <para>This should not be considered strong security but rather a weak
+                "<emphasis>stop-messing-with-my-tracker</emphasis>" protection. At configuration
+            time the password in the configuration file is set to a random 6 character long
+            password. </para>
+        <para>After connecting to the server when the password has been enabled the first string
+            sent back from the server will be the single string:</para>
+        
+        <screen>Password:</screen>
+        <para>The rest of the reply is the same as when no password is used. After three failed
+            attempts the daemon will disconnect the client.</para>
+        <para>For a more secure access to the server the <command>g7sh</command> command should be
+            setup as a login shell (or logging in to the server remotely using
+                <command>ssh</command> or <command>mosh</command>). For more information see <xref
+                linkend="section.command-shell"/>.</para>
+        
+    </section>
+    <section>
+        <title>Adding user hooks for special processing</title>
+        <para>To maintain maximum flexibility the daemon will check for the existence of several
+            (optional) shell scripts that can be provided by the user to take special actions on
+            certain events such as that the tracker reports movement. These shell scripts are
+            initially null scripts and does nothing.</para>
+        <para>The scripts are stored in "<filename>/usr/share/g7ctrl/scripts/</filename>". For more
+            information regarding these event scripts please refer to <xref
+                linkend="section.event-scripts"/>.</para>
+        <para>
+            <tip>
+                <para>These event scripts can for example be used to play an alarm sound when the
+                    daemon receives an alarm event.</para>
+            </tip>
+        </para>
+    </section>
+</section>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="16.1">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options>
+            <serialized version="16.1" xml:space="preserve">
+                <serializableOrderedMap>
+                    <entry>
+                        <String>enable.project.master.files.support</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
+                        <String>validation.scenarios</String>
+                        <validationScenario-array/>
+                    </entry>
+                </serializableOrderedMap>
+            </serialized>
+        </options>
+    </meta>
+    <projectTree name="g7ctrldocs.xpr">
+        <folder masterFiles="true" name="Master Files">
+            <file name="manual/Manual.xml"/>
+        </folder>
+        <folder name="manpages">
+            <file name="manpages/g7ctrl.1.xml"/>
+            <file name="manpages/g7sh.1.xml"/>
+        </folder>
+        <folder name="manual">
+            <file name="manual/Backlog.xml"/>
+            <file name="manual/CommandReference.xml"/>
+            <file name="manual/ConfiguringDaemon.xml"/>
+            <file name="manual/ConnectingDevice.xml"/>
+            <file name="manual/ControllingDevice.xml"/>
+            <file name="manual/ExportingDB.xml"/>
+            <file name="manual/Installing.xml"/>
+            <file name="manual/Introduction.xml"/>
+            <file name="manual/Manual.xml"/>
+            <file name="manual/Preface.xml"/>
+            <file name="manual/ReceivingData.xml"/>
+            <file name="manual/References.xml"/>
+            <file name="manual/ReleaseHistory.xml"/>
+            <file name="manual/RunningTheDaemon.xml"/>
+            <file name="manual/Technical.xml"/>
+            <file name="manual/TheCommandShell.xml"/>
+            <file name="manual/TroubleShooting.xml"/>
+        </folder>
+        <folder path="manual/css_stylesheets/"/>
+        <folder path="manual/xsl_stylesheets/"/>
+    </projectTree>
+</project>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<appendix  xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: TroubleShooting.xml 680 2015-01-21 20:50:07Z ljp $" xml:id="appendix.trouble-shooting" >
+    <title>Troubleshooting</title>
+    <section>
+        <title>The server is not receiving any location data</title>
+        <para>Most likely caused by a router not forwarding the external port to the server or a
+            firewall that is blocking the data. The method to locate such an issue is to start
+            connection from the inside and then try one step out at a time until the problem can be
+            repeated.</para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>Check that the <acronym>IP</acronym> address is correct and that the
+                        daemon is able to received data.</para>
+                    <para>This is most easily checked by trying to manually add a location update to
+                        the daemon. First try to add a location update from the same server as the
+                        one daemon is running on by using the command '<command>nc</command>' (net
+                        cat) command which is a staple tool when it comes to network
+                        troubleshooting.</para>
+                    <para>For example if you have used the default port try</para>
+                    <para>
+                        <screen>$ nc localhost 3400</screen>
+                    </para>
+                    <para>The command above should just show an empty line indicating that the
+                        connection to the server was successfull and that it is now awaiting som
+                        more data, i.e. the screen should look like this</para>
+                    <para>
+                        <screen>$ nc localhost 3400
+
+</screen>
+                    </para>
+                    <para>Precc '<command>Ctrl-C</command>' to stop the net-cat from running. We
+                        have now established that the daemon is indeed listening on the correct port
+                        on the server. The next step is to try to send "fake" location update string
+                        manually. Since the daemon expects the incoming data to be terminated by
+                            '<literal>\r\n</literal>' we use the <command>printf</command>
+                        command.</para>
+                    <para>
+                        <screen>$ printf "3000000001,20131211002222,14.959445,58.366545,0,0,0,0,2,3.92V,0\r\n" |  
+nc localhost 3400</screen>
+                    </para>
+                    <para>Now review the logs for the daemon to see if this location update was
+                        correctly received. If this does not work then use the following
+                        steps:</para>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>double check that the port number is correct to what you have
+                                    set in the configuration file for the daemon. </para>
+                                <para>When this is correct continue with next step.</para>
+                            </listitem>
+                            <listitem>
+                                <para>try to connect to the daemon from within your own network but
+                                    from a different server than the one running the daemon. If this
+                                    does not work then the problem is most likely a firewall issue
+                                    on your server running the daemon. </para>
+                                <para>When this works continue with next step.</para>
+                            </listitem>
+                            <listitem>
+                                <para>try to connect to your server from outside your own network.
+                                    This will verify that your router(s) are sending through the
+                                    data correctly to your server running the daemon. If this
+                                    doesn't work verify your router setting so that the correct port
+                                    is forwarded to the server running the daemon.</para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                    <para>If all of this works and you can send update string to your daemon
+                        manually but you are still not seeing any connectsions from the device then
+                        most likely the tracker device settings is missconfigured. Check your SIM
+                        card provider for correct APN and a DNS server to use as well as the address
+                        the tracker should connect to.</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </section>
+    <section>
+        <title>The device is not connected via USB</title>
+        <para>Most likely this is caused by wrong <acronym>USB</acronym> index. </para>
+        
+        <para><emphasis role="bold">On Linux:</emphasis></para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>Make sure that the device is not connected to your computer.</para>
+                </listitem>
+                <listitem>
+                    <para>List all <literal>ttyACM&lt;n></literal> devices with</para>
+                    <para>
+                        <screen>$ ls /dev/ttyACM*</screen>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>Connect the device via <acronym>USB</acronym>.</para>
+                </listitem>
+                <listitem>
+                    <para>Again list all <literal>ttyACM&lt;n></literal> devices and compare the
+                        output from above. This should show you what the <acronym>USB</acronym>
+                        connection the device connects on. Now change the <acronym>USB</acronym>
+                        index (in the config file or on the command line) to match the number of the
+                            <literal>ttyACM&lt;n></literal></para>
+                </listitem>
+                <listitem>
+                    <para>Make sure the user running the daemon have read/write privileges on the
+                        device</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        
+        <para><emphasis role="bold">On Apple OS X:</emphasis></para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>The device is one of the "<filename>/dev/cu.usbmodem????</filename>"
+                        devices where the question mark is a 4 digit number that depends on where
+                        you plugged the device in. Example of full paths are
+                            "<filename>/dev/cu.usbmodem1411</filename>" and
+                            "<filename>/dev/cu.usbmodem1451</filename>". </para>
+                </listitem>
+                <listitem>
+                    <para>The number to be specified in the config file are the last four
+                        digits</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>In general if a connection cannot be established review the log file (default
+                <filename>/usr/share/g7ctrl/f7ctrl.log</filename>) which might reveal further
+            information.</para>
+        <para>
+            <note>
+                <para>Please remember to wait at least 20 s after the device has been plugged in to
+                    allow it to establish a connection before you try to send a command.</para>
+            </note>
+        </para>
+    </section>
+    <section>
+        <title>An error "port is in use" is shown</title>
+        <para>This means that there is a conflict between the port the daemon is trying to use and
+            one of your other applications. In order to find out what application is using what port
+            the easiest command that accomplish this is most likely</para>
+        <para>
+            <screen>$ sudo netstat -tulpn </screen>
+        </para>
+        <para>To find out open files use "<command>lsof</command>"</para>
+    </section>
+</appendix>
+

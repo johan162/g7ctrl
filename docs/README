@@ -1,0 +1,13 @@
+# Documentation
+
+The documentation consists of manual pages as well as a manual. All documentation
+is written in XML using the Docbook5 schema. All documentation except for the
+standard man pages are installed in “<PREFIX>/share/packages/g7ctrl/“. If the build is
+configured as standard PREFIX is normally /usr
+
+- dbdoc - DB Schema and RNMG grammar for XML export
+
+- manpages - Unix man (1) pages for “g7ctrl” and “g7sh”
+
+- manual - A more detailed description of the daemon. The manual is available in both
+HTML, PDF and text versions.

@@ -1,0 +1,1938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<appendix xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="5.0" revision="$Id: CommandReference.xml 947 2015-04-09 06:28:49Z ljp $"
+    xml:id="appendix.command-reference">
+    <title>Command reference</title>
+    <para>There commands are divided into three different areas</para>
+    <para>
+        <orderedlist>
+            <listitem>
+                <para>Device commands. They are commands that controls a connected device</para>
+            </listitem>
+            <listitem>
+                <para>Database commands. Commands to export and read the database</para>
+            </listitem>
+            <listitem>
+                <para>Preset commands. Commands to manipulate presets</para>
+            </listitem>
+            <listitem>
+                <para>Daemon commands. Commands to act on the daemon itself.</para>
+            </listitem>
+        </orderedlist>
+    </para>
+    <section>
+        <title>Device Command reference</title>
+        <para>Below is the commands possible together with there parameters. In case a command can
+            accept argument the daemon will ask for each command in sequence. The prompt will always
+            be indicated by a "<literal>?</literal>" mark. To abort a specific command just type a
+            single dot "<literal>.</literal>" and the command shell will return to the start
+            position (outer level). Most commands only accept a selected value chosen from a list.
+            All possible values in the lists are shown below.</para>
+        <para>
+            <note>
+                <para>All command example below is shown as they would appear when using the command
+                    shell "<command>g7sh</command>"</para>
+            </note>
+        </para>
+        <para>For even more detailed command information please refer to the "<emphasis
+                role="italic">GM7 Protocol specification</emphasis>" available from where you
+            purchased your device.</para>
+        <para>
+            <tip>
+                <para>Typing "<literal>help </literal>&lt;command-name>" will give you detailed help
+                    for each command in the daemon.</para>
+            </tip>
+        </para>
+
+        <section xml:id="cmd.address">
+            
+            <title><command>address</command></title>
+            <para>Reead the current location and return an approximate street address. The lookup
+                uses Google maps and is usually accurate within 50meters but this depends heavily on
+                the location since addresses in general tend to be less accurate in for example the
+                countryside.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para>
+                <command>get address</command>
+            </para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% get address
+78 Bell Street, NW16TB London</screen>
+            </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.loc"/>, <xref linkend="cmd.locg"/></para>
+            
+        </section>
+
+        <section xml:id="cmd.batt">
+            
+            <title><command>batt</command></title>
+            <para>Read the battery voltage from connected device.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para>
+                <command>get batt</command>
+            </para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% get batt
+3.71V</screen>
+            </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.loc"/></para>
+            
+        </section>
+        
+
+            <section xml:id="cmd.clrec">
+                
+                <title><command>clrec</command></title>
+                    <para>Erase all recorded locations in device memory. Use
+                            <literal>dlrec</literal> to read back the recorded location positions in
+                        device memory to the database.</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para>
+                        <command>do clrec</command>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% do clrec
+Done.</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.dlrec"/>, <xref linkend="cmd.nrec"/></para>
+                
+            </section>
+            <section xml:id="cmd.comm">
+                <title><command>comm</command></title>
+                    <para>Set/Read device communication type and its parameters</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] comm</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>CommSelect</emphasis> - Select primary type of
+                                    communication </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Use USB" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Use SMS over GSM"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "CSD (reserved)" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "UDP over GPRS" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>4</parameter> - "TCP/IP over GPRS"
+                                            </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>SMS Base Phone</emphasis> - <acronym>SMS</acronym> base number
+                            to call </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>CSD Base Phone</emphasis> - <acronym>CSD</acronym> base number
+                            (reserved and not used) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>GPRS APN</emphasis> - The operators <acronym>APN</acronym> .
+                            This must be specified in order to use a <acronym>GPRS</acronym> data
+                            connections. The value of this parameter must be got from the carrier
+                            used.</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>GPRS User</emphasis> - User name if required </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>GPRS Passwd</emphasis> - Password if required </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>GPRS Server</emphasis> - Server <acronym>IP</acronym> address
+                            where the device reports back to. If you specify a fully resolved domain
+                            name here then you must also specify a <acronym>DNS</acronym> server for
+                            the device to use as the  <emphasis>GPRS DNS</emphasis> argument
+                            below.</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>GPRS Server Port</emphasis> - <acronym>TCP/IP</acronym> Port
+                            to use on server must be the same as set in the configuration
+                            file.</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>GPRS Keep Alive</emphasis> - Interval (in seconds) between
+                                <emphasis role="italic">Keep Alive Packets</emphasis> These packets
+                            are empty data packets sent from the device back to the server to
+                            maintain the connection if if no actual data has to be sent. The time
+                            interval between the packets needed depends on how aggressively the
+                            carrier is reclaiming <acronym>IP</acronym> addresses. Usually it should
+                            be between 30-90 seconds even though with some carriers you could get
+                            away with up to 120-150s. You would normally want this time to be as
+                            large as is safe in order to conserve energy in the device. </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>GPRS DNS</emphasis> - Optional DNS server for device
+                                    to use. </para>
+                        <para>
+                            <tip>
+                                <para>Use one of <org>
+                                        <orgname
+                                            xlink:href="https://developers.google.com/speed/public-dns/"
+                                            >Googles</orgname>
+                                    </org> open <acronym>DNS</acronym> servers here,
+                                        '<literal>8.8.8.8</literal>' and
+                                    '<literal>8.8.4.4</literal>', if your carrier doesn't have other
+                                    specific recommendations.</para>
+                            </tip>
+                        </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get comm
+[GM7] COMMTYPE=0,,,,,,,0,0,</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.config">
+                <title><command>config</command></title>
+                    <para>Set/Read device ID, Password, and PIN Code of the SIM card</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] config</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Device ID</emphasis> - Set device ID (leftmost digit
+                                    must always be 3) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Device Password</emphasis> - Set device Password
+                                    (numeric) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>SIM Card PIN</emphasis> - The SIM cards PIN code to
+                                    use </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get config
+[GM7] UNCFG=3000000001,0000,</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.dlrec">
+                <title><command>dlrec</command></title>
+                    <para>Download all recorded position in device memory to the database. Positions
+                        that have been downloaded from the device memory in this way will have an
+                        event id of <literal>1</literal>. During the download a progress for each
+                        10% of the total number of locations downloaded will be printed.</para>
+            <para>After the dataset is imported from the device a check is made in the DB for
+                possible duplicates. This makes it possible to do repeatable downloads without
+                deleting old locations in the device and still only have the new locations remaining
+                in the DB. </para>
+                    <para>
+                        <note>
+                            <para>Please note that download and DB update takes a bit of time. The
+                                device is capable of a throughput (when reading out data) of just
+                                below 40kB/s which translates to approx. 550 locations/s. This means
+                                that, for example, 10,000 locations take just below 20s to read. The
+                                DB update thereafter is for all practical purposes instantaneous. </para>
+                            <para>The device itself have capacity to store more than 100,000
+                        locations, which for example translates to roughly 4 month if a positions
+                        fix is taken every other minute.</para>
+                        </note>
+                    </para>
+            <para>
+                <warning>
+                    <para>If address lookup is used be aware that since Google open Web services has
+                        usage restrictions both in tems of rate and absolute number of lookpus per
+                        24 hour. The lookup is throttled not to send more than 9-10 requests per
+                        second since otherwise the Google APIs will return an error indicating to
+                        high usage. The limit per 24 hour is around 5000 lookups (roughly) which is
+                        quite easy to exceed when importing locations with a high freuqency. This
+                        will limit the rate of DB update to roughly 1000 location imports per 3
+                        minutes.</para>
+                    <para>There are two ways around that. 1) You can request and purchase an API key
+                        which will allows a much higher throughput and absolut number of lookups per
+                        24 hours or you can 2) disable the address lookup when doing bulk import
+                        from the device using the ".<command>address</command>" command See <xref
+                            linkend="cmd.address-toggle"/>.</para>
+                </warning>
+            </para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>do dlrec</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% do dlrec
+Preparing, please wait ...
+Reading 1144 locations from device, please wait ...
+[0%].[10%].[20%].[30%].[40%].[50%].[60%].[70%].[80%].[90%].[100%]
+Storing a copy of read locations in "/tmp/gm7_last_dlrec.txt" ...
+Updating DB. Address lookup used  ...
+[0%].[10%].[20%].[30%].[40%].[50%].[60%].[70%].[80%].[90%].[100%]
+Checking for duplicates ...
+1144 locations imported.
+Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
+</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.clrec"/>, <xref linkend="cmd.nrec"/></para>
+                
+            </section>
+            <section xml:id="cmd.geofevt">
+                <title><command>gfevt</command></title>
+                    <para>Enable/Disable/Set/Read GEO-Fencing event. This allows up to 50 (numbered
+                50-99) events to be specified. An geographic event is the entering/exiting of a
+                specified area centered at the specified latitude, longitude with a specified
+                radius.</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set gfevt</command></para>
+            <para><command>get gfevt EVENTID</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Event ID</emphasis> - Event ID. Maximum of 50 events.
+                                    In range 50-99 </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Enabled</emphasis> - Enable/Disable evenet </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Longitude</emphasis> - Longitude for center of event
+                                    zone </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Latitude</emphasis> - Latitude for center of event
+                                    zone </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Radius</emphasis> - Radius of event zone in meters
+                                    (0-65535) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>ZoneControl</emphasis> - How to trigger event </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Entering zone" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Leaving zone" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Action</emphasis> - What to do on event </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Log to device" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Send to server" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Both log and send"
+                                            </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>get gfevt 50</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.gfen"/></para>
+                
+            </section>
+            <section xml:id="cmd.gfen">
+                <title><command>gfen</command></title>
+                    <para>Enable/Disabling GEO-fencing functionality</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set gfen [ on | off ] </command></para>
+            <para><command>get gfen</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Enabled</emphasis> - Turn option on/off </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Radius</emphasis> - Radius in meter for fence </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Zone trigger</emphasis> - Trigger when leaving or
+                                    entering zone </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Inside zone" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Outside zone" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Report action</emphasis> - What to do on event </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Disabled" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Log to device" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Send to server" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Both log and send"
+                                            </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert
+                                    . Phone number are numbered from left to right as 1,2,4,8,16 For
+                                    example to alert phone number 1 and 3 give the value (1 | 4 ) =
+                                    5</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get gfen
+[GM7] GFEN=0,150,2,0,0</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.geofevt"/></para>
+                
+            </section>
+            <section xml:id="cmd.imei">
+                <title><command>imei</command></title>
+
+                    <para>Query the IMEI number of the internal GSM module</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get imei</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get imei
+[GM7] 912964059600079</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.sim"/></para>
+                
+            </section>
+            <section xml:id="cmd.led">
+                <title><command>led</command></title>
+
+                    <para>Enable/Disable the LED indicator on/off</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set led [ on | off ] </command></para>
+            <para><command>get led</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get led
+[GM7] ELED=0</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.loc">
+                <title><command>loc</command></title>
+
+                    <para>Get latest location</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get loc</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get loc
+[GM7] 3000000001,20140110001836,17.959366,59.367183,0,180,0,0,0,4.10V,0</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+                <para><xref linkend="cmd.locg"/>,<xref linkend="cmd.address"/></para>
+                
+            </section>
+            <section xml:id="cmd.locg">
+                <title><command>locg</command></title>
+
+                    <para>Get the latest position as a Google map link</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get locg</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get locg
+https://www.google.com/maps?q=57.963183,18.152366</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+                <para><xref linkend="cmd.loc"/>,<xref linkend="cmd.address"/></para>
+                
+            </section>
+            <section xml:id="cmd.lowbatt">
+                <title><command>lowbatt</command></title>
+
+                    <para>Set/Read the internal battery low level alert</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] lowbatt</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Report action</emphasis> - Action to perform at low
+                                    battery voltage </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Disable" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Log on device" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Send back to server"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Both log and send back
+                                                ro server" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get lowbatt
+[GM7] LOWBATT=3,7</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.mswitch">
+                <title><command>mswitch</command></title>
+
+                    <para>Enable/Disable detached report (when the device detect that it has bee
+                        detached from its position by affecting the micro switch under the
+                        magnet)</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set mswitch [ on | off ] </command></para>
+            <para><command>get mswitch</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get mswitch
+[GM7] SETRA=3,7</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.nrec">
+                <title><command>nrec</command></title>
+
+                    <para>Return date range and number of location records stored in device
+                        memory</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get nrec</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get nrec
+[GM7] DLREC=17637(20140107231903-20140110002148)</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.dlrec"/>, <xref linkend="cmd.clrec"/></para>
+                
+            </section>
+            <section xml:id="cmd.phone">
+                <title><command>phone</command></title>
+
+                    <para>Enable the function "<emphasis role="italic">Get the current location by
+                    making a phone call</emphasis>". This allows you to make a normal phone call to
+                the device. After the phone call is finished the device will reply back with a text
+                message with the most recent location.</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set phone [ on | off ] </command></para>
+            <para><command>get phone</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get phone
+[GM7] VLOCATION=1,7</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.ps">
+                <title><command>ps</command></title>
+
+                    <para>Enable/Disable power saving mode</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] ps</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Mode</emphasis> - Select when to enable sleep mode to
+                                    save battery </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Sleep after 3min of no
+                                                movement. Wake up on movements. GSM=Standby,
+                                                GPRS=GPS=Off, G-sensor=On" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Always enter sleep after
+                                                3min and wake every n seconds specified.
+                                                GSM=GPRS=GPS=G-sensor=Off" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Always enter sleep after
+                                                3min and wake up on timer.
+                                                GSM=GPRS=GPS=G-sensor=Off" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Always enter sleep after
+                                                3min and wake up on movement. GSM=GPRS=GPS=Off,
+                                                G-sensor=On" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Sleep interval</emphasis> - Used with sleep mode 1, Interval
+                            in minutes between wake ups. Range 60-65535</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Wake up report</emphasis> - Action when awaken </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Disable" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Log on device" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Send back to server"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Both log and send back
+                                                ro server" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>VIP mask</emphasis> - Bit mask of VIP numbers to alert on
+                            awake </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Timer 1</emphasis> - Used with mode=2. 00-23 hr. Makes the
+                            tracker wake up at the specified hour on the day.</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Timer 2</emphasis> - Used with mode=2. 00-23 hr. Makes the
+                            tracker wake up at the specified hour on the day. </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Timer 3</emphasis> - Used with mode=2. 00-23 hr. Makes the
+                            tracker wake up at the specified hour on the day. </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get ps
+[GM7] PSMT=3,0,1,0,,,,</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.reboot">
+                <title><command>reboot</command></title>
+
+                    <para>Restart-up the device</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>do reboot</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% do reboot
+Done.</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.rec">
+                <title><command>rec</command></title>
+
+                    <para>Enable/Disable/read logging function to the device</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] rec</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Mode</emphasis> - When should logging be done </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Disable" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Time mode, log every n
+                                                seconds" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Distance mode, log every
+                                                n meters" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Time AND Distance mode"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>4</parameter> - "Time OR Distance mode"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>5</parameter> - "Heading mode, logging
+                                                starts when heading > set value" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>6</parameter> - "Heading OR Time mode"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>7</parameter> - "Heading OR Distance"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>8</parameter> - "Heading OR (Time AND
+                                                Distance)" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>9</parameter> - "Heading OR Time OR
+                                                Distance" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Time interval</emphasis> - Time interval (in sec) used
+                                    in mode setting </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Distance interval</emphasis> - Distance interval (in
+                                    meters) used in mode setting </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Number of reports</emphasis> - The number of reports to send
+                            back on event (0=continuous logging) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Record basis</emphasis> - Logging mode </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Wait for GPS fix before
+                                                sending back report" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Don't wait for GPS fix
+                                                before sending back report" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Heading</emphasis> - Heading value used in mode
+                                    (10-90) </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get rec
+[GM7] REC=1,10,0,0,1,15</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.clrec"/>, <xref linkend="cmd.dlrec"/>, <xref
+                    linkend="cmd.nrec"/></para>
+                
+            </section>
+            <section xml:id="cmd.reset">
+                <title><command>reset</command></title>
+
+                    <para>Reset all parameters to the factory default settings</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>do reset</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% do reset
+Done.</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.roam">
+                <title><command>roam</command></title>
+
+                    <para>Enable/Disable <acronym>GPRS</acronym> roaming function</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set roam [ on | off ] </command></para>
+            <para><command>get roam</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% set roam off
+[GM7] ROAMING=0</screen>
+                    </para>
+                
+            </section>
+        <section xml:id="cmd.sense">
+            <title><command>sens</command></title>
+            <para>Set sensitivity for movement detection as an integer in range [1..5]  where 1 is
+                the highest sensitivity and 5 is the lowest. The factory setting is "4",</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>[get|set] sens</command></para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% get sens
+[GM7] 4</screen>
+            </para>
+        </section>        
+            <section xml:id="cmd.sim">
+                <title><command>sim</command></title>
+
+                    <para>Query the identification of the <acronym>SIM</acronym> card</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get sim</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get sim
+[GM7] SIMID=73291534007080101233</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.imei"/></para>
+                
+            </section>
+            <section xml:id="cmd.sleep">
+                <title><command>sleep</command></title>
+
+                    <para>Enable/Disable "Sleeping Report"</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set sleep [ on | off ] </command></para>
+            <para><command>get sleep</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Message mode</emphasis> - Set how to handle message at
+                                    when device enters sleep </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "log message to device"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "send back message"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "both log and send back
+                                                message" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get sleep
+[GM7] SLEEP=0</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.sms">
+                <title><command>sms</command></title>
+
+                    <para>Switch the SMS format (Text of PDU mode)</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] sms</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Mode</emphasis> - Set format for SMS sent back </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Use PDU mode" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Use text mode" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get sms
+[GM7] SMSM=1</screen>
+                    </para>
+                
+            </section>
+            <section>
+                <title><command>test</command></title>
+
+                    <para>Device diagnostic function</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>do test</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% do test
+Done.</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.track">
+                <title><command>track</command></title>
+
+                    <para>Control if device should be sending back automatic tracking
+                        information.</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>set track</command></para>
+            <para><command>get track</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Tracking mode</emphasis> - Set condition for when
+                                    tracking is started </para>
+                                <para>Possible values and description:<itemizedlist>
+                                <listitem>
+                                    <para>
+                                        <parameter>0</parameter> - "Disabled"</para>
+                                </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Time mode" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>2</parameter> - "Distance mode" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "Time AND Distance mode"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>4</parameter> - "Time OR distance"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>5</parameter> - "Heading mode" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>6</parameter> - "Heading OR time" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>7</parameter> - "Heading OR distance"
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>8</parameter> - "Heading OR (Time AND
+                                                Distance" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>9</parameter> - "Heading OR Time OR
+                                                Distance" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Timer interval</emphasis> - Used for mode 1 </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Distance interval</emphasis> - Used for mode 2-9
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                            <emphasis>Number of trackings</emphasis> - Use 0 for continuous tracking </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Track basis</emphasis> - Wait for GPS fix or not </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "Send report ONLY if GPS
+                                                is fixed" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Send report regardless
+                                                of GPS status" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Comm select</emphasis> - Set type of report </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                        <parameter>0</parameter> - "Over USB" . <emphasis
+                                            role="bold">Currently NOT supported.</emphasis></para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>1</parameter> - "Over GSM" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                        <parameter>2</parameter> - "Reserved (not used)" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>3</parameter> - "UDP over GPRS" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>4</parameter> - "TCP/IP over GPRS"
+                                            </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Heading</emphasis> - Used for modes 5-9 </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get track
+[GM7] TRACK=0,0,0,0,0,0,0</screen>
+                    </para>
+            <para><emphasis role="bold">See also:</emphasis></para>
+            <para><xref linkend="cmd.comm"/></para>
+
+            </section>
+            <section xml:id="cmd.tz">
+                <title><command>tz</command></title>
+                    <para>Set the time zone information for the device</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] tz</command></para>
+                    
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>Sign</emphasis> - Ahead or before GMT zone </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>+</parameter> - "Ahead of GMT" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>-</parameter> - "Before GMT" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Hour</emphasis> - Number of hours to adjust (0-9)
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>Min</emphasis> - Minutes to adjust </para>
+                                <para>Possible values and description:<itemizedlist>
+                                        <listitem>
+                                            <para>
+                                                <parameter>0</parameter> - "0 min" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>15</parameter> - "15 min" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>30</parameter> - "30 min" </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>
+                                                <parameter>45</parameter> - "45 min" </para>
+                                        </listitem>
+                                    </itemizedlist></para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get tz
+[GM7] SETTZ=+,01,00</screen>
+                    </para>
+                
+            </section>
+            <section xml:id="cmd.ver">
+                <title><command>ver</command></title>
+
+                    <para>Get current firmware version</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>get ver</command></para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get ver
+[GM7] VER=M7 2.005 GP rev00c,V2</screen>
+                    </para>
+                
+            </section>
+
+            <section xml:id="cmd.vip">
+                <title><command>vip</command></title>
+                    <para>Preset up to 5 SMS phone numbers for receiving different alerts</para>
+                    <para><emphasis role="bold">Synopsis:</emphasis></para>
+                    <para><command>[ get | set ] vip</command></para>
+                    <para><emphasis role="bold">Arguments:</emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP 1</emphasis> - Mobile number 1 (full number incl
+                                    country prefix '+' if needed) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP 2</emphasis> - Mobile number 2 (full number incl
+                                    country prefix '+' if needed) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP 3</emphasis> - Mobile number 3 (full number incl
+                                    country prefix '+' if needed) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP 4</emphasis> - Mobile number 4 (full number incl
+                                    country prefix '+' if needed) </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <emphasis>VIP 5</emphasis> - Mobile number 5 (full number incl
+                                    country prefix '+' if needed) </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold">Example:</emphasis></para>
+                    <para>
+                        <screen>% get vip
+[GM7] SETVIP=,,,,</screen>
+                    </para>
+                
+            </section>
+    </section>
+    <?hard-pagebreak?>    
+    <section xml:id="appendix.database-commands">
+        <title>Database commands</title>
+        <para>The database commands are used to manage the stored location updates from the devices.
+            All commands operates on the existing DB which is normally stored in directory
+                "<filename>/usr/share/g7ctrl/</filename>". There are two ways to get locations into
+            the database, 1) downloading locations from device memory (see <xref
+                linkend="cmd.dlrec"/>) or 2) receive live updates from the device (see <xref
+                linkend="cmd.track"/>).</para>
+        <section  xml:id="cmd.db-deletelocations">
+            <title><command>db deletelocations</command></title>
+            <para>Delete all stored locations. This command can NOT be undone.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db deletelocations</command></para>
+        </section>        
+        
+        <section xml:id="cmd.db-dist" xreflabel="db dist">
+            <title><command>db dist</command></title>
+            <para>Calculate the <emphasis role="bold"><emphasis role="underline">approximate
+                        distance</emphasis></emphasis> traveled using the selected data set of
+                location points.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db dist [dev=nnn] [ev=nnn] [from to]</command></para>
+            <para><emphasis role="bold">Arguments:</emphasis></para>
+
+
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><literal>[dev=nnn]</literal> - Filter on a specific deviceid. If not
+                            set all devices will be considered.</para>
+                    </listitem>
+                    <listitem>
+                        <para><literal>[ev=nnn]</literal> - Filter on specific event. If not set all
+                            events will be considered.</para>
+                    </listitem>
+                    <listitem>
+                        <para><literal>[from to]</literal> - Filter on a specific date range. Dates
+                            are given in <literal>YYYY-MM-DD</literal> format with optional time
+                            specification as <literal>HH:MM</literal> in 24h format (military time).
+                            If omitted all dates are considered.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Calculation of distance is approximation of the distance between two
+                    <acronym>GPS</acronym> points (assuming WGS-84 projection) and returns the
+                result using both the <emphasis role="italic">Haversine</emphasis> method (great
+                circle distance) and <emphasis role="italic">Vincenty</emphasis> method (iterative).
+                The reply from the daemon is given as two lines exemplified by</para>
+            <para>
+                <screen>Calculating approximate distance using 344 points.
+25.3 km (alt. 25399.5 m)</screen>
+            </para>
+            <para>The second distance in <literal>m</literal> are calculated using the <emphasis
+                    role="italic">Vincenty</emphasis> method and the first distance (in
+                    <literal>km</literal>) is calculated using the <emphasis role="italic"
+                    >Haversine</emphasis> method.</para>
+            <para>Due to the number of error sources in getting location updates and limitations
+                inherent in this type of distance calculations <emphasis role="bold">we can not in
+                    general assume to have perfect accuracy</emphasis>. The accuracy will also vary
+                depending on the absolute location due to differences in the earth radius. The way
+                traveled between recorded positions is assumed to follow the great circle between
+                the points so the more points the better approximation of the actual real distance. </para>
+            <para>
+                <note>
+                    <para>The precise volatility in the distance figures are very difficult to
+                        quantify due to the large number of factors that influence the
+                            <acronym>GPS</acronym> signal and the way the distance can be
+                        calculated. However,practical tests (with the GM7 device) have shown that in
+                        general it is safe to assume that the true distance (as measured in the
+                        middle part of Sweden around lat 57&#xb0;) in more than 80% of the cases
+                        have less than 5% error compared with the distance as measured by an
+                        odometer. If more accuracy is needed in a particular area then field tests
+                        with known distances needs to be performed and correction factors
+                        introduced.</para>
+                    <para>Often the distance is slightly underestimated and the longer time interval
+                        between each measure the more the distance is underestimated. This is due to
+                        the fact that the distance travelled between each measured point is assumed
+                        to be the shortest (great circle) distance and in practice the real distance
+                        is always longer.</para>
+                    <para>(The <emphasis role="italic">Vincenity</emphasis> method will generally
+                        have better accuracy assuming perfect <acronym>GPS</acronym> positions.
+                        )</para>
+                </note>
+            </para>
+            <para><emphasis role="bold"> Examples: </emphasis></para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            <screen>% db dist</screen>
+                        </para>
+                        <para>Use all the data points and calculate the total traveled
+                            distance</para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <screen>% db dist ev=1 2013-08-01 2013-08-01</screen>
+                        </para>
+                        <para>Calculate the traveled distance from the previously imported data
+                            points from the internal memory of the device (they will have eventid=1)
+                            for the 1:st of August 2013.</para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <screen>% db dist 2013-01-01 2013-12-31 13:00</screen>
+                        </para>
+                        <para>Calculate the total distance in DB for 2013 regardless of what event
+                            triggered the location update</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+
+            <section xml:id="cmd.db-export" xreflabel="db export">
+                <title><command>db export</command></title>
+                <para>Exports the database in the selected format to the named file</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+                <para><command>db export [dev=nnn] [ev=nnn] [from to] (gpx|kml|xml|csv|json)
+                    [filename]</command></para>
+            <para><emphasis role="bold">Arguments:</emphasis></para>
+
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para><literal>[dev=nnn]</literal> - Filter on a specific deviceid.
+                                    If not set all devices will be considered.</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>[ev=nnn]</literal> - Filter on specific event. If not
+                                    set all events will be considered.</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>[from to]</literal> - Filter on a specific date
+                                    range. Dates are given in YYYY-MM-DD format with optional time
+                                    specification as <literal>HH:MM</literal> in 24h format
+                                    (military time). If omitted all dates are considered.</para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>(gpx|kml|xml|csv|json)</literal> - Export format to
+                            use</para>
+                                <para>
+                                    <orderedlist>
+                                        <listitem>
+                                            <para><literal>gpx</literal> = Exchange format for GPS
+                                                devices. Widely used.</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para><literal>kml</literal> = Format used to display
+                                                tracks on Google earth and Google maps</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para><literal>xml</literal> = Export all fields in a
+                                                custom <acronym>XML</acronym> format. See separate
+                                                schema docs (<xref linkend="appendix.technical"
+                                                />). This schema has the advantage of including all
+                                                information from the location updates such as
+                                                included battery voltage and detach button status.
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para><literal>csv</literal> = Export in comma separated
+                                                format. Useful for importing into spreadsheets for
+                                                post processing</para>
+                                        </listitem>
+                                <listitem>
+                                    <para><literal>json</literal> = Export in JSON format. Useful
+                                        for Web based post-processing.</para>
+                                </listitem>
+                                    </orderedlist>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para><literal>[filename]</literal> - Full filename path to export
+                                    to. If omitted the data will be exported to
+                                        <filename>/usr/share/g7ctrl/export.&lt;format></filename>
+                                    The file name must be either have an absolute path or no path.
+                                    Relative paths are not allowed. If no path is specified then the
+                                    current DB directory is used (by default
+                                        <filename>/usr/shar/g7ctrl</filename>). If no file suffix is
+                                    given the the export format will be added as file suffix.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para><emphasis role="bold"> Examples: </emphasis></para>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <screen>% db export gpx</screen>
+                                </para>
+                                <para>Export all stored location in GPX format to the DB dir. If
+                                    default values are used then this command would export
+                                        to<filename>/usr/share/g7ctrl/export.gpx</filename></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <screen>% db export dev=3000000001 2013-02-01 2013-02-28 xml /tmp/myexport.xml</screen>
+                                </para>
+                                <para>Export all location reported in February for device
+                                        <literal>3000000001</literal> in g7ctgrl own
+                                        <acronym>XML</acronym> format to the file
+                                        <filename>/tmp/myexport.xml</filename></para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <screen>% db export ev=1 2013-02-01 2013-02-28 gpx recorded</screen>
+                                </para>
+                                <para>Export all downloaded locations (eventid=1) for the given
+                                    period in <acronym>GPX</acronym> format to
+                                        <filename>recorded.gpx</filename> in the DB directory</para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <screen>% db export 2014-01-05 17:30 2014-01-05 gpx</screen>
+                                </para>
+                                <para>Export all records between <literal>2014-01-05
+                                        17:30:00</literal> to <literal>201-01-05
+                                    23:59:59</literal></para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+            <para>
+                <note>
+                    <para>The recorded way points  broken up in different tracks (and track
+                        segments) according to the config file settings of
+                            <literal>trackseg_split_time</literal> and
+                            <literal>track_split_time</literal></para>
+                </note>
+            </para>
+                
+            </section>
+        
+        <section xml:id="cmd.db-head">
+            <title><command>db head</command></title>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db head [n]</command></para>
+            
+            <para>Display the newest n received locations. If n is omitted it will be defaulted to 10.</para>
+            <para>
+                <note>
+                    <para>By default the ordering (and hence what is considered latest) is based on
+                        the date and time set by the device on the location and not the order the
+                        location arrived in to the server (and hence the DB).</para>
+                </note>
+            </para>
+            
+        </section>
+            <section xml:id="cmd.db-lastloc">
+                <title><command>db lastloc</command></title>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db lastloc</command></para>
+
+                    <para>Display the latest recorded position in the DB</para>
+                
+            </section>        
+            <section xml:id="cmd.db-mailpos">
+                <title><command>db mailpos</command></title>
+                <para>Mail the last recorded position to the predefined mail address in the
+                    configuration file.</para>
+                
+                <para><emphasis role="bold">Synopsis:</emphasis></para>
+                <para><command>db mailpos</command></para>
+                
+            </section>
+            <section xml:id="cmd.db-mailgpx">
+                <title><command>db mailgpx</command></title>
+                <para>Mail a compressed version of a <acronym>GPX</acronym> export file of the
+                    entire DB as an attachment to the predefined mail address in the
+                    configuration file.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+                <para><command>db mailgpx</command></para>
+            </section>
+        <section xml:id="cmd.db-mailcsv">
+            <title><command>db mailcsv</command></title>
+            <para>Mail a compressed version of a <acronym>CSV</acronym> export file of the
+                entire DB as an attachment to the predefined mail address in the
+                configuration file.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db mailcsv</command></para>
+        </section>       
+        <section>
+            <title><command>db size</command></title>
+            <para>Report the number of stored location events in DB</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db size</command></para>
+        </section>
+        <section>
+            <title><command>db sort</command></title>
+            <para>Specify the sorting order for the <literal>db tail</literal> and <literal>db
+                    head</literal> commands. The default is to sort on the device timestamp.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db sort [device|arrival]</command></para>
+            <para><emphasis role="bold">Arguments</emphasis></para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><literal>device</literal> - Base the sort order on the device
+                            timestamp on the received location</para>
+                    </listitem>
+                    <listitem>
+                        <para><literal>arrival</literal> - Base the sort order on the time the
+                            update was received on the server</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>        
+        <section xml:id="cmd.db-tail">
+            <title><command>db tail</command></title>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>db tail [n]</command></para>
+            
+            <para>Display the oldest n received locations. If n is omitted it will be defaulted to 10.</para>
+            <note>
+                <para>By default the ordering (and hence what is considered oldest) is based on the
+                    date and time set by the device on the location and not the order the location
+                    arrived in to the server (and hence the DB).</para>
+            </note>
+            
+        </section>
+        
+    </section>
+    <section>
+        <title>Preset commands</title>
+        <para>The preset commands are used to manage the stored commands in the presets. For more
+            information on presets please refer to <xref linkend="section.using-presets"/></para>
+        <section>
+            <title><command>preset list</command></title>
+            <para>List all defined preset files. Preset files are stored in the config directory
+                under "<filename>presets/</filename>"</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>preset list</command></para>
+        </section>
+        <section>
+            <title><command>preset refresh</command></title>
+            <para>Re-read all presets from disk. An easy way to update the daemon when new presets
+                have been added without having to restart the daemon.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>preset refresh</command></para>
+        </section>
+        <section>
+            <title><command>preset use</command></title>
+            <para>Execute the specified preset. A shortcut for this is
+                    "<literal>@&lt;preset-name></literal>"</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>preset use &lt;preset-name></command></para>
+        </section>
+        <section>
+            <title><command>preset help</command></title>
+            <para>Give help for the specified preset. The preset help for each defined preset file
+                is store in the beginning of the preset file itself.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>preset help &lt;preset-name></command></para>
+        </section>
+    </section>
+    <section  xml:id="section.server-commands" xreflabel="Server commands">
+        <title>Server commands</title>
+        <para>Daemon commands are internal commands that interacts with the server (daemon) itself.
+            All server commands (except the "help" command are started with a dot
+                "<command>.</command>".</para>
+        <section  xml:id="cmd.address-toggle" xreflabel="address">
+            <title><command>.address</command></title>
+            <para>Toggle the address lookup when a location is stored in the DB. The default value
+                is specified in the configuration file. It could be useful to turn the lookup
+                temporarily off if for example a large number of locations are imported via
+                USB.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.address</command></para>
+            <para>
+                <screen>% .address
+Address lookup : off
+% .address
+Address lookup : on</screen>
+            </para>
+        </section>
+        <section xml:id="cmd.cachestat" xreflabel="cachestat">
+            <title><command>.cachestat</command></title>
+            <para>Display statistics for the usage of the Geo loction cache system. The cache system works for both
+            address lookup and for the small static maps that can be included in the notification mails so the command
+            displayes statitcs separately for both address and minimap cache. The statistics is calculated from the
+            start of the dameon and hence reset each time the daemon is started.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.cachestat</command></para>
+            <para>
+                <screen>% .cachestat
++=========+======+=======+=======+========+
+|  Cache  |  Tot |  Fill |  Hits |   Mem  |
++=========+======+=======+=======+========+
+| Address |    0 |  16 % |   0 % | 563 kB |
+| Minimap |    0 |   2 % |   0 % | 252 kB |
++=========+======+=======+=======+========+</screen>
+            </para>
+            <para>The above table shows the cache status just after start when the cache has been
+                initialized from file but no calls has yet been made.</para>
+        </section>                
+        <section xml:id="cmd.date" xreflabel="date">
+            <title><command>.date</command></title>
+            <para>Print the current date and time on the server</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.date</command></para>
+            <para>
+                <screen>%.date
+Thu Mar 26 21:01:34 2015</screen>
+            </para>
+        </section>        
+        <section  xml:id="cmd.help" xreflabel="help">
+            <title><command>help</command></title>
+            <para>Print a one line description (without arguments) of all available commands that
+                the daemon supports. </para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>help</command></para>
+        </section>
+        <section  xml:id="cmd.help-command" xreflabel="help-command">
+            <title><command>help &lt;command></command></title>
+            <para>Print a detailed help on the specified command including synopsis, description of
+                arguments and where applicable a few examples.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>help &lt;command-name></command></para>
+            <para><emphasis role="bold">Examples:</emphasis></para>
+            <para><command>help db export</command></para>
+            <para>
+                <screen>db export - Export entire or filtered portion of the existing DB to other formats
+
+SYNOPSIS:
+db export [dev=nnn] [ev=nnn] [from to] (gpx|kml|xml|csv) [filename]
+
+ARGUMENTS:
+dev=nnn            Optional. Filter on device id
+ev=nnn             Optional. Filter on eventid
+[from to]          Optional. Date interval to export in format "yyyy-mm-dd"
+(gpx|kml|xml|csv)  Mandatory. Which format used for exporting the DB
+                    gpx = Exchange format or GPS devices. WIdely used.
+                    kml = Format used to display tracks on Google earth and Google maps
+                    xml = Export all fields in DB in a XML format. See separate schema docs.
+                    csv = Export in comma separated format. Useful for importing into spreadsheets
+filename           Optional. Filename of exported file.
+
+
+EXAMPLES:
+"db export gpx" - Export entire DB to in GPX format
+"db export 2013-01-01 2013-01-31 csv /tmp/jan.xml" - Export all january entries to "jan.xml" in CSV format
+"db export dev=3000000002 kml /tmp/export.xml" - Export all entries for device=3000000002 to "export.xml" in KML format</screen>
+            </para>
+            <para><command>help .nl</command></para>
+            <para>
+                <screen>% help .nl
+.nl - List all registered nick names
+
+SYNOPSIS:
+.nl </screen>
+            </para>
+            <para><command>help track</command></para>
+            <para>
+                <screen>% help track
+NAME:
+  track - Control if device should be sending back automatic tracking information.
+ 
+SYNOPSIS:
+  set track [on|off]
+  get track
+ 
+ARGUMENTS:
+  Tracking mode       - Set condition for when tracking is started
+  Timer interval      - Used for mode 1
+  Distance interval   - Used for mode 2-9
+  Number of trackings - Use 0 for continously tracking
+  Track basis         - Wait for GPS fix or not
+  Comm select         - Set type of report
+  Heading             - Used for modes 5-9
+ 
+
+DESCRIPTION:
+Long description not yet available.</screen>
+            </para>
+        </section>
+        <section  xml:id="cmd.srv-ver" xreflabel=".ver">
+            <title><command>.ver</command></title>
+            <para>Print software version of daemon</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para>
+                <screen>% .ver
+GM7 Server version 3.2.0 (build 150318-748)</screen>
+            </para>
+        </section>
+        <section  xml:id="cmd.srv-lc" xreflabel=".lc">
+            <title><command>.lc</command></title>
+            <para>List all connected command clients  </para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.lc</command></para>
+            <para><emphasis role="bold">See also:</emphasis>
+                <xref linkend="cmd.srv-ld"/>, <xref linkend="cmd.srv-usb"/></para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% .lc
+------------------------------------------------------
+                 Command connections
+------------------------------------------------------
+ #   IP               Status            
+------------------------------------------------------
+*01  127.0.0.1        2015-02-13 20:37
+</screen>
+            </para>
+        </section>
+        <section xml:id="cmd.srv-ld" xreflabel=".ld">
+            <title><command>.ld</command></title>
+            <para>List all connected devices, both on <acronym>USB</acronym> and over
+                    <acronym>GPRS</acronym>
+            </para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.ld</command></para>
+            <para><emphasis role="bold">See also:</emphasis>
+                <xref linkend="cmd.srv-usb"/></para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% .ld
+------------------------------------------------------
+                    GPRS connections
+------------------------------------------------------
+ #   IP               Status            Dev ID
+------------------------------------------------------
+ 01  127.0.0.1        2015-02-13 20:07  3000000011
+
+------------------------------------------------------
+                     USB devices
+------------------------------------------------------
+ #   USB              Status            Dev ID
+------------------------------------------------------
+00 : *ttyACM0         2015-02-13 20:38  3000000002
+01 :  ttyACM1         (no device)
+02 :  ttyACM2         (no device)
+03 :  ttyACM3         (no device)
+04 :  ttyACM4         (no device)
+05 :  ttyACM5         (no device)
+
+</screen>
+            </para>
+            <para>
+                <note>
+                    <para>For device connections over <acronym>GPRS</acronym> the daemon needs to
+                        receive at least one <literal>KEEP_ALIVE</literal> packet in order to
+                        determine the device ID of the device that connected. Depending on the
+                        configuration on how often a <literal>KEEP_ALIVE</literal> packet is sent it
+                        can take a few minutes until the daemon knows the Device ID. </para>
+                </note>
+            </para>
+        </section>
+        <section  xml:id="cmd.srv-ln" xreflabel=".ln">
+            <title><command>.ln</command></title>
+            <para>List all registered devices in the chosen format. Defaults to format 3 if no
+                format specified</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.ln [n]</command></para>
+            <para><emphasis role="bold">Argumnts:</emphasis></para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>[0] - One full record per line</para>
+                    </listitem>
+                    <listitem>
+                        <para>[1] - Four lines per full record</para>
+                    </listitem>
+                    <listitem>
+                        <para>[2] - One field in the full record per row</para>
+                    </listitem>
+                    <listitem>
+                        <para>[3] - Compact list version with just Nick, DEV.ID and IMEI fields
+                            displayed</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para><emphasis role="bold">Example:</emphasis></para>
+            <para>
+                <screen>% .ln 1
+#   NICK        DEV.ID               IMEI              SIM                  
+01  MC          3000000001           312345678600039   89123456787000101922 
+
+PHONE           FW.VER               REG.DATE          UPD.DATE        
+070-123 45 67   M7 2.005 GP rev00c   20140116 07:56    20140117 13:36 </screen>
+            </para>
+            <para>
+                <screen>% .ln 2
+#         01
+NICK:     MC
+DEV.ID:   3000000001
+IMEI:     312345678600039
+SIM:      89123456787000101922
+PHONE:    070-123 45 67
+FW.VER:   M7 2.005 GP rev00c
+REG.DATE: 20140116 07:56
+UPD.DATE: 20140117 13:36</screen>
+            </para>
+            <para>
+                <screen>% .ln
+-------------------------------------------
+#   NICK        DEV.ID      IMEI              
+-------------------------------------------
+01  MYMC        3000000001  352964052600039 </screen>
+            </para>
+        </section>
+        <section>
+            <title><command>.dn</command></title>
+            <para>Delete the specified nick-name</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.dn nick-name</command></para>
+        </section>
+        <section  xml:id="cmd.srv-nick" xreflabel=".nick">
+            <title><command>.nick</command></title>
+            <para>Register the device connected over USB. This will read back the
+                    <acronym>IMEI</acronym>, the <acronym>SIM</acronym> and the <emphasis
+                    role="bold">Device ID</emphasis> from the device and record them in the server
+                DB. When events are received from a tracker the device id will be replaced with the
+                nick-name (when it exists) in all communication from the daemon to the user for each
+                of use. By using the "<command>.nl</command>" command all registered devices can be
+                shown together with the registered information.</para>
+            <para>The nick name can also be used together with the "<command>.use</command>" command
+                as an easy way to communicate with a remote device.</para>
+            <para>This is a good way to manage multiple devices. In all database commands the nick
+                name can be used instead of the numeric device id which makes it easier to manage
+                multiple devices without remembering all device id:s</para>
+            <para>The optional <acronym>SIM</acronym> phone number must be given manually since it
+                is not possible to read back the <acronym>SIM</acronym> phone number from the
+                device.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.nick nick-name [phone-number]</command></para>
+            <para>
+                <note>
+                    <para>Please note that nick-name are case sensitive!</para>
+                </note>
+            </para>
+        </section>
+        <section xml:id="cmd.srv-table" xreflabel=".table">
+            <title><command>.table</command></title>
+            <para> Toggle the output to pretty-print output tables using Unicode table drawing
+                characters.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.table</command></para>
+            <para><emphasis role="bold">See also:</emphasis>
+                <xref linkend="cmd.srv-usb"/>,<xref linkend="cmd.srv-target"/>,
+            </para>            
+            <para><emphasis role="bold">Examples:</emphasis></para>
+            <para>
+                <screen>% .table
+Table drawing : On
+%</screen>
+            </para>
+        </section>
+        <section xml:id="cmd.srv-target" xreflabel=".target">
+            <title><command>.target</command></title>
+            <para>Specify which device connected over GPRS to use as target for the device commands.
+                The target is specified as either the given nick-name for the tracker or as the
+                client number as shown with the "<command>.lc</command>" command. The direction is
+                in effect until the next time the command is used. </para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.target [ nick-name | client-number ]</command></para>
+            <para><emphasis role="bold">See also:</emphasis>
+                <xref linkend="cmd.srv-usb"/></para>
+            <para><emphasis role="bold">Examples:</emphasis></para>
+            <para>
+                <screen>% .target MyCar</screen>
+            </para>
+            <para>All the commands hereafter will be directed to the device with the nick-name
+                "MyCar"</para>
+            <para>
+                <screen>% .target 1 </screen>
+            </para>
+            <para>This will use the device connected as client number 1 as listed by the
+                    "<command>.lc</command>" command.</para>
+        </section>
+        <section xml:id="cmd.srv-usb" xreflabel=".usb">
+            <title><command>.usb</command></title>
+            <para>Specify which device connected on USB to talk to or list status of all connected
+                devices</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.USB [ usb-index ]</command></para>
+            <para><emphasis role="bold">See also:</emphasis>
+                <xref linkend="cmd.srv-target"/></para>
+            <para><emphasis role="bold">Examples:</emphasis></para>
+            <para>
+                <screen>% .usb 1</screen>
+            </para>
+            <para>Use device connected on USB device 1</para>
+            <para>
+                <screen>% .usb
+------------------------------------------------------
+ #    USB             Status            Dev ID
+------------------------------------------------------
+00 : *ttyACM0         2015-02-13 19:38  3000000002</screen>
+            </para>
+            <para>List all existing devices. The star '<literal>*</literal>' in front of the
+                    <literal>ttyACM0</literal> device indicates that this is the selected device for
+                this command connection. If this command had been given just after the device had
+                been connected and before the identity of the device had been established the
+                listing would instead have shown the following</para>
+            <para>
+                <screen>% .usb
+------------------------------------------------------
+ #    USB             Status            Dev ID
+------------------------------------------------------
+00 : *ttyACM0         connecting ...</screen>
+            </para>
+        </section>
+    </section>
+</appendix>

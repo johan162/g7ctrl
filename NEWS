@@ -1,0 +1,457 @@
+NEWS
+====
+
+v3.2.0 (may 2015)
+========================
+
+General notes for this release
+------------------------------
+
+This is a feature release which increases functionality, stability and fine-tunes
+existing functionality in a number of areas
+
+1. more database commands to display and list entries in the DB
+2. improvements in geolocation lookup to handle failed API calls
+3. improved handling of Google rate limit of API calls
+4. pretty printing of output tables (using unicode table characters)
+5. updated look & feel of mail templates
+6. improved handling of UTF8 encoded characters when applicable.
+7. improved handling of large replies from the server to the command shell *g7sh*
+8. A number of new configuration options (in *g7config.conf*)
+
+    - Specification of a Google API key which is used in the geolocation lookups.
+      This allows the specification of a commercial key to increase the allowed
+      number of calls (and rate/s) to Google location APIs.
+
+      *More information about Google API key is available in the manual
+      (see Appendix A.2 in the manual)*
+
+    - A new setting (or actually settings) in the configuration file makes it
+      possible to include two static mini-maps in the notification mails on event
+      notifications for those event that carry a location. This is a small
+      customizable static Google map centered around the current location of
+      the tracker at two zoom levels (overview and detailed). The exact zoom-levels
+      used are customizable
+
+    - A new setting to customize mail subject prefix
+
+    - A new setting to choose to use a shorter form of device ID in subject header
+9. Summary of new server commands
+    - **.date ** Prints current date and time on server
+    - **.cachestat**  Prints statistics on the Geolcation caches
+    - **.address** Prints the street address for the last received location
+    - **db head** Print the *n* latest received location updates
+    - **db tail** Print the *n* first received locations
+    - **db sort** Controls the sorting order for the *db head* and *db tail*
+       commands DB
+    - **.table** Toggles the printing of pretty-printed tables
+
+
+-----
+**NOTE:** Since the configuration file has been updated it is recommended to
+install the new default config file and re-apply local config changes manually.
+
+-----
+
+
+Detailed user visible changes
+-----------------------------
+- Manual updated to RA15 to reflect changes in 3.2.0
+
+- Mail templates slightly updated with new look & feel
+
+- Mail templates updated to try to circumvent Googles stupidity in auto-trimming
+  of mails when the mail recipient uses a GMail account. This is not a 100% fix
+  since Gmails auto-trimming is insanely diabolic.
+
+- Added options "include_minimap" to enable the inclusion of a small static map
+  showing the current location (with both an overview and a detailed map) the the
+  notification mail. The exact meaning of these parameters are described in the
+  manual and in the config file.
+
+- Added a new cache for the minimap images which are stored i the standard
+  variable data files directory (defaults to /var/lib/g7ctrl) if not otherwise
+  adjusted by the configuration. The same approximation as for the address
+  is used.
+
+- Added server command ".cachestat" to return statistics on cache hits and
+  usage.
+
+- Added server command ".date"
+
+- Added server command ".address" to toggle address lookup when storing
+  locations in DB. Default value on startup is read from the configuration file.
+
+- Added server command "db sort [arrival|device]" to specify sort order for
+  "db head" and "db tail" commands.
+
+- Added "subject_prefix" setting the configuration file to allow customization
+  of the prefix used in the subject header for all mails sent from the daemon.
+
+- The calls to Google lookup API:s are now throttled not to exceed the rate
+  limit for anonymous calls that Google enforces (5 QPS).
+  It is (of course) still possible to exceed the "number of calls per 24 hour"
+  (2500 calls/24h) and in that case you just have to wait.
+  To avoid this it is strongly recommended to purchase an API commercial key.
+  Using such a key will increase your Google allowances (10 QPS and 100,000
+  queries/24h).  Such a key is personal and is requested directly from Google.
+  A purchased or otherwise acquired key can be specified in the configuration file.
+
+- Handle 24h absolute rate limit for Google APIs. If the 24h rate limit (for
+  total number of API calls) is reached  then no further Google API calls are
+  made until 24h has passed. This can be reset
+  manually with the new ".ratereset" command. If the rate limit is hit then a
+  notification email is also sent. Restarting the daemon will also reset the
+  blockage.
+
+- Introduced option to set a Google API key in the configuration file to allow
+  for higher rate and higher absolute number of address lookups. To get a key
+  you must configure a key in the Google administration console as described in
+  Appendix A.2
+
+- Moved port settings in config file from "config" to "startup" section since
+  ports will not be changed in the running daemon even if the config file is
+  refreshed.
+
+- Search for the chosen compression program in several locations
+  and give better error message if not found when trying to mail a
+  compressed version of the DB.
+
+- Add server command ".table" to output result tables in nicer unicode table.
+  The command itself toggles this option for the connected client.
+  This currently only affects the ".usb" and ".target" commands which outputs
+  result tables.
+  For example:
+
+        % .table
+        Table drawing : On
+        % .target
+        ╒════╤════════════════╤══════════════════╤════════════╕
+        │  # │       IP       │      Status      │   Dev ID   │
+        ╞════╪════════════════╪══════════════════╪════════════╡
+        │ 01 │ *79.102.220.42 │ 2015-03-05 20:06 │ 3000000001 │
+        └────┴────────────────┴──────────────────┴────────────┘
+
+- Improved geo location lookup. If a location does not have a street address
+  then see if it has a at least a postal code and in that case return that before
+  before giving up.
+
+- Added two DB commands "db tail" and "db head" which displays a list of location
+  updates from the head or tail of the location table. Only the key fields
+  position, timestamp, address, speed and device id fields are displayed.
+  The list is always sorted in descending order of date & time of location
+  so that the latest location update in the list is always at top. The oldest
+  location in the DB has number 1 and the newest the highest.
+  For example:
+
+        % db head
+        0002  2014-12-11 00:57:07 3000000001 61.478771 15.382076 0   "828 93, Sweden"
+        0001  2014-12-11 00:22:25 3000000001 57.478771 16.382076 0   "Skälsebo Målehorva 2, 572 96 Fårbo, Sweden"
+
+    Or with pretty printing enabled
+
+        % .table
+        Table drawing : On
+        % db head
+        ╔════╤═══════════════════╤══════════╤═════════╤═════════╤═════╤══════════════════════════════════════════╗
+        ║  # │       Date        │  Dev.ID  │   Lat   │   Lon   │Speed│                  Address                 ║
+        ╠════╪═══════════════════╪══════════╪═════════╪═════════╪═════╪══════════════════════════════════════════╣
+        ║0002│2014-12-11 00:57:07│3000000001│61.478771│15.382076│0    │828 93, Sweden                            ║
+        ╟────┼───────────────────┼──────────┼─────────┼─────────┼─────┼──────────────────────────────────────────╢
+        ║0001│2014-12-11 00:22:25│3000000001│57.478771│16.382076│0    │Skälsebo Målehorva 2, 572 96 Fårbo, Sweden║
+        ╚════╧═══════════════════╧══════════╧═════════╧═════════╧═════╧══════════════════════════════════════════╝
+
+
+
+Bugs fixed
+----------
+
+- The CSS tag for bold fonts in email template "mail_event.html" was wrong.
+
+- The memcpy() used strlcpy() would read too much memory for short strings. This
+  would never cause a buffer overwrite error but could be reading non-accessible
+  memory and result in a **SIGSEGV**.
+
+
+Internal changes (visible for developers and packagers)
+-------------------------------------------------------
+- Renamed geolocation_google.[hc] to geoloc.[hc]
+
+- The modules "unicode_tbl.[ch]" was added which manage the table formatting
+  in a nice and easy way.
+
+- The daemon now initializes setlocale(LC_ALL,"") to read the current locale
+  since it will be needed for correctly handling of UTF8 code points.
+
+- In XML doc sources start replacing xlink:href with linkend
+
+- Added some more detailed error messages to better diagnose what Google is
+  returning as street address (or not).
+
+- Some internal changes to DB location list handling
+
+- Generic improvements in handling of UTF8 encoded chars
+   - Added xmb_strncpy() in xstr.c as a UTF8 safe version of strncpy()
+   - Refactored all internal usage of strncpy() to use UTF8 safe version as applicable
+     as well as buffer and security audit of all usages.
+   - Added UTF8 safe versions of printf() and fprintf() to properly format strings with
+     size specifiers such as "%-30s" xmb_printf(), and xmb_fprintf()
+   - Added xmb_strncat()
+
+
+- For OSX an approximation of clock_gettime() POSIX call has been added in the
+  utils module.
+
+- Increased a number of buffers used with the socket communication to be able to
+  handle larger amount of data in the g7 shell before truncating and giving an
+  error.
+
+- The built in SMTP library has received some better documentation and some
+  new utility methods to simplify handling of non-file based images that should
+  be included as inline pictures.
+
+- The mailutil library has also got new supporting functionality to work with
+  images that are inline and not included as attachments.
+
+- If the system uses logrotate the installation will now install a configuration
+  script in /etc/logrotate.d . NOTE since the logfile could be a runtime setting
+  it might need adjustment if a non standard location is used for the logfile.
+  The logrotate script assumes that the logfile is "/var/log/g7ctrl/g7ctrl.log"
+
+- The README files and other text info files are being transformed to markdown
+  syntax
+
+
+----
+
+----
+
+
+g7ctrl v3.1.0 (march 2015)
+==========================
+
+General notes for this release
+------------------------------
+**This release bring some notable new features:**
+
+1. Each connected client can now independently have different connected devices.
+   In previous releases all clients talked to the same device when issuing
+   commands and if one client changed the target the other clients were also
+   changed since the target device was a server setting.
+
+2. The server can now manage several connected devices over USB and the
+   client can select which of the connected USB devices to talk to.
+   In addition when a USB device is connected the ID of the device is read
+   and first after the ID has been successfully read is the device available
+   for commands.
+
+3. The last feature that will allow the user to specify a proximity range for
+   when the location lookup should match an existing address. The proximity is
+   specified as a new value (in meters) in the config file.
+   Since the accuracy of the GPS is rarely better than 15 meters it is
+   un-necessary to send a request to Google if the location is only different
+   in the last digit or so in the received coordinates. The distance calculation
+   uses the "Haversine" method (Great circle) to calculate the distance between
+   two locations.
+
+4. Summary of new/modified commands introduced in this release
+   Server commands:
+
+    * .target     - List/Set device target connected over GPRS
+    * .usb        - List/Set device target connected on a USB port
+    * .ld         - List all connected devices
+    * -lc         - List all connected command clients
+
+    Device commands:
+
+    * get address - Return approx. street address for current location
+    * @@CMD(arg1,arg2, ...) New syntax to give non-interactive commands
+
+
+User visible changes:
+---------------------
+- Manual updated to RA13 to cover all new additions in 3.1.0
+
+- A new command "get address" was  introduced which will get the latest
+  location from the device as a street address.
+
+- It is now possible to enter non-interactive commands with the syntax
+  @@CMD(arg1,arg2,...)
+  Example: @@LED(1)
+  The syntax is the exact same as how presets are specified. This makes
+  it faster to enter more complex command for experienced user by bypassing
+  the question/answer process when using the ordinary command entering process.
+  This is further documented in the manual.
+
+- The new command ".target" replaces the old ".use" to specify which device
+  should receive the commands. This targets a device connected over GPRS
+
+- The new server command ".usb" is used to specify which USB port to talk
+  to in case multiple devices are connected. It is also used to list devices
+  currently connected on USB
+
+- The ".lc" behavior is modified to only list command connections
+
+- The new server command ".ld" is used to list connected devices over both
+  USB and GPRS
+
+- Each command client now have an individual connection state so each connected
+  client can talk to a different device
+
+- Multiple USB devices can be connected and managed
+
+- The device ID of connected devices over USB is read upon connection. NOTE
+  this also introduces a slight delay which also better indicates the time it
+  tales for the device to establish a USB serial simulation so the device ID
+  can be read back. It takes about 20s for the device to set up .
+
+- Added "address_lookup_proximity" config setting to allow setting how close a
+  cache match must be in order to be considered a match for a cached street address.
+
+- Allow multiple commands in the same string for batch shell processing with
+  "g7sh -e". Commands are separated with a ";" character
+  For example: g7sh -e ".ver;db size;db mailcsv;"
+  Commands with arguments are not yet supported.
+
+- Updated documentation to reflect changes in 3.1.0. Updated troubleshooting
+  guide and some more code statistics in the technical appendix.
+
+- Some minor esthetic updates:
+   - Extra blank line in reply after listing preset removed
+   - Extra blank line in reply after sending mail with exported db removed
+   - Title in mails sent on on new device connection and events harmonized
+
+- Some minor updates of default values in the config file
+
+- The timeout value for receiving command replies over GPRS was increased
+  since it sometimes take up to 30s to receive a reply.
+
+
+Bugs fixed:
+-----------
+- A number of theoretical buffer overruns was fixed (detected by Coverity scan)
+
+- The translation to human readable text would always show "Off" for binary
+  commands.
+
+- The translation of the device error code to human text was incorrect for the
+  case when the command name was not included in the reply (as the protocol
+  specification wrongly states it always should be.)
+
+- On some occasions the assumption was made that basename() does not change
+  its argument (glibc - style since the code is built with _GNU_SOURCE defined).
+  Unfortunately this is an incorrect assumption if both libgen.h and string.h
+  is included in the same *.c file even if _GNU_SOURCE is defined!
+
+- If the g7shell was terminated with Ctrl-C then the terminal could be left
+  in a confused state and require a "reset" due to readline() signal
+  handling not being properly cleaned up.
+
+- A few minor spelling errors in comments and docs was fixed
+
+
+Internal changes (visible for developers and packagers):
+--------------------------------------------------------
+- The xstrsplitfields() function has changed behavior so that it will
+  preserve spaces in the split strings.
+
+- Added buffer overrun checks in xstrsplitfields() for extra safety
+
+- The signature for the geodetic distance calculations functions have been
+  updated to reflect there const'ness
+
+- Renamed worker.[ch] -> socklistener.[ch]
+
+- Some major refactoring in all command methods due to the need to include
+  the client context which is unique for each command thread.
+
+- A new structure usb_conn_status have ben introduced to keep track of multiple
+  USB devices.
+
+
+
+g7ctrl v3.0.0 (jan 2015)
+========================
+
+**General notes for this release**
+-----------------------------------
+The bump in full version number is made necessary since the config file
+and startup option has changed and potentially breaks the backwards
+compatibility with existing installation scripts by packager.
+
+This release also changes the location for various data files to better
+adhere to FHS.
+
+This is good thing but potential packagers need to be aware of this even
+though it should make things simpler in the long run.
+
+
+User visible changes:
+---------------------
+- Make the daemon reload config and preset files on receiving signal SIGHUP
+
+- Removed the daemonize config setting from the config file. It makes more sense to
+  only have this as a program option handled by a system administrator at install time.
+
+- The directories for the data files has been changed to better adherence to FHS.
+  This means that :
+    a) The static datafiles (templates etc.) are moved to /usr/share/g7ctrl
+    b) The default data files that change (i.e. DB files) is now moved to /var/lib/g7ctrl
+    c) The default PID lock file is in /var/run/g7ctrl
+    d) The default logfile is in /var/log/g7ctrl
+    e) The default config file location remains in /etc/g7ctrl
+  These locations can be overridden by program options at start of the daemon using
+  the new options --pidfile , --datadir, --dbdir
+
+- The db_dir and logfile locations are removed from the config file since this is
+  more correctly a packaging setting and now has to be overridden by program
+  options. This also makes it possible to reload config file on the fly when we receive
+  the SIGHUP signal.
+
+- Added JSON export format for DB.
+
+- When exporting the DB to chosen format there is no longer any imposed size restriction
+  other than available memory.
+
+- Don't install the g7m emulator for regular builds but only for development builds
+  it does not make sense for regular users to have this.
+
+
+Bugs fixed:
+-----------
+- The mail handling can now be completely disabled with the config setting "use_mail"
+  Previously this setting was ignored.
+
+- The upstart script (for Debian based distributions) was using "expect fork" when
+  it needs an "expect dameon" since we fork exactly twice to avoid becoming session leader.
+  This error made "stop g7ctrl" give an error since the wrong PID was registered
+  by upstart.
+
+- If translation to human labels on receiving device replies was enabled then the reply
+  from the server would erronous indicate an error in the device reply.
+
+
+Internal changes (visible for developers and packagers):
+--------------------------------------------------------
+- Use the system log directory by default, i.e. "/var/log" and handle permission
+  accordingly when we drop down.
+
+- The lockfile handling has been completely rewritten to better adhere to
+  best practice. This also means that the daemon accepts and extra command
+  line argument "-z" to optionally specify where to store a lockfile.
+  NOTE1: This is now mandatory if the daemon is not started as root!
+  NOTE2: When started as root the lockfile is always stored in "/var/run/g7ctrl/g7ctrl.pid"
+
+- By configuring with "--enable-stacktrace" this will now force gcc to use the
+  "-rdynamic" flag to be able to include the symbol tables so that the stacktrace
+  directly can give better human information. In addition enabling the stacktrace
+  is interpretated as a development build and will also build the emulator.
+
+- Added utility build script "dbgconfig.sh" to configure a development build.
+
+- The automake file for installing assets like templates has been rewritten to
+  make it clearer and rely more on the built in magic of autotools
+
+- Added utility build scripts ststbuild,sh and ststrun.sh to build and install
+  in a system test directory for development purposes using the make staging
+  with DESTDIR

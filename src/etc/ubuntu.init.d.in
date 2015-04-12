@@ -1,0 +1,62 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          @PACKAGE_NAME@ 
+# Required-Start:    $syslog $remote_fs
+# Required-Stop:     $syslog $remote_fs
+# Should-Start:      $network 
+# Should-Stop:       $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      1
+# Short-Description: Listening daemon for g7ctrl GPS tracker
+# Description:       Listens to connections from the G7 GPS tracker and allows
+#                    a client to interact with the device using both USB and network.
+### END INIT INFO
+
+# Author: Johan Persson <johan162@gmail.com>
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=@prefix@/bin/@PACKAGE_NAME@
+NAME=@PACKAGE_NAME@
+PIDFILE=@prefix@/share/@PACKAGE_NAME@/@PACKAGE_NAME@.pid
+DESC="GM7 GPS tracker controlling daemon"
+SCRIPTNAME=/etc/init.d/@PACKAGE_NAME@
+
+# Exit if the package is not installed
+test -x $DAEMON || exit 0
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting $DESC" "$NAME"
+        start-stop-daemon --start --quiet --oknodo --pidfile "$PIDFILE" --exec $DAEMON
+        status=$?
+        log_end_msg $status
+        ;;
+  stop)
+        log_daemon_msg "Stopping $DESC" "$NAME"
+        start-stop-daemon --stop --quiet --retry 5 --oknodo --pidfile $PIDFILE --name $NAME
+        status=$?
+        log_end_msg $status
+        ;;
+  restart)
+        log_daemon_msg "Restarting $DESC" "$NAME"
+        if start-stop-daemon --stop --quiet --retry 5 --oknodo --pidfile $PIDFILE --name $NAME; then
+                start-stop-daemon --start --quiet --pidfile "$PIDFILE" --exec $DAEMON
+        fi
+        status=$?
+        log_end_msg $status
+        ;;
+  status)
+        status_of_proc -p "$PIDFILE" "$DAEMON" "$NAME" && exit 0 || exit $?
+        ;;
+  *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|status}" >&2
+        exit 3
+        ;;
+esac
+
+exit 0

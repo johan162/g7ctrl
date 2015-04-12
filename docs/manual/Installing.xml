@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="5.0" revision="$Id: Installing.xml 667 2015-01-15 08:15:51Z ljp $" xml:id="section.installing">
+    <title>Installing</title>
+    <tip>
+        <para>There are pre-built binary packages for <productname>OpenSuSE</productname> 12.1 -
+            13.1 (both in <acronym>RPM</acronym> and <emphasis role="italic"
+                >One-Click-Install</emphasis>) available from <link
+                xlink:href="http://software.opensuse.org/download.html?project=home%3Ajohanp_aditus&amp;package=g7ctrl"
+            /></para>
+    </tip>
+    <section>
+        <title>System requirements</title>
+        <para>The software is designed to work on a <acronym>GNU</acronym> Linux derived system. It has been built and
+            verified on the following systems and versions:</para>
+        <itemizedlist>
+            <listitem>
+                <para><productname>OpenSuSE</productname> 12.3, 13.1</para>
+            </listitem>
+            <listitem>
+                <para><productname>Linux Mint</productname> r15, r16, r17</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="italic">OS X Maverick 10.9</emphasis> (Experimental support
+                    only - <command>g7sh</command> has limitations and requires
+                        <acronym>GNU</acronym> readline for full functionality, see <xref
+                        xlink:href="#section.known-defects"/>)</para>
+            </listitem>
+        </itemizedlist>
+        <para>The daemon will specifically <emphasis role="bold">not</emphasis> run on any variant
+            of MS Windows nor will it ever be ported by the author to any variants thereof.</para>
+        <para>Even though the daemon is only tested on these versions it will most likely build fine
+            on most recent <acronym>GNU</acronym> Linux distributions. It does not make use of any
+            special code, tricks or requires special libraries. In order to compile the software a
+            supported C compiler must be used. As of version 2.0 the following compilers are
+            officially supported:</para>
+        <itemizedlist>
+            <listitem>
+                <para><command>gcc</command>,v4.6.x,  v4.7.x &amp; v4.8.x</para>
+            </listitem>
+            <listitem>
+                <para><command>clang</command>, v3.2</para>
+            </listitem>
+        </itemizedlist>
+        <para>In addition the daemon need three utility libraries to build. The build configuration
+            will check for those libraries and if they are not found an error message is shown on
+            exactly what library is missing. For current version of the daemon the following
+            external libraries are needed for a successful compilation.</para>
+        <itemizedlist>
+            <listitem>
+                <para><literal>libpcre3</literal></para>
+            </listitem>
+            <listitem>
+                <para><literal>libsqlite3</literal></para>
+            </listitem>
+            <listitem>
+                <para><literal>libxml2</literal></para>
+            </listitem>
+        </itemizedlist>
+        <para>In addition, if your system has <literal>libiniparser</literal> library the build will
+            also use it and if it is not available a built-in version will be used. In order to
+            compile with the needed libraries the development version of each library (usually named
+            with a "<literal>-devel</literal>" or "<literal>-dev</literal>" suffix) must be
+            installed.</para>
+        <para>
+            <warning>
+                <para>Please make sure that the Tracker firmware is <emphasis role="bold">M7 2.007
+                        GP rev00c</emphasis> or later. With the daemon installed and the device
+                    connected you can easily verify this using the command <command>get
+                        ver</command></para>
+            </warning>
+        </para>
+    </section>    
+   <section>
+       <title>Building and installing</title>
+       <para>Even though the process of installing the daemon ideally is as simple as typing three
+            commands it is inevitable that different systems and variants behave differently and it
+            is impossible to test the software build on all possible configurations "in the wild".
+            While the software is configured to handle most system differences automatically there
+            will always be corner cases that will require some minor adjustments to get the software
+            working on that particular system. Unfortunately that requires a bit of
+            experience.</para>
+    <para>It will be helpful if you previously experience running <command>configure</command> and
+                <command>make</command>. The commands</para>
+    <para>
+        <screen>./configure &amp;&amp; make
+sudo make install</screen>
+    </para>
+    <para>is a standard way of compiling and installing Unix/<acronym>GNU</acronym> Linux software
+            based on the <acronym>GNU</acronym>
+            <emphasis role="italic">Automake</emphasis> tool chain (which is a fantastic piece of
+            canned black magic and years of experience). With default configuration the daemon will
+            be installed in <filename>/usr/bin</filename> and the configuration directory will be
+            set to <filename>/etc/g7ctrl</filename>. If you would like to install the daemon in
+            other places, for example under <filename>/usr/local/bin</filename>, then configure the
+            daemon using the <literal>--prefix</literal> argument as</para>
+    <para>
+        <screen>./configure --prefix=/usr/local &amp;&amp; make
+sudo make install</screen>
+    </para>
+    <para>If you are not comfortable with this process or have never done this before it is
+            recommended for you to use a pre-compiled package for your particular system. </para>
+    <para> 
+        <tip>
+            <para>If a package does not yet exist for your system please consider requesting a
+                package to be provided from the people responsible for your distribution.</para>
+        </tip>
+    </para></section>
+
+    <section>
+        <title>Installing the daemon as a systemd service</title>
+        <para>For technical reason having to do with the way the autotools work the  installation
+            does not enable the daemon as a service.  If you want to have the daemon run as a
+                <literal>systemd</literal> service execute the following line after you have done
+            the standard <literal>make install</literal> (still as root)</para>
+        <para>
+            <screen>systemctl enable g7ctrl.service</screen>
+        </para>
+        <para>This will enable the <command>g7ctrl</command> service with <literal>systemd</literal>
+            in multi-user mode. </para>
+    </section>
+    <section>
+        <title>Rebuilding the documentation</title>
+        <para>The distribution comes with pre-rendered versions of all documentation in both plain
+            text, <acronym>HTML</acronym> and <acronym>PDF</acronym> format. </para>
+        <para>The documentation is written using the <emphasis role="italic">Docbook 5
+                XML</emphasis> schema which is a very good way to build multi-mode documentation.
+            However, rebuilding the documentation (perhaps you want to add some section or have
+            found one or more spelling mistakes that irritates you) requires a fully working Docbook
+            5 environment. </para>
+        <para>While this is certainly possible <emphasis role="italic">Docbook5</emphasis> and
+                <acronym>XML</acronym> transformations might not be everyone’s coup of tea. if you
+            are not used to the <acronym>XML</acronym> transformation process it can be a certain
+            learning step. The configuration process will investigate your system if it has the
+            capability to render all or some of the output formats and state that information at the
+            end after running the "<filename>./configure</filename>" script.</para>
+        <para>
+            <tip>
+                <para>An easy way to get a fully working <emphasis role="italic">Docbook5</emphasis>
+                    setup is to check out the source directly from the repository and run the
+                        <filename>bootstrap.sh</filename> script. This will re-create a full build
+                    environment for the daemon. See <xref xlink:href="#section.build-environment"
+                    /></para>
+            </tip>
+        </para>
+        <para> </para>
+    </section>
+    <section>
+        <title>Configuring and compiling the source using the distributed tarball</title>
+        <para>Using the tar-ball installation is the recommended way for most end users (compared to
+            getting the source directly from the repository) since the tar ball has pre-built
+            configuration environment and pre-rendered documentation. After downloading the tarball
+            (please use the latest version available at the time of download) it needs to be
+            extracted to a temporary directory where it can be compiled. </para>
+        <para>Assuming you have downloaded version 3.0.0 the commands to extract the source is
+            first</para>
+        <para>
+            <screen>tar xzf g7ctrl-3.0.0.tar.gz</screen>
+        </para>
+        <para>or if you downloaded the "<literal>.xz</literal>" version (which is in general smaller
+            but requires the <command>xz</command>-compression program, which makes use of the more
+            efficient <acronym>LMZ2</acronym>)</para>
+        <para>
+            <screen>tar xJf g7ctrl.3.0.0.tar.xz</screen>
+        </para>
+        <para>In order to then configure and compile the sources (using default settings) do the
+            following:</para>
+        <para>
+            <screen>cd g7ctrl-3.0.0
+./configure &amp;&amp; make -j8</screen>
+        </para>
+        <para>(the <literal>-j8</literal> is strictly speaking not necessary but will speed up the
+            compilation a bit through parallelization) If some of the necessary prerequisites are
+            missing (like one of the required libraries) an error message will be given. Install the
+            required library and run the commands again. Once the compilation process is done the
+            daemon needs to be installed. This requires <literal>root</literal> privileges. To
+            install the daemon do the following</para>
+        <para>
+            <screen>sudo make install</screen>
+        </para>
+        <para>By default the installation process will install the binary in
+                <filename>/usr/bin</filename>, the configuration file in
+                <filename>/etc/g7ctrl</filename> and the database in
+                <filename>/var/lib/g7ctrl</filename>. The exact location can easily be changed by
+            using the "<literal>--prefix</literal>" argument to "<literal>configure</literal>". For
+            a complete list of options at configuration time please run </para>
+        <para>
+            <screen>./configure --help</screen>
+        </para>
+    </section>
+    <section xml:id="section.build-environment">
+        <titleabbrev>Creating a build environment</titleabbrev>
+        <title>Setting up your own build environment - for developers</title>
+        <para>If your are planning to do some development of your own or just want to follow the
+            development of the daemon more closely than waiting for official releases you can set up
+            your own local copy of the repository. However, this is only recommended for developers
+            with previous experience with medium complex software. Specifically you need experience
+            with the <emphasis>subversion</emphasis>
+            <acronym>SCS</acronym> since that is what the repository uses.</para>
+        <para>To help setup a full build environment including the
+                <productname>Docbook5</productname> environment with this there are two utility
+            script in the <filename>bldscripts</filename> directory which when run will
+            automatically set up a complete build environment including a working
+                <productname>Docbook5</productname> environment. The two included bootstrap scripts
+            are</para>
+        <itemizedlist>
+            <listitem>
+                <para><filename>bootstrap.sh</filename></para>
+                <para>Used for RPM based system like OpenSuSE</para>
+            </listitem>
+            <listitem>
+                <para><filename>bootstrap-deb.sh</filename></para>
+                <para>Used for PKG based system such as Debian, Ubuntu or Linux Mint</para>
+            </listitem>
+        </itemizedlist>
+        <para>The bootstrap script are <emphasis role="bold">only</emphasis> meant to be <emphasis
+                role="bold">run once</emphasis> after the initial checkout. </para>
+        <para>If you are on a <productname>Debian</productname> based system the following two steps
+            are all that is needed to both checkout and setup a complete build system</para>
+        <para>
+            <screen>svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
+cd g7ctrl
+sh ./bldscripts/bootstrap<emphasis role="bold">-deb</emphasis>.sh</screen>
+        </para>
+        <para>and if you are on a <productname>OpenSuSE</productname> (<acronym>RPM</acronym>) based
+            system use the following steps</para>
+        <para>
+            <screen>svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
+cd g7ctrl
+sh ./bldscripts/bootstrap.sh</screen>
+        </para>
+        <para>The bootstrap script will install all required pre-requisites including
+                <acronym>GNU</acronym>
+            <command>autoconfig</command> and <command>automake</command> tools. If no errors were
+            found you should see the following information on the screen.</para>
+        <para>
+            <screen>Build environment is ready.
+
+Now run autoreconf
+You can now run "./stdbuild.sh" to build the daemon
+and then then run "./mkrelease.sh" to create new releases.</screen>
+        </para>
+        <para>Now run the <filename>autoreconf</filename> script in order to recreate the
+                <acronym>GNU</acronym> autotools setup. After that you can proceed as usual to build
+            the source.</para>
+        <para>
+            <note>
+                <para>Please note that you will not have the ability check in changes to the code
+                    base by default. To get permission you need to show that you have a substantial
+                    contribution and demonstrated clear knowledge at the level required to
+                    comprehend the code base. If you believe you meet this requirement contact the
+                    author via email stating your request. For more technical information on the
+                    source tree please see <xref xlink:href="#appendix.technical"/></para>
+            </note>
+        </para>
+        <para>For development there are two additional configuration parameters that can be given to
+            the configures process.</para>
+        <para>
+            <variablelist>
+                <varlistentry>
+                    <term><literal>--enable-simulate</literal></term>
+                    <listitem>
+                        <para>This will allow the execution of commands even though a real device is
+                            not connected. Note that if this is enabled the daemon will never be
+                            able to communicate with a real device!</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><literal>--enable-stacktrace</literal></term>
+                    <listitem>
+                        <para>This will instrument the build so that in case of a
+                                <literal>SIGSEGV</literal> (or <literal>SIGABRT</literal>,
+                                <literal>SIGBUS</literal>) a limited stack trace will be written to
+                                "<filename>/tmp</filename>" to facility debugging. It is also
+                            recommended that the system is setup to allow for full core-dump in
+                            order to help with the post-mortem debugging. The stack trace is however
+                            useful to help analyze a fault at an end user where he/she can mail the
+                            stack trace back to the developer for analyze. Ideally a watch daemon
+                            should be added to the system that will watch the
+                                <filename>/tmp</filename> directory for a stack trace and in that
+                            case offer the end user to automatically mail the trace (and mini-dump)
+                            back to the developer.</para>
+                        <para>
+                            <note>
+                                <para><literal>--enable-stacktrace</literal> is <emphasis
+                                        role="bold">not</emphasis> supported on OSX/Darwin due to
+                                    reliance on specific <acronym>GNU</acronym> Linux system
+                                    libraries (stack-walking) and will give a configuration error if
+                                    enabled on OSX.</para>
+                            </note>
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+    </section>
+    <section>
+        <title>Configuring the daemon</title>
+        <para>After a successful installation the daemon needs to be configured. This is done by
+            adjusting the configuration template file. The first step is to switch to root and then
+            use the template provided to create an initial configuration file. Assuming the
+            configuration file is installed in the default directory start by doing the
+            following:</para>
+        <para>
+            <screen>cd /etc/g7ctrl
+sudo cp g7ctrl.conf.template g7ctrl.conf</screen>
+        </para>
+        <para>The next step is to open the configuration file in your favourite editor and adjust a
+            few settings in accordance with your preferences and system. There are very few settings
+            that you absolutely have to adjust. Depending on your needs and setup you should as a
+            minimum review the following settings:</para>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">SMTP mail server.</emphasis>
+                </para>
+                <para>If you intend to use the mail functionality of the daemon you need to state
+                    the name of the <acronym>SMTP</acronym> server and your credentials (user and
+                    password)</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Listening ports</emphasis></para>
+                <para>Reviewing what ports the daemon is listening on from command and device
+                    connections. By default the daemon will listen on port <literal>3100</literal>
+                    for commands and on port <literal>3400</literal> for incoming events from the
+                    tracking device such as alarms and location updates. The ports can be any number
+                    but it is recommended you keep the port range in the range
+                        <literal>[1025-9000]</literal> unless you really know what you are
+                    doing!</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Connection password</emphasis></para>
+                <para>In order to make a command connection to the daemon password must normally be
+                    given. By default the build process will create a random 6 letter password in
+                    the configuration file. You might want to change this to better suit you
+                    environment. If you only intend to have the daemon reachable from your local
+                    computer network (and not have the command port open to the entire internet) you
+                    might turn off the password to avoid having to type it whenever you want to
+                    connect the daemon. </para>
+                <para>However, if you have the daemon accessible from the internet <emphasis
+                        role="bold">you really, really should have it protected by a password
+                    </emphasis>of minimum 8 characters in length. However since the communication is
+                    done in plain text it is susceptible for line listening. For a secure
+                    communication the command shell should be configured as a login shell so that
+                    the communication can easily be done over a encrypted link, more details are
+                    available in <xref xlink:href="#section.command-shell"/>.</para>
+            </listitem>
+        </itemizedlist>
+        <para> All settings in the configuration file is described in more details in <xref
+                xlink:href="#appendix.configuring-the-daemon"/>.</para>
+    </section>
+</section>
