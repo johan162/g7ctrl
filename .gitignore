@@ -72,3 +72,4 @@ g7ctrl.service
 suse.init.d
 ubuntu.init.d
 
+/build/
