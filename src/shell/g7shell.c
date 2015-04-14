@@ -7,7 +7,7 @@
  *              that user.
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7shell.c 967 2015-04-14 14:01:32Z ljp $
+ * SVN:         $Id: g7shell.c 968 2015-04-14 22:31:55Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -160,6 +160,7 @@ char *cmd_list[] = {
     "get", "set", "do", "help", "db",
     "preset", ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
     ".address", ".table", ".nick", ".ln", ".dn", ".ratereset",
+    "exit", "quit",
     (char *) NULL
 };
 
