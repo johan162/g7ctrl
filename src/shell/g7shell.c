@@ -7,7 +7,7 @@
  *              that user.
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7shell.c 944 2015-04-08 21:20:25Z ljp $
+ * SVN:         $Id: g7shell.c 966 2015-04-14 13:31:13Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -158,7 +158,7 @@ static const struct option long_options [] = {
 
 char *cmd_list[] = {
     "get", "set", "do", "help", "db",
-    "preset", "nick",
+    "preset", 
     ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
     ".address", ".table", ".nick", ".ln", ".dn", ".ratereset",
     (char *) NULL
@@ -198,11 +198,6 @@ char *set_cmd_list[] = {
 
 char *preset_cmd_list[] = {
     "use", "list", "refresh", "help",
-    (char *) NULL
-};
-
-char *nick_cmd_list[] = {
-    "use",
     (char *) NULL
 };
 
@@ -751,7 +746,6 @@ read_inifile(void) {
     }
 }
 
-
 /**
  * Completion generator basic commands
  * @param text
@@ -873,36 +867,6 @@ do_cmd_generator(const char* text, int state) {
 }
 
 /**
- * Completion generator nick commands
- * @param text
- * @param state
- * @return NULL if no match was found
- */
-char* 
-nick_cmd_generator(const char* text, int state) {
-    static int nick_cmd_list_index, nick_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        nick_cmd_list_index = 0;
-        nick_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = nick_cmd_list[nick_cmd_list_index])) {
-        nick_cmd_list_index++;
-
-        if (strncmp(name, text, nick_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
-}
-
-/**
  * Completion generator preset commands
  * @param text
  * @param state
@@ -1004,11 +968,9 @@ set_cmd_generator(const char* text, int state) {
  */
 static char** 
 cmd_completion(const char * text, int start, int end) {
-    char **matches;
-    matches = (char **) NULL;
-
+    char **matches = (char **) NULL;
     
-    // Disable default filename completeion
+    // Disable default filename completion
     rl_attempted_completion_over = 1;
     
     if (0 == strncmp("db sort ", rl_line_buffer, 8)) {
@@ -1071,24 +1033,11 @@ cmd_completion(const char * text, int start, int end) {
         } else {
             matches = rl_completion_matches((char*) text, &preset_cmd_generator);
         }
-    } else if (0 == strncmp("nick ", rl_line_buffer, 5)) {
-        if (strlen(rl_line_buffer) > 6) {
-            // If we have a complete word after 'get' then we don't do any completion
-            // this is indicated by an empty text since the cursor would be at the
-            // space after the word.
-            if (*text)
-                matches = rl_completion_matches((char*) text, &nick_cmd_generator);
-        } else {
-            matches = rl_completion_matches((char*) text, &nick_cmd_generator);
-        }
     } else {
         matches = rl_completion_matches((char*) text, &cmd_generator);
     }
-
     return (matches);
-
 }
-
 #pragma GCC diagnostic pop
 
 
@@ -1096,6 +1045,7 @@ cmd_completion(const char * text, int start, int end) {
  * Needed to communicate between callback and main command loop
  */
 volatile int quitCmdLoop = FALSE;
+
 /**
  * Callback function for the asynchronous version of readline. This callback
  * is activated when a full line has been read from the terminal

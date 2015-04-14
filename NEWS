@@ -1,5 +1,8 @@
-NEWS
-====
+NEWS - Major releases
+===========
+***Highlights major changes for each release in reverse chronological order.***
+
+*Note: This NEWS file is compatible with Markdown*
 
 v3.2.0 (may 2015)
 ========================
@@ -13,11 +16,10 @@ existing functionality in a number of areas
 1. more database commands to display and list entries in the DB
 2. improvements in geolocation lookup to handle failed API calls
 3. improved handling of Google rate limit of API calls
-4. pretty printing of output tables (using unicode table characters)
+4. Command completion added to command line as well as pretty printing tables
 5. updated look & feel of mail templates
-6. improved handling of UTF8 encoded characters when applicable.
-7. improved handling of large replies from the server to the command shell *g7sh*
-8. A number of new configuration options (in *g7config.conf*)
+6. improved handling of large replies from the server to the command shell *g7sh*
+7. A number of new configuration options (in *g7config.conf*)
 
     - Specification of a Google API key which is used in the geolocation lookups.
       This allows the specification of a commercial key to increase the allowed
@@ -36,7 +38,7 @@ existing functionality in a number of areas
     - A new setting to customize mail subject prefix
 
     - A new setting to choose to use a shorter form of device ID in subject header
-9. Summary of new server commands
+8. Summary of new server commands
     - **.date ** Prints current date and time on server
     - **.cachestat**  Prints statistics on the Geolcation caches
     - **.address** Prints the street address for the last received location
@@ -58,6 +60,9 @@ Detailed user visible changes
 -----------------------------
 - Manual updated to RA15 to reflect changes in 3.2.0
 
+- Added smart context sensitive command completion in the command shell 
+  invoked by the tab-key
+
 - Mail templates slightly updated with new look & feel
 
 - Mail templates updated to try to circumvent Googles stupidity in auto-trimming
@@ -68,6 +73,8 @@ Detailed user visible changes
   showing the current location (with both an overview and a detailed map) the the
   notification mail. The exact meaning of these parameters are described in the
   manual and in the config file.
+
+- Adds full UTF-8 support in order to better handle addresses from Google
 
 - Added a new cache for the minimap images which are stored i the standard
   variable data files directory (defaults to /var/lib/g7ctrl) if not otherwise

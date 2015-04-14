@@ -235,7 +235,7 @@ setup_sighandlers(void) {
 
 char *cmd_list[] = {
   "get","set","do","help","db",
-  "preset list","preset refresh","preset use", "preset help",
+  "preset",  
   ".date",".cachestat",".usb",".target",".ver",".lc",".ld",
   ".address",".table",".nick",".ln",".dn",".ratereset",
   (char *)NULL
@@ -496,23 +496,74 @@ static char** cmd_completion( const char * text , int start,  int end)
 {
     char **matches;
     matches = (char **)NULL;
+    rl_attempted_completion_over = 1;	
 
-    //fprintf(stderr,"\n\"%s\"[%s, %d,%d]\n",rl_line_buffer,text,start,end);
-
-    
- 
-    if( 0==strncmp("db ",rl_line_buffer,3) )
-      matches = rl_completion_matches ((char*)text, &db_cmd_generator);
-    else if( 0==strncmp("do ",rl_line_buffer,3) )
-      matches = rl_completion_matches ((char*)text, &do_cmd_generator);
-    else if( 0==strncmp("set ",rl_line_buffer,4) )
-      matches = rl_completion_matches ((char*)text, &set_cmd_generator);
-    else if( 0==strncmp("get ",rl_line_buffer,4) )
-      matches = rl_completion_matches ((char*)text, &get_cmd_generator);
-    else if( 0==strncmp("preset ",rl_line_buffer,7) )
-      matches = rl_completion_matches ((char*)text, &preset_cmd_generator);
-    else if( 0==strncmp("nick ",rl_line_buffer,5) )
-      matches = rl_completion_matches ((char*)text, &nick_cmd_generator);
+    if( 0==strncmp("db ",rl_line_buffer,3) ) {
+      if (strlen(rl_line_buffer) > 5) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &db_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &db_cmd_generator);
+      }
+    }
+    else if( 0==strncmp("do ",rl_line_buffer,3) ) {
+      if (strlen(rl_line_buffer) > 4) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &do_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &do_cmd_generator);
+      }
+    }
+    else if( 0==strncmp("set ",rl_line_buffer,4) ) {
+      if (strlen(rl_line_buffer) > 5) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &set_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &set_cmd_generator);
+      }
+    }
+    else if( 0==strncmp("get ",rl_line_buffer,4) ) {
+      if (strlen(rl_line_buffer) > 5) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &get_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &get_cmd_generator);
+      }
+    }
+    else if( 0==strncmp("preset ",rl_line_buffer,7) ) {
+      if (strlen(rl_line_buffer) > 8) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &preset_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &preset_cmd_generator);
+      }
+    }
+    else if( 0==strncmp("nick ",rl_line_buffer,5) ) {
+      if (strlen(rl_line_buffer) > 6) {
+	// If we have a complete word after 'get' then we don't do any completion
+	// this is indicated by an empty text since the cursor would be at the
+	// space after the word.
+	if( *text )
+	  matches = rl_completion_matches ((char*)text, &nick_cmd_generator);
+      } else {
+	matches = rl_completion_matches ((char*)text, &nick_cmd_generator);
+      }
+    }
     else
       matches = rl_completion_matches ((char*)text, &cmd_generator);
       //    else
