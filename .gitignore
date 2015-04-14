@@ -36,6 +36,9 @@ config.log
 config.status
 nbproject
 
+# Intermediate DocBook files
+*.fo
+
 # Files not tracked (built fron sources)
 docs/manual/out
 docs/manual/out/html
