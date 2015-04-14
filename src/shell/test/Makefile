@@ -2,8 +2,8 @@ CFLAGS=-O2 -Wall --std=gnu99 -Wextra -pedantic -Wshadow -Wpointer-arith -Wstrict
 LIBS=-lreadline
 SOURCES=comp_rl.c
 
-comp_rl : $(SOURCES)
-	gcc -o $@ $(CFLAGS) $(SOURCES) $(LIBS)
+comp_rl: $(SOURCES)
+	gcc -o $@ $(CFLAGS) $< $(LIBS)
 
 clean:
 	rm comp_rl
