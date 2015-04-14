@@ -152,6 +152,60 @@ static const struct option long_options [] = {
 };
 
 
+/*
+ * Command lists for completion
+ */
+
+char *cmd_list[] = {
+    "get", "set", "do", "help", "db",
+    "preset", "nick",
+    ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
+    ".address", ".table", ".nick", ".ln", ".dn", ".ratereset",
+    (char *) NULL
+};
+
+char *db_cmd_list[] = {
+    "help", "deletelocations", "tail", "head",
+    "mailgpx", "mailcsv", "size", "dist", "export",
+    "mailpos", "lastloc", "sort",
+    (char *) NULL
+};
+
+char *dbsort_cmd_list[] = {
+    "device","arrival",
+    (char *) NULL     
+};
+
+char *do_cmd_list[] = {
+    "test", "clrec", "dlrec", "reboot", "reset",
+    (char *) NULL
+};
+
+char *get_cmd_list[] = {
+    "address", "ver", "locg", "gfevt", "phone",
+    "roam", "led", "gfen", "sleep", "loc",
+    "imei", "sim", "ver", "nrec", "batt", "track", "mswitch", "tz",
+    "sms", "comm", "vip", "ps", "config", "rec", "lowbatt", "sens",
+    (char *) NULL
+};
+
+char *set_cmd_list[] = {
+    "tz", "roam", "led", "gfen", "sleep", "loc", "phone",
+    "imei", "sim", "ver", "nrec", "batt", "track", "mswitch", "tz",
+    "sms", "comm", "vip", "ps", "config", "rec", "lowbatt", "sens",
+    (char *) NULL
+};
+
+char *preset_cmd_list[] = {
+    "use", "list", "refresh", "help",
+    (char *) NULL
+};
+
+char *nick_cmd_list[] = {
+    "use",
+    (char *) NULL
+};
+
 int _writef(int fd, const char *buf, ...) __attribute__ ((format(printf,2,3)));
 
 /**
@@ -699,6 +753,346 @@ read_inifile(void) {
 
 
 /**
+ * Completion generator basic commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+cmd_generator(const char* text, int state) {
+    static int cmd_list_index, cmd_len;
+    char *name;
+
+    if (0 == state) {
+        cmd_list_index = 0;
+        cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = cmd_list[cmd_list_index])) {
+        cmd_list_index++;
+
+        if (strncmp(name, text, cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+/**
+ * Completion generator database commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+db_cmd_generator(const char* text, int state) {
+    static int db_cmd_list_index, db_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        db_cmd_list_index = 0;
+        db_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = db_cmd_list[db_cmd_list_index])) {
+        db_cmd_list_index++;
+
+        if (strncmp(name, text, db_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+}
+
+/**
+ * Completion generator database sort commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+dbsort_cmd_generator(const char* text, int state) {
+    static int dbsort_cmd_list_index, dbsort_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        dbsort_cmd_list_index = 0;
+        dbsort_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = dbsort_cmd_list[dbsort_cmd_list_index])) {
+        dbsort_cmd_list_index++;
+
+        if (strncmp(name, text, dbsort_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+
+/**
+ * Completion generator "do" commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+do_cmd_generator(const char* text, int state) {
+    static int do_cmd_list_index, do_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        do_cmd_list_index = 0;
+        do_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = do_cmd_list[do_cmd_list_index])) {
+        do_cmd_list_index++;
+
+        if (strncmp(name, text, do_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+/**
+ * Completion generator nick commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+nick_cmd_generator(const char* text, int state) {
+    static int nick_cmd_list_index, nick_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        nick_cmd_list_index = 0;
+        nick_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = nick_cmd_list[nick_cmd_list_index])) {
+        nick_cmd_list_index++;
+
+        if (strncmp(name, text, nick_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+/**
+ * Completion generator preset commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+preset_cmd_generator(const char* text, int state) {
+    static int preset_cmd_list_index, preset_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        preset_cmd_list_index = 0;
+        preset_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = preset_cmd_list[preset_cmd_list_index])) {
+        preset_cmd_list_index++;
+
+        if (strncmp(name, text, preset_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+/**
+ * Completion generator "get" commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+get_cmd_generator(const char* text, int state) {
+    static int get_cmd_list_index, get_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        get_cmd_list_index = 0;
+        get_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = get_cmd_list[get_cmd_list_index])) {
+        get_cmd_list_index++;
+
+        if (strncmp(name, text, get_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+/**
+ * Completion generator "set" commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+set_cmd_generator(const char* text, int state) {
+    static int set_cmd_list_index, set_cmd_len;
+    char *name;
+
+    if (0 == state) {
+        set_cmd_list_index = 0;
+        set_cmd_len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to cmd_len characters
+    while (NULL != (name = set_cmd_list[set_cmd_list_index])) {
+        set_cmd_list_index++;
+
+        if (strncmp(name, text, set_cmd_len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+/**
+ * Readline entry point for completion function
+ * @param text
+ * @param start
+ * @param end
+ * @return 
+ */
+static char** 
+cmd_completion(const char * text, int start, int end) {
+    char **matches;
+    matches = (char **) NULL;
+
+    
+    // Disable default filename completeion
+    rl_attempted_completion_over = 1;
+    
+    if (0 == strncmp("db sort ", rl_line_buffer, 8)) {
+        if (strlen(rl_line_buffer) > 9) {
+            // If we have a complete word after 'db sort' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &dbsort_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &dbsort_cmd_generator);
+        }
+    } else if (0 == strncmp("db ", rl_line_buffer, 3)) {
+        if (strlen(rl_line_buffer) > 5) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &db_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &db_cmd_generator);
+        }
+    } else if (0 == strncmp("do ", rl_line_buffer, 3)) {
+        if (strlen(rl_line_buffer) > 4) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &do_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &do_cmd_generator);
+        }
+    } else if (0 == strncmp("set ", rl_line_buffer, 4)) {
+        if (strlen(rl_line_buffer) > 5) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &set_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &set_cmd_generator);
+        }
+    } else if (0 == strncmp("get ", rl_line_buffer, 4)) {
+        if (strlen(rl_line_buffer) > 5) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &get_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &get_cmd_generator);
+        }
+    } else if (0 == strncmp("preset ", rl_line_buffer, 7)) {
+        if (strlen(rl_line_buffer) > 8) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &preset_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &preset_cmd_generator);
+        }
+    } else if (0 == strncmp("nick ", rl_line_buffer, 5)) {
+        if (strlen(rl_line_buffer) > 6) {
+            // If we have a complete word after 'get' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &nick_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &nick_cmd_generator);
+        }
+    } else {
+        matches = rl_completion_matches((char*) text, &cmd_generator);
+    }
+
+    return (matches);
+
+}
+
+#pragma GCC diagnostic pop
+
+
+/**
  * Needed to communicate between callback and main command loop
  */
 volatile int quitCmdLoop = FALSE;
@@ -832,7 +1226,8 @@ cmd_loop(void) {
     fd_set read_fdset;
     struct timeval timeout;
     rl_callback_handler_install(SHELL_PROMPT,cb_rl_readline);
-
+    rl_attempted_completion_function = cmd_completion;
+    
     do {
 
         FD_ZERO(&read_fdset);
