@@ -7,7 +7,7 @@
  *              that user.
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7shell.c 966 2015-04-14 13:31:13Z ljp $
+ * SVN:         $Id: g7shell.c 967 2015-04-14 14:01:32Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -158,8 +158,7 @@ static const struct option long_options [] = {
 
 char *cmd_list[] = {
     "get", "set", "do", "help", "db",
-    "preset", 
-    ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
+    "preset", ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
     ".address", ".table", ".nick", ".ln", ".dn", ".ratereset",
     (char *) NULL
 };
@@ -172,7 +171,7 @@ char *db_cmd_list[] = {
 };
 
 char *dbsort_cmd_list[] = {
-    "device","arrival",
+    "device", "arrival",
     (char *) NULL     
 };
 
@@ -190,9 +189,9 @@ char *get_cmd_list[] = {
 };
 
 char *set_cmd_list[] = {
-    "tz", "roam", "led", "gfen", "sleep", "loc", "phone",
-    "imei", "sim", "ver", "nrec", "batt", "track", "mswitch", "tz",
-    "sms", "comm", "vip", "ps", "config", "rec", "lowbatt", "sens",
+    "roam", "led", "gfen", "sleep", "phone",
+    "track", "mswitch", "tz","sms", "comm", 
+    "vip", "ps", "config", "rec", "lowbatt", "sens",
     (char *) NULL
 };
 
