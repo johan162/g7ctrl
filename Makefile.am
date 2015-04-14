@@ -17,7 +17,7 @@ uninstall-local:
 	rm -rf ${DESTDIR}${prefix}/share/man/man1/g7sh.1*
 	rm -rf ${DESTDIR}${prefix}/share/@PACKAGE@
 
-EXTRA_DIST=assets NEWS.html
+EXTRA_DIST=assets 
 assetsdir=${prefix}/share/@PACKAGE@/assets
 assets_DATA=assets/trainxbell.mp3 assets/dumpdb.sh
 
