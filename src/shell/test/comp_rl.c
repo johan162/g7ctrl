@@ -54,15 +54,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-// Since these defines are supposed to be defined directly in the linker using
-// --defsym to step the build number at each build and apples linker do not support
-// this we just give them a 0 number here and never use them.
-// This also means that on OSX the build number displayed is meaningless
-// TODO. Remove all references to build number when running on OSX
-#ifdef __APPLE__
-char   __BUILD_DATE = '\0';
-char   __BUILD_NUMBER = '\0';
-#endif
 
 // Clear variable section in memory
 #define CLEAR(x) memset (&(x), 0, sizeof(x))
@@ -70,17 +61,10 @@ char   __BUILD_NUMBER = '\0';
 #define FALSE (0)
 #define TRUE (-1)
 
-#define DEFAULT_CMD_PORT 3100
-#define DEFAULT_SERVER "127.0.0.1"
-
 #define SHELL_PROMPT "% "
 
-#define HISTORY_FILE ".g7ctrl_history"
+#define HISTORY_FILE ".rlhistory"
 #define HISTORY_LENGTH 100
-
-#define LEN_10K (10*1024)
-#define LEN_100K (100*1024)
-#define LEN_10M (1000*1024*10)
 
 char hfilename[256];
 
