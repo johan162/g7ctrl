@@ -2,7 +2,6 @@
  * File:        CONNWATCHER.C
  * Description: Watch the virtual serial port for new devices connecting
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: connwatcher.h 703 2015-02-11 22:33:46Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

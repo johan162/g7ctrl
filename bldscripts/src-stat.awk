@@ -1,4 +1,3 @@
-# $Id$
 # AWK source to format the output from cloc into valid Docbook XML
 # Author: Johan Persson <johan162@gmail.com>
 #
@@ -7,7 +6,7 @@
 #
 
 BEGIN { 
-print "<table xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"5.0\" revision=\"$Id$\" xml:id=\"table.source-stats\" >\
+print "<table xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"5.0\" xml:id=\"table.source-stats\" >\
 <title>Breakdown of project LOC by type</title>\
 <tgroup cols=\"5\" align=\"center\">\
 <colspec colname=\"c1\" colnum=\"1\" colwidth=\"150pt\" align=\"left\"/>\

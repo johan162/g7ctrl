@@ -1,7 +1,6 @@
 #! /bin/sh
 # Build the server and install in a local system test directory "systest" and setup a suitable
 # config file based on the argument to this script. 
-# $Id
 
 smtp_srv=
 smtp_uid=

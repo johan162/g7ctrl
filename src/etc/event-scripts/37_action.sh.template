@@ -9,7 +9,6 @@
 #         -n longitude   Longitude of event  
 #         -m nick        Nickname (if defined)
 #
-# SVN:    $Id$
 #
 # Note: This is just a TEMPLATE that can be modified to do
 # specific actions when event is received.

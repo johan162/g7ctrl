@@ -2,7 +2,6 @@
  * File:        presets.c
  * Description: Handle preset command files.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: presets.c 810 2015-03-10 17:52:43Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -2,7 +2,6 @@
 # Automake file to build documentation. This is the top file which
 # is used to create both manpages and manual
 # Author:      Johan Persson (johan162@gmail.com)
-# SVN:         $Id: Makefile.am 862 2015-03-20 00:04:28Z ljp $
 #
 # Copyright (C) 2014 Johan Persson
 #

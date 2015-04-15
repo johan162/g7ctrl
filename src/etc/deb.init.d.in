@@ -12,7 +12,6 @@
 ### END INIT INFO
 
 # Author:Johan Persson <johan162@gmail.com>
-# $Id: deb.init.d.in 499 2014-07-12 10:56:49Z ljp $
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="GPS GM7 Tracker handling daemon"

@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: ExportingDB.xml 690 2015-01-29 22:50:40Z ljp $" xml:id="section.exporting-db">
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="section.exporting-db">
     <title>Exporting the DB</title>
     <para>The database managed by the daemon contains all position update events received. To make
         it possible to interact with other programs (for example to plot routes in using the site

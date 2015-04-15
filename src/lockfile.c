@@ -3,7 +3,6 @@
  * Description: Functions to manage the lockfile used to avoid
  *              running to instances of the program at once.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: lockfile.c 711 2015-02-14 07:12:15Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -8,7 +8,6 @@
  *              run separately as a kind of micro unit test.
  *              gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: unicode_tbl.c 944 2015-04-08 21:20:25Z ljp $
  *
  * Copyright (C) 2015 Johan Persson
  *

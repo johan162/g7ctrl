@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: TheCommandShell.xml 543 2014-08-12 17:45:41Z ljp $" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  
     xml:id="section.command-shell">
     <title>The command shell - "g7sh"</title>
     <para>The supplied command shell offers the easiest way to control a device and the daemon. The

@@ -2,7 +2,6 @@
  * File:        json_util.c
  * Description: Utility functions to support working with JSON format
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: json_util.c 696 2015-02-02 06:42:40Z ljp $
  *
  * Copyright (C) 2015  Johan Persson
  *

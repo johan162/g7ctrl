@@ -2,7 +2,6 @@
  * File:        FUTILS.H
  * Description: A collection of file and directory utility functions.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: futils.h 908 2015-04-03 23:24:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

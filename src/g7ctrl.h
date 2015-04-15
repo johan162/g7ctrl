@@ -2,7 +2,6 @@
  * File:        G7CTRL.H
  * Description: Header for main module
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7ctrl.h 767 2015-03-05 19:34:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

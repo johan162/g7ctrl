@@ -2,7 +2,6 @@
  * File:        G7CTRL
  * Description: Main module for the g7ctrl daemon
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7ctrl.c 914 2015-04-05 22:37:26Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

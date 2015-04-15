@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: ConnectingDevice.xml 752 2015-03-02 06:09:11Z ljp $" xml:id="section.connecting-device">
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="section.connecting-device">
     <title>Connecting the device </title>
     <para>The tracker is connected to the server in one of three ways each with there own advantages
         and disadvantages.</para>

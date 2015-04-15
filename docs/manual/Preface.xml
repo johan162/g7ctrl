@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: Preface.xml 889 2015-03-22 23:40:36Z ljp $">
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" >
     <title>Preface</title>
     <para>This is a short guide through a particular software that interacts with a technology that
         almost seamlessly has seeped in to our daily life in a way that very few could have

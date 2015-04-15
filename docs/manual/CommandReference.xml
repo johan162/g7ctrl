@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <appendix xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
-    version="5.0" revision="$Id: CommandReference.xml 947 2015-04-09 06:28:49Z ljp $"
+    version="5.0" 
     xml:id="appendix.command-reference">
     <title>Command reference</title>
     <para>There commands are divided into three different areas</para>

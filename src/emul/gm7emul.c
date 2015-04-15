@@ -4,7 +4,6 @@
  *              events back to the daemon,
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id$
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -5,7 +5,6 @@
  *              traffic is stored in the tracker log file which is
  *              actually an sqlite DB
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: tracker.c 958 2015-04-11 09:04:56Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

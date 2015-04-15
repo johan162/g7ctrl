@@ -3,7 +3,6 @@
  * Description: Utility function to send mail through command line
  *              or using an SMTP server (through smtplib)
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: mailutil.h 912 2015-04-05 13:30:34Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

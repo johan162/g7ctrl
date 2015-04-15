@@ -5,7 +5,6 @@
  *              handling of attachment, plain and HTML mail as well as
  *              inline images within the HTML code.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: mailclientlib.c 911 2015-04-05 00:04:34Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

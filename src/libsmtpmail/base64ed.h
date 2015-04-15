@@ -6,7 +6,6 @@
  *              maximum speed but rather maximum clarity to aviod nasty
  *              off by one bugs.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: base64ed.h 623 2015-01-08 07:25:36Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

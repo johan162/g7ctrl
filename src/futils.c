@@ -2,7 +2,6 @@
  * File:        FUTILS.C
  * Description: A collection of file and directory utility functions
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: futils.c 913 2015-04-05 13:41:05Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

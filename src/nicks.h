@@ -2,7 +2,6 @@
  * File:        nicks.h
  * Description: Handle device nick names
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: nicks.h 644 2015-01-10 10:18:27Z ljp $
  *
  * Copyright (C) 2014 Johan Persson
  *

@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <appendix xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: ConfiguringDaemon.xml 934 2015-04-06 20:46:34Z ljp $" xml:id="appendix.configuring-the-daemon">
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="appendix.configuring-the-daemon">
     <title>Configuring the daemon</title>
     <para>There are a few principle areas which can be used to configure the daemon. They
         are:</para>

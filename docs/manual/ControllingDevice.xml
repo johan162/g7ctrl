@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: ControllingDevice.xml 933 2015-04-06 20:23:32Z ljp $"  xml:id="section.controlling-device">
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"   xml:id="section.controlling-device">
     <title>Controlling the device using commands</title>
     <para>A tracking device such as the <productname>GM7</productname> must be setup to operate in a
         specific mode to be useful. The tracker can be setup so that it only sends an update when it

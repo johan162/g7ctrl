@@ -1,11 +1,9 @@
 # ===============================================================================
-# $Id$
 # Autoconf script for the g7ctrl daemon
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
 AC_INIT([g7ctrl],[3.2.0],[johan162@gmail.com])
-AC_REVISION([$Id$])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2015 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET

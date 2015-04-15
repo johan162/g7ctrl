@@ -4,7 +4,6 @@
  *              daemon house holding has been setup.
  *              running to instances of the program at once.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: socklistener.c 767 2015-03-05 19:34:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

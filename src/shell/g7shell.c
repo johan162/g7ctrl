@@ -7,7 +7,6 @@
  *              that user.
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7shell.c 970 2015-04-15 19:25:06Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 # Utility script to prepare a new release
 echo "Creating new ChangeLog ..."
 bldscripts/mkcl.sh

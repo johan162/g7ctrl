@@ -2,7 +2,6 @@
  * File:        RKEY.C
  * Description: Functions to do key/val pair substitution in buffers
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: rkey.c 644 2015-01-10 10:18:27Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

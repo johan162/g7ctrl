@@ -3,7 +3,6 @@
  * Description: A collection of small utility functions used by the rest
  *              of the daemon.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: utils.c 956 2015-04-11 06:24:55Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

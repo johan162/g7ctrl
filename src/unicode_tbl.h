@@ -4,7 +4,6 @@
  *              using unicode page U+25xx characters for output nicely
  *              formatted output to a terminal
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: unicode_tbl.h 944 2015-04-08 21:20:25Z ljp $
  *
  * Copyright (C) 2015 Johan Persson
  *

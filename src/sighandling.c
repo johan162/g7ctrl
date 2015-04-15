@@ -3,7 +3,6 @@
  * Description: Signal handling for the daemon, including the
  *              signal catching daemon
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: sighandling.c 761 2015-03-03 10:18:20Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *

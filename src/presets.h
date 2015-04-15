@@ -2,7 +2,6 @@
  * File:        presets.h
  * Description: Handle preset command files
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: presets.h 700 2015-02-05 06:51:55Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
-    version="5.0" revision="$Id: ReceivingData.xml 788 2015-03-08 21:35:16Z ljp $" xml:id="section.receiving-data">
+    version="5.0"  xml:id="section.receiving-data">
     <title>Receiving data</title>
     <para>Once the daemon is running it will listen for incoming events from the tracker. By default
         the daemon is listening on <acronym>TCP/IP</acronym> port 3400 for device connections. As

@@ -4,7 +4,6 @@
  *              daemon householding has been setup.
  *              running to instances of the program at once.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Ids$
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

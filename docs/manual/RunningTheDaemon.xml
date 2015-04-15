@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <section  xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: RunningTheDaemon.xml 921 2015-04-06 15:09:59Z ljp $" xml:id="section.running-the-daemon" >
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="section.running-the-daemon" >
     <title>Running the daemon</title>
     <para>Once installed it is time to start the daemon. This can be done in a number of ways as the
         following sections will show.</para>

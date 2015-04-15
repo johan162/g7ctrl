@@ -4,7 +4,6 @@
  * Description: Functions to handle writing back a reply to a client
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id$
  *
  * Copyright (C) 2015  Johan Persson
  *

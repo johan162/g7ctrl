@@ -3,7 +3,6 @@
  * Description: Commands to extract data from the database of received
  *              events.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: dbcmd.c 946 2015-04-09 06:28:34Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

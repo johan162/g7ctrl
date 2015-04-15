@@ -6,7 +6,7 @@
         xmlns:xi="http://www.w3.org/2001/XInclude"
         xmlns:xlink="http://www.w3.org/1999/xlink" 
         version="5.0"
-        revision="$Id: Manual.xml 851 2015-03-18 07:21:47Z ljp $">
+        >
     
     <info>
         <title>'g7ctrl' Manual &amp; Handbook</title>

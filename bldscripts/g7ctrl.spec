@@ -1,4 +1,3 @@
-# $Id$ 
 # spec file for package g7ctrl
 # Copyright 2014 Johan Persson <johan162@gmail.com> 
 

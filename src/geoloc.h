@@ -3,7 +3,6 @@
  * Description: Use the Google map API to do reverse geolocation lookup
  *              to translate lat/long to street address
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: geoloc.h 946 2015-04-09 06:28:34Z ljp $
  *
  * Copyright (C) 2014 Johan Persson
  *

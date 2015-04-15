@@ -4,7 +4,7 @@
 <section xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink" 
     version="5.0"
-    revision="$Id: Introduction.xml 888 2015-03-22 21:50:32Z ljp $" xml:id="section.introduction">
+     xml:id="section.introduction">
     <title>Introduction</title>
     <para>This software is meant to be used together with the <productname>Xtreme GM7</productname>
         <acronym>GPS</acronym> tracker to help simplify its management and to make it possible to

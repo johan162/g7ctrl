@@ -7,7 +7,6 @@
 #         -d deviceid    Device Id
 #         -n nick        Nickname (deviceid if no nickname is defined)
 #
-# SVN:    $Id$
 #
 # Note: This is just a TEMPLATE that can be modified to do
 # specific actions when event is received.

@@ -1,5 +1,3 @@
-$Id$
-
 Database 
 
 The received locations are stored in a SQLITE3 database. This directory contain the

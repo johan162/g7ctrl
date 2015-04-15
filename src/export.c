@@ -2,7 +2,6 @@
  * File:        export.c
  * Description: Handle export of DB to GPX, KML and CSV format
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: export.c 908 2015-04-03 23:24:03Z ljp $
  *
  * Copyright (C) 2014 Johan Persson
  *

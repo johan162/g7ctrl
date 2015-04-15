@@ -1,5 +1,4 @@
 # ===============================================================================
-# $Id: Makefile.am 227 2014-01-05 12:20:53Z ljp $
 # Automake build script. This will create the utility library used to handle
 # SMTP mail sending.
 # ===============================================================================

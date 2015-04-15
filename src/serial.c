@@ -4,7 +4,6 @@
  *              and various checks for error conditions.
  *              running to instances of the program at once.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: serial.c 734 2015-03-01 18:00:11Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

@@ -2,7 +2,6 @@
  * File:        PCREDMALLOC.H
  * Description: Traced memory allocation/deallocation for PCRE library
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: pcredmalloc.h 623 2015-01-08 07:25:36Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

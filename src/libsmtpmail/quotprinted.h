@@ -2,7 +2,6 @@
  * File:        QUOTPRINTED.H
  * Description: Quoted printable encoding
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: quotprinted.h 623 2015-01-08 07:25:36Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

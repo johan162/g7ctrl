@@ -2,7 +2,6 @@
  * File:        LOGGER.C
  * Description: Routines to do logging
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: logger.c 839 2015-03-16 01:23:49Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

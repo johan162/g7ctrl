@@ -2,7 +2,7 @@
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <appendix  xmlns="http://docbook.org/ns/docbook" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" revision="$Id: References.xml 677 2015-01-16 20:35:53Z ljp $" xml:id="appendix.references" >
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="appendix.references" >
     <title>References</title>
     <section>
         <title>Major SW technologies and tools used</title>
