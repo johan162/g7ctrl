@@ -63,6 +63,8 @@ Detailed user visible changes
 - Added smart context sensitive command completion in the command shell 
   invoked by the tab-key
 
+- Replaced "%" as command line prompt in shell with ">" 
+
 - Mail templates slightly updated with new look & feel
 
 - Mail templates updated to try to circumvent Googles stupidity in auto-trimming

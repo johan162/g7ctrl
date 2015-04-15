@@ -7,7 +7,7 @@
  *              that user.
  *
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7shell.c 968 2015-04-14 22:31:55Z ljp $
+ * SVN:         $Id: g7shell.c 970 2015-04-15 19:25:06Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -86,7 +86,7 @@ char   __BUILD_NUMBER = '\0';
 #define DEFAULT_CMD_PORT 3100
 #define DEFAULT_SERVER "127.0.0.1"
 
-#define SHELL_PROMPT "% "
+#define SHELL_PROMPT "> "
 
 #define HISTORY_FILE ".g7ctrl_history"
 #define HISTORY_LENGTH 100
@@ -746,6 +746,37 @@ read_inifile(void) {
     }
 }
 
+
+/**
+ * Completion generator basic commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+static char* 
+_generator(const char* text, int state, char **cmdlist) {
+    static int list_index, len;
+    char *name;
+
+    if (0 == state) {
+        list_index = 0;
+        len = strlen(text);
+    }
+
+    // Find out which next command matches
+    // up to len characters
+    while (NULL != (name = cmdlist[list_index])) {
+        list_index++;
+
+        if (strncmp(name, text, len) == 0)
+            return (strdup(name));
+    }
+
+    /* If no names matched, then return NULL. */
+    return ((char *) NULL);
+
+}
+
 /**
  * Completion generator basic commands
  * @param text
@@ -754,26 +785,7 @@ read_inifile(void) {
  */
 char* 
 cmd_generator(const char* text, int state) {
-    static int cmd_list_index, cmd_len;
-    char *name;
-
-    if (0 == state) {
-        cmd_list_index = 0;
-        cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = cmd_list[cmd_list_index])) {
-        cmd_list_index++;
-
-        if (strncmp(name, text, cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+    return _generator(text,state,cmd_list);
 }
 
 /**
@@ -784,25 +796,7 @@ cmd_generator(const char* text, int state) {
  */
 char* 
 db_cmd_generator(const char* text, int state) {
-    static int db_cmd_list_index, db_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        db_cmd_list_index = 0;
-        db_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = db_cmd_list[db_cmd_list_index])) {
-        db_cmd_list_index++;
-
-        if (strncmp(name, text, db_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
+    return _generator(text,state,db_cmd_list);
 }
 
 /**
@@ -813,28 +807,8 @@ db_cmd_generator(const char* text, int state) {
  */
 char* 
 dbsort_cmd_generator(const char* text, int state) {
-    static int dbsort_cmd_list_index, dbsort_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        dbsort_cmd_list_index = 0;
-        dbsort_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = dbsort_cmd_list[dbsort_cmd_list_index])) {
-        dbsort_cmd_list_index++;
-
-        if (strncmp(name, text, dbsort_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+    return _generator(text,state,dbsort_cmd_list);    
 }
-
 
 /**
  * Completion generator "do" commands
@@ -844,26 +818,7 @@ dbsort_cmd_generator(const char* text, int state) {
  */
 char* 
 do_cmd_generator(const char* text, int state) {
-    static int do_cmd_list_index, do_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        do_cmd_list_index = 0;
-        do_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = do_cmd_list[do_cmd_list_index])) {
-        do_cmd_list_index++;
-
-        if (strncmp(name, text, do_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+   return _generator(text,state,do_cmd_list);
 }
 
 /**
@@ -874,26 +829,7 @@ do_cmd_generator(const char* text, int state) {
  */
 char* 
 preset_cmd_generator(const char* text, int state) {
-    static int preset_cmd_list_index, preset_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        preset_cmd_list_index = 0;
-        preset_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = preset_cmd_list[preset_cmd_list_index])) {
-        preset_cmd_list_index++;
-
-        if (strncmp(name, text, preset_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+    return _generator(text,state,preset_cmd_list);
 }
 
 /**
@@ -904,26 +840,7 @@ preset_cmd_generator(const char* text, int state) {
  */
 char* 
 get_cmd_generator(const char* text, int state) {
-    static int get_cmd_list_index, get_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        get_cmd_list_index = 0;
-        get_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = get_cmd_list[get_cmd_list_index])) {
-        get_cmd_list_index++;
-
-        if (strncmp(name, text, get_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+    return _generator(text,state,get_cmd_list);    
 }
 
 /**
@@ -934,37 +851,25 @@ get_cmd_generator(const char* text, int state) {
  */
 char* 
 set_cmd_generator(const char* text, int state) {
-    static int set_cmd_list_index, set_cmd_len;
-    char *name;
-
-    if (0 == state) {
-        set_cmd_list_index = 0;
-        set_cmd_len = strlen(text);
-    }
-
-    // Find out which next command matches
-    // up to cmd_len characters
-    while (NULL != (name = set_cmd_list[set_cmd_list_index])) {
-        set_cmd_list_index++;
-
-        if (strncmp(name, text, set_cmd_len) == 0)
-            return (strdup(name));
-    }
-
-    /* If no names matched, then return NULL. */
-    return ((char *) NULL);
-
+    return _generator(text,state,set_cmd_list);
 }
-
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 /**
- * Readline entry point for completion function
- * @param text
- * @param start
- * @param end
- * @return 
+ * Readline entry point for completion function. The reason for calling multiple
+ * generators is that depending on the context the user is restricted to only
+ * a subset of all possible commands. For example, if the user has started with
+ * "db " then only the database commands are given as options. Once the user
+ * as entered two parts of a command words no more completions should be possible.
+ * This is handled by the code that checks if there are more characters than minimum
+ * entered and at the same time the "text" argument is empty then we don't call
+ * any generator function and just return NULL.
+ * The entire line buffer is found in the "rl_line_buffer" variable.
+ * @param text The partial text that should be completed
+ * @param start Start index in line buffer of partial text to match
+ * @param end End index in line buffer of partial text to match
+ * @return A list of matches, NULL if no matches
  */
 static char** 
 cmd_completion(const char * text, int start, int end) {
@@ -975,7 +880,7 @@ cmd_completion(const char * text, int start, int end) {
     
     if (0 == strncmp("db sort ", rl_line_buffer, 8)) {
         if (strlen(rl_line_buffer) > 9) {
-            // If we have a complete word after 'db sort' then we don't do any completion
+            // If we have a complete word after 'db sort ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -985,7 +890,7 @@ cmd_completion(const char * text, int start, int end) {
         }
     } else if (0 == strncmp("db ", rl_line_buffer, 3)) {
         if (strlen(rl_line_buffer) > 5) {
-            // If we have a complete word after 'get' then we don't do any completion
+            // If we have a complete word after 'db ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -995,7 +900,7 @@ cmd_completion(const char * text, int start, int end) {
         }
     } else if (0 == strncmp("do ", rl_line_buffer, 3)) {
         if (strlen(rl_line_buffer) > 4) {
-            // If we have a complete word after 'get' then we don't do any completion
+            // If we have a complete word after 'do ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -1005,7 +910,7 @@ cmd_completion(const char * text, int start, int end) {
         }
     } else if (0 == strncmp("set ", rl_line_buffer, 4)) {
         if (strlen(rl_line_buffer) > 5) {
-            // If we have a complete word after 'get' then we don't do any completion
+            // If we have a complete word after 'set ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -1015,7 +920,7 @@ cmd_completion(const char * text, int start, int end) {
         }
     } else if (0 == strncmp("get ", rl_line_buffer, 4)) {
         if (strlen(rl_line_buffer) > 5) {
-            // If we have a complete word after 'get' then we don't do any completion
+            // If we have a complete word after 'get ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -1025,7 +930,7 @@ cmd_completion(const char * text, int start, int end) {
         }
     } else if (0 == strncmp("preset ", rl_line_buffer, 7)) {
         if (strlen(rl_line_buffer) > 8) {
-            // If we have a complete word after 'get' then we don't do any completion
+            // If we have a complete word after 'preset ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
             if (*text)
@@ -1094,6 +999,7 @@ cb_rl_readline(char *line) {
 
 /**
  * Execute one single command specified as argument
+ * @param command Command string to be executed
  */
 int
 single_command(const char *command) {
@@ -1171,13 +1077,14 @@ cmd_loop(void) {
         fprintf(stderr, "Cannot initialize communication with server.\n");
         return;
     }
-
+    fprintf(stdout,"Press tab-key for auto-completion of commands.\n");
+    
     int rc;
     fd_set read_fdset;
     struct timeval timeout;
     rl_callback_handler_install(SHELL_PROMPT,cb_rl_readline);
     rl_attempted_completion_function = cmd_completion;
-    
+
     do {
 
         FD_ZERO(&read_fdset);
@@ -1219,15 +1126,20 @@ cmd_loop(void) {
  * Main entry point for g7sh
  * @param argc Argument count
  * @param argv Argument vector
- * @return EXIT_SUCCESS at program termination
+ * @return EXIT_SUCCESS or EXIT_FAILURE depending on if the program exits in good or
+ * bad standing.
  */
 int
 main(int argc, char **argv) {
     parsecmdline(argc, argv);
     setup_sighandlers();
+    
+    // Try to find a possible ini-file
     if (0 == setup_inifile()) {
         read_inifile();
     }
+    
+    // Setup default command port if user didn't explicitly specify port
     if (tcpip_port == -1) {
         tcpip_port = DEFAULT_CMD_PORT;
     }
@@ -1246,13 +1158,15 @@ main(int argc, char **argv) {
     read_history(hfilename);
 
     if( singleCmd ) {
+        
+        // Just do one single command
         if( 0 == single_command(singleCmdLine) )
             _exit(EXIT_SUCCESS);
         else
             _exit(EXIT_FAILURE);
 
     } else  {
-
+       
         // The command loop is active until the server disconnects or the user
         // quits the command shell
         cmd_loop();
