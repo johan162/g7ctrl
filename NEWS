@@ -2,7 +2,6 @@ NEWS - Major releases
 ===========
 ***Highlights major changes for each release in reverse chronological order.***
 
-*Note: This NEWS file is compatible with Markdown*
 
 v3.2.0 (may 2015)
 ========================
@@ -181,6 +180,12 @@ Bugs fixed
 
 Internal changes (visible for developers and packagers)
 -------------------------------------------------------
+- New location for the repository 
+  https://sourceforge.net/p/g7ctrl/git/
+
+- Moved to Git based repository from 3.2.0 and hence all SVN tags
+  has been removed.
+
 - Renamed geolocation_google.[hc] to geoloc.[hc]
 
 - The modules "unicode_tbl.[ch]" was added which manage the table formatting
@@ -228,9 +233,6 @@ Internal changes (visible for developers and packagers)
   syntax
 
 
-----
-
-----
 
 
 g7ctrl v3.1.0 (march 2015)

@@ -54,23 +54,20 @@
                 alternative command line way is to connect directly to the daemon port using for
                 example <command>telnet</command> or <command>nc</command>, however this is only
                 recommended for troubleshooting purposes.</para>
-            <para>The shell can be run either on the same server as the daemon in which case it can
-                simply be started with</para>
+            <para>The shell can be run either on the same server as the daemon or on a separate
+                computer. In the forst case it is simple a matter of starting the shell with</para>
             <para>
-                <screen>$>g7sh</screen>
+                <screen>$> g7sh</screen>
             </para>
-            <para>or it can be run on a different computer in which case the
-                    <command>g7ctrl</command> server (and optionally the command TCP/IP port) must
-                be specified either on the command line as </para>
+            <para>If it is run on a separate computer the IP-address to the server must be
+                given</para>
             <para>
-                <screen>$> g7sh -s 192.168.010</screen>
+                <screen>$> g7sh -s 192.168.0.10</screen>
             </para>
-            <para>or by storing the server and port setting in the <command>g7ctrl</command> config
-                file that is reused by the shell. If the config file can not be found in the common
-				place (i.e. /etc/g7ctrl/g7ctrl.conf) then the shell
-				will look for a shell specific config file "<filename>.g7sh</filename>" in the users 
-				home directory. Command line argument will however always override any ini file
-				setting.</para>
+            <para> If the config file can not be found in the common place (i.e.
+                    <filename>/etc/g7ctrl/g7ctrl.conf</filename>) then the shell will look for a
+                shell specific config file "<filename>.g7sh</filename>" in the users home directory.
+                Command line argument will however always override any ini file setting.</para>
         </refsect1>
         <refsect1
             xml:id="g7sh.options">
