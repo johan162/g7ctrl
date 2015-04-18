@@ -11,15 +11,12 @@ General notes for this release
 ------------------------------
 
 This is a feature release which increases functionality, stability and fine-tunes
-existing functionality in a number of areas
+existing functionality in a number of areas. The major changes are: 
 
 1. more database commands to display and list entries in the DB
-2. improvements in geolocation lookup to handle failed API calls
-3. improved handling of Google rate limit of API calls
-4. Command completion added to command line as well as pretty printing tables
-5. updated look & feel of mail templates
-6. improved handling of large replies from the server to the command shell *g7sh*
-7. A number of new configuration options (in *g7config.conf*)
+2. improvements in geolocation lookup to handle failed API calls and Google rate limit
+3. context sensitive command completion in command shell 
+4. a number of new configuration options (in *g7config.conf*)
 
     - Specification of a Google API key which is used in the geolocation lookups.
       This allows the specification of a commercial key to increase the allowed
@@ -38,7 +35,7 @@ existing functionality in a number of areas
     - A new setting to customize mail subject prefix
 
     - A new setting to choose to use a shorter form of device ID in subject header
-8. Summary of new server commands
+5. new server commands
     - **.date ** Prints current date and time on server
     - **.cachestat**  Prints statistics on the Geolcation caches
     - **.address** Prints the street address for the last received location
