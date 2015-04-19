@@ -164,7 +164,7 @@ char *cmd_list[] = {
 };
 
 char *db_cmd_list[] = {
-    "help", "deletelocations", "tail", "head",
+    "deletelocations", "tail", "head",
     "mailgpx", "mailcsv", "size", "dist", "export",
     "mailpos", "lastloc", "sort",
     (char *) NULL
