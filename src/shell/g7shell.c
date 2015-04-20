@@ -200,6 +200,18 @@ char *preset_cmd_list[] = {
     (char *) NULL
 };
 
+char *help_cmd_list[] = {
+    "db", "preset", ".date", ".cachestat", ".usb", 
+    ".target", ".ver", ".lc", ".ld", ".address", ".table", ".nick", 
+    ".ln", ".dn", ".ratereset",
+    "address", "ver", "locg", "gfevt", "phone",
+    "roam", "led", "gfen", "sleep", "loc",
+    "imei", "sim", "ver", "nrec", "batt", "track", "mswitch", "tz",
+    "sms", "comm", "vip", "ps", "config", "rec", "lowbatt", "sens",
+    "test", "clrec", "dlrec", "reboot", "reset",    
+    (char *) NULL
+};
+
 int _writef(int fd, const char *buf, ...) __attribute__ ((format(printf,2,3)));
 
 /**
@@ -853,6 +865,17 @@ set_cmd_generator(const char* text, int state) {
     return _generator(text,state,set_cmd_list);
 }
 
+/**
+ * Completion generator "help" commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+help_cmd_generator(const char* text, int state) {
+    return _generator(text,state,help_cmd_list);
+}
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 /**
@@ -936,7 +959,27 @@ cmd_completion(const char * text, int start, int end) {
                 matches = rl_completion_matches((char*) text, &preset_cmd_generator);
         } else {
             matches = rl_completion_matches((char*) text, &preset_cmd_generator);
-        }
+        }   
+    } else if (0 == strncmp("help db ", rl_line_buffer, 8)) {
+        if (strlen(rl_line_buffer) > 9) {
+            // If we have a complete word after 'help ' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &db_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &db_cmd_generator);
+        }               
+    } else if (0 == strncmp("help ", rl_line_buffer, 5)) {
+        if (strlen(rl_line_buffer) > 6) {
+            // If we have a complete word after 'help ' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &help_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &help_cmd_generator);
+        }                
     } else {
         matches = rl_completion_matches((char*) text, &cmd_generator);
     }
