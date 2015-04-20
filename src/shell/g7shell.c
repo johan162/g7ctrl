@@ -86,6 +86,8 @@ char   __BUILD_NUMBER = '\0';
 #define DEFAULT_SERVER "127.0.0.1"
 
 #define SHELL_PROMPT "> "
+#define SHELL_PROMPT_ARG ">> "
+
 
 #define HISTORY_FILE ".g7ctrl_history"
 #define HISTORY_LENGTH 100
@@ -1025,6 +1027,17 @@ cb_rl_readline(char *line) {
         size_t const maxreplylen = LEN_10M;
         char *reply = calloc(maxreplylen, sizeof (char));
         const int rc = g7ctrl_command(cli_sockd, line, reply, maxreplylen);
+        
+        // We use a second level prompt to indicate that we are in a command argument
+        // input sequence. We know this from the ending question mark in the label
+        // sent from the daemon.
+        int len = strlen(reply);
+        if( len > 3 && reply[len-3]=='?')
+            rl_set_prompt(SHELL_PROMPT_ARG);
+        else
+            rl_set_prompt(SHELL_PROMPT);
+        
+        // Check if there was an error
         if (rc < 0) {
             if (-3 == rc) {
                 fprintf(stderr, "Remote server closed connection.\n");

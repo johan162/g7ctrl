@@ -14,7 +14,7 @@ existing functionality in a number of areas. The major changes are:
 
 1. more database commands to display and list entries in the DB
 2. improvements in geolocation lookup to handle failed API calls and Google rate limit
-3. context sensitive command completion in command shell 
+3. context sensitive command completion in command shell and other improvements 
 4. a number of new configuration options (in *g7config.conf*)
 
     - Specification of a Google API key which is used in the geolocation lookups.
@@ -58,6 +58,9 @@ Detailed user visible changes
 
 - Added smart context sensitive command completion in the command shell 
   invoked by the tab-key
+
+- The shell now indicates with a second level prompt when the input is
+  within the argument list for a command.
 
 - Replaced "%" as command line prompt in shell with ">" 
 
