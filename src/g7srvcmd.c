@@ -3,6 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7srvcmd.c 953 2015-04-09 17:04:10Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -82,8 +83,8 @@ struct srvcmd_help {
  * List of help texts for DB commands
  */
 struct srvcmd_help srvcmd_help_list [] = {
-    {"address",
-       "Toggle reverse address lookup from location before storing in database",
+    {"lookup",
+       "Toggle reverse lookup lookup from location before storing in database",
        "",
        "",
        ""
@@ -533,7 +534,7 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
             _writef(sockd,"FAILED to send test image mail");        
 #endif        
         
-    } else if (0 < (nf = matchcmd("^address" _PR_E, cmdstr, &field))) {
+    } else if (0 < (nf = matchcmd("^lookup" _PR_E, cmdstr, &field))) {
         use_address_lookup = !use_address_lookup;
         _writef(sockd,"Address lookup : %s",use_address_lookup ? "on" : "off");
     } else if (0 < (nf = matchcmd("^ld" _PR_E, cmdstr, &field))) {
