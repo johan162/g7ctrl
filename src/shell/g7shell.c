@@ -202,6 +202,11 @@ char *preset_cmd_list[] = {
     (char *) NULL
 };
 
+char *onoff_cmd_list[] = {
+    "on", "off", 
+    (char *) NULL
+};
+
 char *help_cmd_list[] = {
     "db", "preset", ".date", ".cachestat", ".usb", 
     ".target", ".ver", ".lc", ".ld", ".address", ".table", ".nick", 
@@ -878,6 +883,18 @@ help_cmd_generator(const char* text, int state) {
     return _generator(text,state,help_cmd_list);
 }
 
+/**
+ * Completion generator "on/off" commands
+ * @param text
+ * @param state
+ * @return NULL if no match was found
+ */
+char* 
+onoff_cmd_generator(const char* text, int state) {
+    return _generator(text,state,onoff_cmd_list);
+}
+
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 /**
@@ -898,6 +915,7 @@ help_cmd_generator(const char* text, int state) {
 static char** 
 cmd_completion(const char * text, int start, int end) {
     char **matches = (char **) NULL;
+    int mlen=0;
     
     // Disable default filename completion
     rl_attempted_completion_over = 1;
@@ -913,7 +931,7 @@ cmd_completion(const char * text, int start, int end) {
             matches = rl_completion_matches((char*) text, &dbsort_cmd_generator);
         }
     } else if (0 == strncmp("db ", rl_line_buffer, 3)) {
-        if (strlen(rl_line_buffer) > 5) {
+        if (strlen(rl_line_buffer) > 4) {
             // If we have a complete word after 'db ' then we don't do any completion
             // this is indicated by an empty text since the cursor would be at the
             // space after the word.
@@ -932,6 +950,21 @@ cmd_completion(const char * text, int start, int end) {
         } else {
             matches = rl_completion_matches((char*) text, &do_cmd_generator);
         }
+    } else if (
+            0 == strncmp("set gfen ", rl_line_buffer, (mlen=9) )  ||
+            0 == strncmp("set roam ", rl_line_buffer, (mlen=9) ) ||
+            0 == strncmp("set led ", rl_line_buffer, (mlen=8) ) ||
+            0 == strncmp("set phone ", rl_line_buffer, (mlen=10) ) 
+            ) {
+        if ((int)strlen(rl_line_buffer) > mlen+1) {
+            // If we have a complete word after 'set ' then we don't do any completion
+            // this is indicated by an empty text since the cursor would be at the
+            // space after the word.
+            if (*text)
+                matches = rl_completion_matches((char*) text, &onoff_cmd_generator);
+        } else {
+            matches = rl_completion_matches((char*) text, &onoff_cmd_generator);
+        }        
     } else if (0 == strncmp("set ", rl_line_buffer, 4)) {
         if (strlen(rl_line_buffer) > 5) {
             // If we have a complete word after 'set ' then we don't do any completion
