@@ -1594,17 +1594,17 @@ Done.</screen>
             All server commands (except the "help" command are started with a dot
                 "<command>.</command>".</para>
         <section  xml:id="cmd.address-toggle" xreflabel="address">
-            <title><command>.address</command></title>
+            <title><command>.lookup</command></title>
             <para>Toggle the address lookup when a location is stored in the DB. The default value
                 is specified in the configuration file. It could be useful to turn the lookup
                 temporarily off if for example a large number of locations are imported via
                 USB.</para>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
-            <para><command>.address</command></para>
+            <para><command>.lookup</command></para>
             <para>
-                <screen>% .address
+                <screen>% .lookup
 Address lookup : off
-% .address
+% .lookup
 Address lookup : on</screen>
             </para>
         </section>
