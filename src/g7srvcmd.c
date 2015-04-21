@@ -3,7 +3,6 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 953 2015-04-09 17:04:10Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -94,7 +93,7 @@ struct srvcmd_help srvcmd_help_list [] = {
        "",
        "",
        ""
-    },    
+    },
     {"target",
         "Specify which target device to use to send commands to.\n"
         "The target is specified as either the client number (as listed by \".lc\" command)\n"
@@ -114,7 +113,7 @@ struct srvcmd_help srvcmd_help_list [] = {
         "n         - USB index (as listed by \".lc\"",
         "\".usb 1\"     - Use connected client to USB 1 as recipient of commands\n"
         "\".usb\"       - List all USB ports"
-    },    
+    },
     {"ver",
        "Return daemon version",
        "",
@@ -132,7 +131,7 @@ struct srvcmd_help srvcmd_help_list [] = {
        "",
        "",
        ""
-    },    
+    },
     {"dn",
        "Delete existing nick",
        "nick-name",
@@ -254,7 +253,7 @@ _srvcmd_nick(struct client_info *cli_info, const char *nick,const char *phone) {
  *                 other things this structure stores the socket used to communicate back
  *                 to the client as well as information about which device the client
  *                 has set as target device.
- * @param filter FIlter action for what to list. 
+ * @param filter FIlter action for what to list.
  * 1=list command connections, 2=list device connections (both USB and GPRS),
  * 3=list only GPRS connections. In all situations highlight the current active device connection
  * @return 0 success, -1 failure
@@ -385,12 +384,12 @@ _srv_cmd_debug_info(struct client_info *cli_info) {
             cli_info->cli_ipadr,
             cli_info->cli_is_cmdconn,
             (unsigned)cli_info->cli_ts,
-            cli_info->target_deviceid,            
+            cli_info->target_deviceid,
             (int)cli_info->target_cli_idx,
             (int)cli_info->target_socket,
             (int)cli_info->target_usb_idx
             );
-    
+
     list_usb_stat(cli_info);
 }
 
@@ -405,67 +404,67 @@ _srv_date(int sockd) {
 
 void
 _srv_cache_stat(struct client_info *cli_info) {
-    
+
     const int sockd = cli_info->cli_socket;
-    
+
     unsigned addr_tot_calls, minimap_tot_calls;
     double addr_hitrate, minimap_hitrate;
     double addr_cache_fill, minimap_cache_fill;
     size_t addr_musage,minimap_musage;
-    
-    get_cache_stat(CACHE_ADDR, &addr_tot_calls, &addr_hitrate, &addr_cache_fill, &addr_musage);    
+
+    get_cache_stat(CACHE_ADDR, &addr_tot_calls, &addr_hitrate, &addr_cache_fill, &addr_musage);
     get_cache_stat(CACHE_MINIMAP, &minimap_tot_calls, &minimap_hitrate, &minimap_cache_fill, &minimap_musage);
-    
+
     const size_t nCols = 5;
     char *tdata[3 * 5];
     memset(tdata, 0, sizeof (tdata));
     char valbuff[32];
     int row=0;
-    
+
     /* Header */
     tdata[row * nCols + 0] = strdup("  Cache ");
     tdata[row * nCols + 1] = strdup("  Tot ");
     tdata[row * nCols + 2] = strdup("  Fill ");
     tdata[row * nCols + 3] = strdup("  Hits ");
     tdata[row * nCols + 4] = strdup("  Mem ");
-    
+
     row++;
     /* Address */
     tdata[row * nCols + 0] = strdup(" Address ");
-    
+
     snprintf(valbuff,sizeof(valbuff),"%u ",addr_tot_calls);
     tdata[row * nCols + 1] = strdup(valbuff);
-    
+
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",addr_cache_fill*100);
     tdata[row * nCols + 2] = strdup(valbuff);
-    
+
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",addr_hitrate*100);
     tdata[row * nCols + 3] = strdup(valbuff);
 
     snprintf(valbuff,sizeof(valbuff)," %zu kB ",addr_musage/1024);
     tdata[row * nCols + 4] = strdup(valbuff);
-    
+
     row++;
     /* Minimap */
     tdata[row * nCols + 0] = strdup(" Minimap ");
-    
+
     snprintf(valbuff,sizeof(valbuff),"%u ",minimap_tot_calls);
     tdata[row * nCols + 1] = strdup(valbuff);
-    
+
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",minimap_cache_fill*100);
     tdata[row * nCols + 2] = strdup(valbuff);
-    
+
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",minimap_hitrate*100);
     tdata[row * nCols + 3] = strdup(valbuff);
 
     snprintf(valbuff,sizeof(valbuff)," %zu kB ",minimap_musage/1024);
     tdata[row * nCols + 4] = strdup(valbuff);
-    
+
     row++;
-    
+
     /* Setup table */
     table_t *t = utable_create_set(row, nCols, tdata);
-    
+
 
     utable_set_table_halign(t, RIGHTALIGN);
     utable_set_row_halign(t, 0, CENTERALIGN);
@@ -503,7 +502,7 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
     } else if (0 < matchcmd("^date" _PR_E, cmdstr, &field)) {
         _srv_date(cli_info->cli_socket);
     } else if (0 < matchcmd("^cachestat" _PR_E, cmdstr, &field)) {
-        _srv_cache_stat(cli_info);                
+        _srv_cache_stat(cli_info);
     } else if (0 < matchcmd("^usb" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {
         set_usb_device_target_by_index(cli_info,xatoi(field[1]));
     } else if (0 < matchcmd("^target" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {
@@ -525,15 +524,15 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
         geocode_rate_limit_reset();
         staticmap_rate_limit_reset();
         _writef(sockd,"Google API rate limit reset");
-        
-#ifdef TEST_MAIL_WITH_MINIMAP        
+
+#ifdef TEST_MAIL_WITH_MINIMAP
     } else if (0 < (nf = matchcmd("^tstmail" _PR_E, cmdstr, &field))) {
         if( 0 == tst_mailimg() )
-            _writef(sockd,"Sent test image mail");        
+            _writef(sockd,"Sent test image mail");
         else
-            _writef(sockd,"FAILED to send test image mail");        
-#endif        
-        
+            _writef(sockd,"FAILED to send test image mail");
+#endif
+
     } else if (0 < (nf = matchcmd("^lookup" _PR_E, cmdstr, &field))) {
         use_address_lookup = !use_address_lookup;
         _writef(sockd,"Address lookup : %s",use_address_lookup ? "on" : "off");
@@ -543,9 +542,9 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
         cli_info->use_unicode_table = !cli_info->use_unicode_table;
         _writef_reply(sockd,"Table drawing : %s",cli_info->use_unicode_table ? "On" : "Off");
     } else if (0 < (nf = matchcmd("^target" _PR_E, cmdstr, &field))) {
-        _srv_cmd_lc(cli_info, FILTER_GPRS_CONNECTIONS);        
+        _srv_cmd_lc(cli_info, FILTER_GPRS_CONNECTIONS);
     } else if (0 < (nf = matchcmd("^dbg" _PR_E, cmdstr, &field))) {
-        _srv_cmd_debug_info(cli_info);        
+        _srv_cmd_debug_info(cli_info);
     } else if (0 < (nf = matchcmd("^nick" _PR_S _PR_AAN _PR_S _PR_NDS _PR_E, cmdstr, &field))) {
         _srvcmd_nick(cli_info, field[1], field[2]);
     } else if (0 < (nf = matchcmd("^nick" _PR_S _PR_AAN _PR_E, cmdstr, &field))) {
