@@ -161,7 +161,7 @@ static struct g7command g7command_list[] = {
     /* 2 */
     { "led", "ELED", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable/Disable the LED indicator on/off", ""},
     /* 3 */
-    { "gfen", "GFEN", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable/Disabling virtual fence", ""},
+    { "gfen", "GFEN", cmd_set_template, CMD_TYPE_GETSET, CMD_MODE_RW, "Enable/Disabling virtual fence", ""},
     /* 4 */
     { "sleep", "SLEEP", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable/Disable \"Sleeping Report\"", ""},
 
@@ -380,7 +380,7 @@ static struct cmdargs cmdargs_list[] = {
 
     { "gfen", 5,
         {
-            {AUTO_ENABLE_LABEL, "Turn option on/off", ARGT_BOOL, 0,
+            {"Enable", "Turn option on/off", ARGT_BOOL, 0,
                 {
                     {0, 0}
                 }},
