@@ -951,7 +951,6 @@ cmd_completion(const char * text, int start, int end) {
             matches = rl_completion_matches((char*) text, &do_cmd_generator);
         }
     } else if (
-            0 == strncmp("set gfen ", rl_line_buffer, (mlen=9) )  ||
             0 == strncmp("set roam ", rl_line_buffer, (mlen=9) ) ||
             0 == strncmp("set led ", rl_line_buffer, (mlen=8) ) ||
             0 == strncmp("set phone ", rl_line_buffer, (mlen=10) ) 
