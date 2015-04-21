@@ -2,7 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 982 2015-04-21 08:01:22Z ljp $
+ * SVN:         $Id: g7sendcmd.c 983 2015-04-21 08:03:51Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -386,7 +386,6 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
             return -1;
         }
 
-        int taglen=0;
         // Check for optional tag
         if (*p == '+') {
             p++;
