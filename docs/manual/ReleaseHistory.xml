@@ -53,9 +53,11 @@
                         db tail) and some minor bug fixes. Configuration file modified by adding
                         possibility to set a Google API key and moved the port settings to the
                         "startup" section. Improvements of the <command>dlrec</command> command and
-                        some genereal documentation updates. Security audit for string routines and
-                        a complete Coverity check. The communication with command shell was improved
+                        some general documentation updates. Security audit for string routines and a
+                        complete Coverity check. The communication with command shell was improved
                         to be able to send larger amount of data without truncation.</para>
+                    <para>This release also adds the concept of "mini-maps" to the event mail as
+                        well as fixes some minor bugs.</para>
             </listitem>
         </varlistentry>        
             <varlistentry>

@@ -47,9 +47,9 @@
                 xlink:href="#appendix.database-commands"/></para>
         <para><emphasis role="bold">Examples:</emphasis></para>
         <para>
-            <screen><emphasis role="bold">db export gpx</emphasis>
-<emphasis role="bold">db export 2013-01-01 2013-01-31 csv /tmp/jan.csv</emphasis>
-<emphasis role="bold">db export dev=3000000002 kml</emphasis></screen>
+            <screen><emphasis role="bold">> db export gpx</emphasis>
+<emphasis role="bold">> db export 2013-01-01 2013-01-31 csv /tmp/jan.csv</emphasis>
+<emphasis role="bold">> db export dev=3000000002 kml</emphasis></screen>
         </para>
         <para>The first command will export all locations in the database to the file
                 <filename>/usr/share/g7ctrl/export.gpx</filename>, the second command for the

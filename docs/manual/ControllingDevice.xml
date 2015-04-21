@@ -10,8 +10,7 @@
         major way in which the device can be configured as discussed in <xref
             linkend="section.connecting-device"/>. </para>
     <para>The daemon supports both communication over <acronym>USB</acronym> which is the preferred
-        way to do the initial setup (connection TO the device over <acronym>GPRS</acronym> is
-        planned for release 1.1.0 of the daemon). </para>
+        way to do the initial setup </para>
     <para>Please keep in mind though that when you are giving commands you are talking to the daemon
         which then sends commands to the device. The normal way to interact with the daemon is
         through the command shell , "<literal>g7sh</literal>", see  <xref
@@ -42,7 +41,7 @@
             mode). </para>
         <para>The same command using the simplified daemon command set would be</para>
         <para>
-            <screen>set roam on</screen>
+            <screen>> set roam on</screen>
         </para>
         <para>Perhaps not a gigantic difference but definitely easier to remember especially since
             the command structure is the same for a large number of commands. The greatest
@@ -59,25 +58,32 @@
             Using the daemons command version instead the following conversation between the user
             and the daemon would take place:</para>
         <para>
-            <screen>%set comm
+            <screen>> set comm
 CommSelect - Select primary type of communication
   0 - Use USB
   1 - Use SMS over GSM
   2 - CSD &lt;reserved>
   3 - UDP over GPRS
   4 - TCP/IP over GPRS
-Select (0/1/2/3/4)?</screen>
+Select (0/1/2/3/4)?
+>> </screen>
         </para>
-        <para>At this point user enters his selection after the "<literal>?</literal>" mark and hits
-            enter. The next question will be</para>
+        <para>At this point user enters his selection after the "<literal>>></literal>" mark and
+            hits enter. The next question will be</para>
         <para>
             <screen>SMS Base Phone - SMS base number to call
-?</screen>
+>></screen>
         </para>
         <para>and the user can enter the corresponding phone number. This will be followed by the a
             clear question for each of the following command arguments. After the user have answered
             all the questions and the daemon has made some sanity checks of the answers the complete
             command will be sent to the device. </para>
+        <para>
+            <note>
+                <para>When giving arguments for a device command the prompt changes from "> " to ">>
+                    "</para>
+            </note>
+        </para>
         <para>To further simplify device handling it is possible to "record" command and command
             sequences so that instead of having to answer ten questions (as is the case for the
             "comm" command) a single command is given and earlier recorded parameters are used See
@@ -85,7 +91,8 @@ Select (0/1/2/3/4)?</screen>
         <para>
             <tip>
                 <para>To abort a command in the middle of specifying parameters just enter a
-                    punctuation character "<command>.</command>" to abortthe current command.</para>
+                    punctuation character "<command>.</command>" to abort the current
+                    command.</para>
             </tip>
         </para>
         <para>A complete list of server command with all argument s given in <xref
@@ -136,7 +143,7 @@ Use "help &lt;command>" for detailed help on each command.
 Server Command list:
 --------------------
 help       - Print help for all commands
-.address   - Toggle geolocation lookup
+.lookup    - Toggle geolocation lookup
 .cachestat - Print statistics of cache usage
 .date      - Print date and time of server
 .target    - List or set the GPRS target device to be active
@@ -178,7 +185,7 @@ preset help &lt;preset>   - Give more detailed help on the specified preset</scr
                     comm</command> command the interaction would be somewhat along the lines of (all
                 text <emphasis role="bold">in bold</emphasis> are user input):</para>
             <para>
-                <screen>% <emphasis role="bold">set comm</emphasis>
+                <screen>> <emphasis role="bold">set comm</emphasis>
 CommSelect - Select primary type of communication
   0 - Use USB
   1 - Use SMS over GSM
@@ -186,25 +193,25 @@ CommSelect - Select primary type of communication
   3 - UDP over GPRS
   4 - TCP/IP over GPRS
 Select (0/1/2/3/4)?
-% <emphasis role="bold">4</emphasis>
+>> <emphasis role="bold">4</emphasis>
 SMS Base Phone - SMS base number to call?
-% <emphasis role="bold">[RETURN]</emphasis>
+>> <emphasis role="bold">[RETURN]</emphasis>
 CSD Base Phone - CSD base number &lt;reserved and not used>?
-% <emphasis role="bold">[RETURN]</emphasis>
+>> <emphasis role="bold">[RETURN]</emphasis>
 GPRS APN - The operators APN?
-% <emphasis role="bold">internet.telenor.se</emphasis>
+>> <emphasis role="bold">internet.telenor.se</emphasis>
 GPRS User - User name if required?
-% <emphasis role="bold">[RETURN]</emphasis>
+>> <emphasis role="bold">[RETURN]</emphasis>
 GPRS Passwd - Password if required?
-% <emphasis role="bold">[RETURN]</emphasis>
+>> <emphasis role="bold">[RETURN]</emphasis>
 GPRS Server - Server IP address where the device reports back to?
-% <emphasis role="bold">mytracker.mydomain.com</emphasis>
+>> <emphasis role="bold">mytracker.mydomain.com</emphasis>
 GPRS Server Port - TCP/IP Port to use on server?
-% <emphasis role="bold">3400</emphasis>
+>> <emphasis role="bold">3400</emphasis>
 GPRS Keep Alive - Interval (in sec) between Keep Alive Packets?
-% <emphasis role="bold">120</emphasis>
+>> <emphasis role="bold">120</emphasis>
 GPRS DNS - Optional DNS server for device to use.?
-% <emphasis role="bold">208.67.222.222</emphasis>
+>> <emphasis role="bold">208.67.222.222</emphasis>
 [GM7] 4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222
       CommSelect: TCP/IP over GPRS
   SMS Base Phone: 
