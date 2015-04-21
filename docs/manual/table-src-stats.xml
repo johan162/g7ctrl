@@ -1,6 +1,6 @@
 <table xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="table.source-stats" ><title>Breakdown of project LOC by type</title><tgroup cols="5" align="center"><colspec colname="c1" colnum="1" colwidth="150pt" align="left"/><colspec colname="c2" colnum="2" colwidth="50pt" align="left"/><colspec colname="c3" colnum="3" colwidth="80pt" align="right"/><colspec colname="c4" colnum="4" colwidth="80pt" align="right"/><colspec colname="c5" colnum="5" colwidth="90pt" align="right"/>
 <thead>  <row>  <entry>language</entry>  <entry>files</entry>  <entry>blank</entry>  <entry>comment</entry>  <entry>code</entry>  </row>  </thead><tbody>
-<row><entry>C</entry>  <entry>35</entry>  <entry>2812</entry>  <entry>6025</entry>  <entry>14548</entry></row>
+<row><entry>C</entry>  <entry>35</entry>  <entry>2812</entry>  <entry>6026</entry>  <entry>14549</entry></row>
 <row><entry>XML</entry>  <entry>20</entry>  <entry>152</entry>  <entry>2</entry>  <entry>8368</entry></row>
 <row><entry>HTML</entry>  <entry>9</entry>  <entry>326</entry>  <entry>0</entry>  <entry>4680</entry></row>
 <row><entry>XSLT</entry>  <entry>14</entry>  <entry>290</entry>  <entry>613</entry>  <entry>1965</entry></row>
@@ -8,7 +8,7 @@
 <row><entry>CSS</entry>  <entry>2</entry>  <entry>181</entry>  <entry>69</entry>  <entry>894</entry></row>
 <row><entry>Bourne Shell</entry>  <entry>10</entry>  <entry>89</entry>  <entry>241</entry>  <entry>271</entry></row>
 <row><entry>SQL</entry>  <entry>1</entry>  <entry>2</entry>  <entry>0</entry>  <entry>28</entry></row>
-<row><entry><emphasis role="bold">TOTAL</emphasis></entry>  <entry><emphasis role="bold">127</emphasis></entry>  <entry><emphasis role="bold">4727</emphasis></entry>  <entry><emphasis role="bold">8654</emphasis></entry>  <entry><emphasis role="bold">32233</emphasis></entry></row>
-<row><entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold">(All: 45741)</emphasis></entry></row>
+<row><entry><emphasis role="bold">TOTAL</emphasis></entry>  <entry><emphasis role="bold">127</emphasis></entry>  <entry><emphasis role="bold">4727</emphasis></entry>  <entry><emphasis role="bold">8655</emphasis></entry>  <entry><emphasis role="bold">32234</emphasis></entry></row>
+<row><entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold"> </emphasis></entry>  <entry><emphasis role="bold">(All: 45743)</emphasis></entry></row>
 </tbody></tgroup></table>
 
