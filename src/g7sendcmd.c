@@ -2,6 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7sendcmd.c 981 2015-04-21 07:43:45Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -196,9 +197,10 @@ cmdqueue_get(size_t idx,struct cmdqueue_t **entry) {
  */
 int
 cmdqueue_match(const unsigned devid, const char *tag, struct cmdqueue_t **entry) {
-    logmsg(LOG_DEBUG, "QUEUE: Searching for match: [%u:%s]", devid, tag);
+    logmsg(LOG_DEBUG, "QUEUE: Searching for match: [%u:\"%s\"]", devid, tag);
     _Bool found = FALSE;
     for (size_t i = 0; !found && i < MAX_CMDQUEUE_LEN; i++) {
+        logmsg(LOG_DEBUG, "QUEUE: Comparing to [%u:\"%s\"]", cmdq[i].devid, cmdq[i].tag);
         if (cmdq[i].devid && cmdq[i].devid == devid) {
             if (*tag) {
                 if (0 == strcmp(tag, cmdq[i].tag)) {
