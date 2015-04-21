@@ -2,7 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 983 2015-04-21 08:03:51Z ljp $
+ * SVN:         $Id: g7sendcmd.c 984 2015-04-21 08:13:59Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -390,7 +390,7 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
         if (*p == '+') {
             p++;
             pp = p;
-            max = 5;
+            max = 7;
             while (max-- > 0 && *pp != '=' && *pp != '\r' && *pp != '\n') {
                 ++pp;
             }
@@ -404,7 +404,7 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
 
         // p now either points to the end of the string for replies such as "$OK:RESET+0009"
         // or to a '=' when the command reply with data. For that case we extract all the data.
-        if (*p) {
+        if (*p && *p!='\r' && *p!='\n') {
             p++;
             if (xstrsplitfields(p, ',', flds)) {
                 return -1;
