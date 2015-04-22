@@ -59,7 +59,7 @@
             </para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% get address
+                <screen>> get address
 78 Bell Street, NW16TB London</screen>
             </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -77,7 +77,7 @@
             </para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% get batt
+                <screen>> get batt
 3.71V</screen>
             </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -98,7 +98,7 @@
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% do clrec
+                        <screen>> do clrec
 Done.</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -214,7 +214,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get comm
+                        <screen>> get comm
 [GM7] COMMTYPE=0,,,,,,,0,0,</screen>
                     </para>
                 
@@ -246,7 +246,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get config
+                        <screen>> get config
 [GM7] UNCFG=3000000001,0000,</screen>
                     </para>
                 
@@ -294,7 +294,7 @@ Done.</screen>
                     <para><command>do dlrec</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% do dlrec
+                        <screen>> do dlrec
 Preparing, please wait ...
 Reading 1144 locations from device, please wait ...
 [0%].[10%].[20%].[30%].[40%].[50%].[60%].[70%].[80%].[90%].[100%]
@@ -383,7 +383,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>get gfevt 50</screen>
+                        <screen>> get gfevt 50</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
             <para><xref linkend="cmd.gfen"/></para>
@@ -455,7 +455,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get gfen
+                        <screen>> get gfen
 [GM7] GFEN=0,150,2,0,0</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -470,7 +470,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
                     <para><command>get imei</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get imei
+                        <screen>> get imei
 [GM7] 912964059600079</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -486,7 +486,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
             <para><command>get led</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get led
+                        <screen>> get led
 [GM7] ELED=0</screen>
                     </para>
                 
@@ -499,7 +499,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
                     <para><command>get loc</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get loc
+                        <screen>> get loc
 [GM7] 3000000001,20140110001836,17.959366,59.367183,0,180,0,0,0,4.10V,0</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -514,7 +514,7 @@ Total time: 3:37 min (Device read: 0:06 min, DB Update: 3:31 min)
                     <para><command>get locg</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get locg
+                        <screen>> get locg
 https://www.google.com/maps?q=57.963183,18.152366</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -564,7 +564,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get lowbatt
+                        <screen>> get lowbatt
 [GM7] LOWBATT=3,7</screen>
                     </para>
                 
@@ -580,7 +580,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
             <para><command>get mswitch</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get mswitch
+                        <screen>> get mswitch
 [GM7] SETRA=3,7</screen>
                     </para>
                 
@@ -594,7 +594,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                     <para><command>get nrec</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get nrec
+                        <screen>> get nrec
 [GM7] DLREC=17637(20140107231903-20140110002148)</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -613,7 +613,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
             <para><command>get phone</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get phone
+                        <screen>> get phone
 [GM7] VLOCATION=1,7</screen>
                     </para>
                 
@@ -711,7 +711,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get ps
+                        <screen>> get ps
 [GM7] PSMT=3,0,1,0,,,,</screen>
                     </para>
                 
@@ -724,7 +724,7 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                     <para><command>do reboot</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% do reboot
+                        <screen>> do reboot
 Done.</screen>
                     </para>
                 
@@ -833,7 +833,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get rec
+                        <screen>> get rec
 [GM7] REC=1,10,0,0,1,15</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -849,7 +849,7 @@ Done.</screen>
                     <para><command>do reset</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% do reset
+                        <screen>> do reset
 Done.</screen>
                     </para>
                 
@@ -863,7 +863,7 @@ Done.</screen>
             <para><command>get roam</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% set roam off
+                        <screen>> set roam off
 [GM7] ROAMING=0</screen>
                     </para>
                 
@@ -876,7 +876,7 @@ Done.</screen>
             <para><command>[get|set] sens</command></para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% get sens
+                <screen>> get sens
 [GM7] 4</screen>
             </para>
         </section>        
@@ -888,7 +888,7 @@ Done.</screen>
                     <para><command>get sim</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get sim
+                        <screen>> get sim
 [GM7] SIMID=73291534007080101233</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -931,7 +931,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get sleep
+                        <screen>> get sleep
 [GM7] SLEEP=0</screen>
                     </para>
                 
@@ -976,7 +976,7 @@ Done.</screen>
                     <para><command>do test</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% do test
+                        <screen>> do test
 Done.</screen>
                     </para>
                 
@@ -1109,7 +1109,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get track
+                        <screen>> get track
 [GM7] TRACK=0,0,0,0,0,0,0</screen>
                     </para>
             <para><emphasis role="bold">See also:</emphasis></para>
@@ -1170,7 +1170,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get tz
+                        <screen>> get tz
 [GM7] SETTZ=+,01,00</screen>
                     </para>
                 
@@ -1183,7 +1183,7 @@ Done.</screen>
                     <para><command>get ver</command></para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get ver
+                        <screen>> get ver
 [GM7] VER=M7 2.005 GP rev00c,V2</screen>
                     </para>
                 
@@ -1226,7 +1226,7 @@ Done.</screen>
                     </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
-                        <screen>% get vip
+                        <screen>> get vip
 [GM7] SETVIP=,,,,</screen>
                     </para>
                 
@@ -1322,14 +1322,14 @@ Done.</screen>
                 <itemizedlist>
                     <listitem>
                         <para>
-                            <screen>% db dist</screen>
+                            <screen>> db dist</screen>
                         </para>
                         <para>Use all the data points and calculate the total traveled
                             distance</para>
                     </listitem>
                     <listitem>
                         <para>
-                            <screen>% db dist ev=1 2013-08-01 2013-08-01</screen>
+                            <screen>> db dist ev=1 2013-08-01 2013-08-01</screen>
                         </para>
                         <para>Calculate the traveled distance from the previously imported data
                             points from the internal memory of the device (they will have eventid=1)
@@ -1337,7 +1337,7 @@ Done.</screen>
                     </listitem>
                     <listitem>
                         <para>
-                            <screen>% db dist 2013-01-01 2013-12-31 13:00</screen>
+                            <screen>> db dist 2013-01-01 2013-12-31 13:00</screen>
                         </para>
                         <para>Calculate the total distance in DB for 2013 regardless of what event
                             triggered the location update</para>
@@ -1422,7 +1422,7 @@ Done.</screen>
                         <itemizedlist>
                             <listitem>
                                 <para>
-                                    <screen>% db export gpx</screen>
+                                    <screen>> db export gpx</screen>
                                 </para>
                                 <para>Export all stored location in GPX format to the DB dir. If
                                     default values are used then this command would export
@@ -1430,7 +1430,7 @@ Done.</screen>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <screen>% db export dev=3000000001 2013-02-01 2013-02-28 xml /tmp/myexport.xml</screen>
+                                    <screen>> db export dev=3000000001 2013-02-01 2013-02-28 xml /tmp/myexport.xml</screen>
                                 </para>
                                 <para>Export all location reported in February for device
                                         <literal>3000000001</literal> in g7ctgrl own
@@ -1439,7 +1439,7 @@ Done.</screen>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <screen>% db export ev=1 2013-02-01 2013-02-28 gpx recorded</screen>
+                                    <screen>> db export ev=1 2013-02-01 2013-02-28 gpx recorded</screen>
                                 </para>
                                 <para>Export all downloaded locations (eventid=1) for the given
                                     period in <acronym>GPX</acronym> format to
@@ -1447,7 +1447,7 @@ Done.</screen>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <screen>% db export 2014-01-05 17:30 2014-01-05 gpx</screen>
+                                    <screen>> db export 2014-01-05 17:30 2014-01-05 gpx</screen>
                                 </para>
                                 <para>Export all records between <literal>2014-01-05
                                         17:30:00</literal> to <literal>201-01-05
@@ -1602,9 +1602,9 @@ Done.</screen>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para><command>.lookup</command></para>
             <para>
-                <screen>% .lookup
+                <screen>> .lookup
 Address lookup : off
-% .lookup
+> .lookup
 Address lookup : on</screen>
             </para>
         </section>
@@ -1617,7 +1617,7 @@ Address lookup : on</screen>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para><command>.cachestat</command></para>
             <para>
-                <screen>% .cachestat
+                <screen>> .cachestat
 +=========+======+=======+=======+========+
 |  Cache  |  Tot |  Fill |  Hits |   Mem  |
 +=========+======+=======+=======+========+
@@ -1634,7 +1634,7 @@ Address lookup : on</screen>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para><command>.date</command></para>
             <para>
-                <screen>%.date
+                <screen>> .date
 Thu Mar 26 21:01:34 2015</screen>
             </para>
         </section>        
@@ -1678,7 +1678,7 @@ EXAMPLES:
             </para>
             <para><command>help .nl</command></para>
             <para>
-                <screen>% help .nl
+                <screen>> help .nl
 .nl - List all registered nick names
 
 SYNOPSIS:
@@ -1713,7 +1713,7 @@ Long description not yet available.</screen>
             <para>Print software version of daemon</para>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para>
-                <screen>% .ver
+                <screen>> .ver
 GM7 Server version 3.2.0 (build 150318-748)</screen>
             </para>
         </section>
@@ -1726,7 +1726,7 @@ GM7 Server version 3.2.0 (build 150318-748)</screen>
                 <xref linkend="cmd.srv-ld"/>, <xref linkend="cmd.srv-usb"/></para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% .lc
+                <screen>> .lc
 ------------------------------------------------------
                  Command connections
 ------------------------------------------------------
@@ -1747,7 +1747,7 @@ GM7 Server version 3.2.0 (build 150318-748)</screen>
                 <xref linkend="cmd.srv-usb"/></para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% .ld
+                <screen>> .ld
 ------------------------------------------------------
                     GPRS connections
 ------------------------------------------------------
@@ -1805,7 +1805,7 @@ GM7 Server version 3.2.0 (build 150318-748)</screen>
             </para>
             <para><emphasis role="bold">Example:</emphasis></para>
             <para>
-                <screen>% .ln 1
+                <screen>> .ln 1
 #   NICK        DEV.ID               IMEI              SIM                  
 01  MC          3000000001           312345678600039   89123456787000101922 
 
@@ -1825,7 +1825,7 @@ REG.DATE: 20140116 07:56
 UPD.DATE: 20140117 13:36</screen>
             </para>
             <para>
-                <screen>% .ln
+                <screen>> .ln
 -------------------------------------------
 #   NICK        DEV.ID      IMEI              
 -------------------------------------------
@@ -1874,9 +1874,8 @@ UPD.DATE: 20140117 13:36</screen>
             </para>            
             <para><emphasis role="bold">Examples:</emphasis></para>
             <para>
-                <screen>% .table
-Table drawing : On
-%</screen>
+                <screen>> .table
+Table drawing : On</screen>
             </para>
         </section>
         <section xml:id="cmd.srv-target" xreflabel=".target">
@@ -1891,12 +1890,12 @@ Table drawing : On
                 <xref linkend="cmd.srv-usb"/></para>
             <para><emphasis role="bold">Examples:</emphasis></para>
             <para>
-                <screen>% .target MyCar</screen>
+                <screen>> .target MyCar</screen>
             </para>
             <para>All the commands hereafter will be directed to the device with the nick-name
                 "MyCar"</para>
             <para>
-                <screen>% .target 1 </screen>
+                <screen>> .target 1 </screen>
             </para>
             <para>This will use the device connected as client number 1 as listed by the
                     "<command>.lc</command>" command.</para>
@@ -1911,11 +1910,11 @@ Table drawing : On
                 <xref linkend="cmd.srv-target"/></para>
             <para><emphasis role="bold">Examples:</emphasis></para>
             <para>
-                <screen>% .usb 1</screen>
+                <screen>> .usb 1</screen>
             </para>
             <para>Use device connected on USB device 1</para>
             <para>
-                <screen>% .usb
+                <screen>> .usb
 ------------------------------------------------------
  #    USB             Status            Dev ID
 ------------------------------------------------------
@@ -1927,7 +1926,7 @@ Table drawing : On
                 been connected and before the identity of the device had been established the
                 listing would instead have shown the following</para>
             <para>
-                <screen>% .usb
+                <screen>> .usb
 ------------------------------------------------------
  #    USB             Status            Dev ID
 ------------------------------------------------------

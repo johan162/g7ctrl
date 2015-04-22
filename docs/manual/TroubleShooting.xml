@@ -22,13 +22,13 @@
                         troubleshooting.</para>
                     <para>For example if you have used the default port try</para>
                     <para>
-                        <screen>$ nc localhost 3400</screen>
+                        <screen><emphasis role="bold">linux ></emphasis> nc localhost 3400</screen>
                     </para>
                     <para>The command above should just show an empty line indicating that the
                         connection to the server was successfull and that it is now awaiting som
                         more data, i.e. the screen should look like this</para>
                     <para>
-                        <screen>$ nc localhost 3400
+                        <screen><emphasis role="bold">linux ></emphasis> nc localhost 3400
 
 </screen>
                     </para>
@@ -39,7 +39,7 @@
                             '<literal>\r\n</literal>' we use the <command>printf</command>
                         command.</para>
                     <para>
-                        <screen>$ printf "3000000001,20131211002222,14.959445,58.366545,0,0,0,0,2,3.92V,0\r\n" |  
+                        <screen><emphasis role="bold">linux ></emphasis> printf "3000000001,20131211002222,14.959445,58.366545,0,0,0,0,2,3.92V,0\r\n" |  
 nc localhost 3400</screen>
                     </para>
                     <para>Now review the logs for the daemon to see if this location update was
@@ -90,7 +90,7 @@ nc localhost 3400</screen>
                 <listitem>
                     <para>List all <literal>ttyACM&lt;n></literal> devices with</para>
                     <para>
-                        <screen>$ ls /dev/ttyACM*</screen>
+                        <screen><emphasis role="bold">linux ></emphasis> ls /dev/ttyACM*</screen>
                     </para>
                 </listitem>
                 <listitem>
@@ -142,7 +142,7 @@ nc localhost 3400</screen>
             one of your other applications. In order to find out what application is using what port
             the easiest command that accomplish this is most likely</para>
         <para>
-            <screen>$ sudo netstat -tulpn </screen>
+            <screen><emphasis role="bold">linux ></emphasis> sudo netstat -tulpn </screen>
         </para>
         <para>To find out open files use "<command>lsof</command>"</para>
     </section>
