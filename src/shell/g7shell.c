@@ -85,8 +85,8 @@ char   __BUILD_NUMBER = '\0';
 #define DEFAULT_CMD_PORT 3100
 #define DEFAULT_SERVER "127.0.0.1"
 
-#define SHELL_PROMPT "> "
-#define SHELL_PROMPT_ARG ">> "
+#define SHELL_PROMPT "g7ctrl> "
+#define SHELL_PROMPT_ARG "(arg)>> "
 
 
 #define HISTORY_FILE ".g7ctrl_history"
@@ -193,7 +193,8 @@ char *get_cmd_list[] = {
 char *set_cmd_list[] = {
     "roam", "led", "gfen", "sleep", "phone",
     "track", "mswitch", "tz","sms", "comm", 
-    "vip", "ps", "config", "rec", "lowbatt", "sens",
+    "vip", "ps", "config", "rec", "lowbatt", 
+    "sens",
     (char *) NULL
 };
 
