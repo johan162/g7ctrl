@@ -81,7 +81,7 @@ XSL_DIRECTORIES = xsl_stylesheets/images/ xsl_stylesheets
 
 
 CLEANFILES = *~
-EXTRA_DIST = $(XML_FILES) out ${CSS_FILES} ${IMAGE_FILES} ${XSL_FILES} ${DBDOC_DIRECTORIES} ${DBDOC_FILES}
+EXTRA_DIST = $(XML_FILES) out src-stat.awk ${CSS_FILES} ${IMAGE_FILES} ${XSL_FILES} ${DBDOC_DIRECTORIES} ${DBDOC_FILES}
 
 #
 # Hooks to allow us to do the standard "make html" and "make pdf"
@@ -139,6 +139,12 @@ distclean-local:
 	done ;						   	\
         fi                        
 
+
+table-src-stats.xml:
+	cloc --autoconf --quiet --progress-rate=0 --force-lang=make,in \
+	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
+	../../src/ ../. | gawk --file=$(srcdir)/src-stat.awk > table-src-stats.xml
+	
 #
 # Again, this get overly complicated just because of the need to add the
 # files necessary for the build. The extra tests for existence is needed

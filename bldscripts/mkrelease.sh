@@ -3,7 +3,7 @@
 echo "Creating new ChangeLog ..."
 bldscripts/mkcl.sh
 echo "Updating code statistics ..."
-bldscripts/src-stat.sh
+rm docs/manual/table-src-stats.xml
 echo "Running autoreconf ..."
 autoreconf
 if test "$?" = 0; then
