@@ -37,11 +37,10 @@ existing functionality in a number of areas. The major changes are:
 5. new server commands
     - **.date ** Prints current date and time on server
     - **.cachestat**  Prints statistics on the Geolcation caches
-    - **.address** Prints the street address for the last received location
+    - **.lookup** Toggles the address lookup for received locations
     - **db head** Print the *n* latest received location updates
     - **db tail** Print the *n* first received locations
     - **db sort** Controls the sorting order for the *db head* and *db tail*
-       commands DB
     - **.table** Toggles the printing of pretty-printed tables
 
 
@@ -88,7 +87,7 @@ Detailed user visible changes
 
 - Added server command ".date"
 
-- Added server command ".address" to toggle address lookup when storing
+- Added server command ".lookup" to toggle address lookup when storing
   locations in DB. Default value on startup is read from the configuration file.
 
 - Added server command "db sort [arrival|device]" to specify sort order for
@@ -151,13 +150,18 @@ Detailed user visible changes
   The list is always sorted in descending order of date & time of location
   so that the latest location update in the list is always at top. The oldest
   location in the DB has number 1 and the newest the highest.
+
+  The newest location (according to the specified sort order) is always at the
+  top. The sort order can be set to either "byr arrival" or "by timestamp". See
+  the "db sort" command.
+
   For example:
 
         % db head
         0002  2014-12-11 00:57:07 3000000001 61.478771 15.382076 0   "828 93, Sweden"
         0001  2014-12-11 00:22:25 3000000001 57.478771 16.382076 0   "Skälsebo Målehorva 2, 572 96 Fårbo, Sweden"
 
-    Or with pretty printing enabled
+  Or with pretty printing enabled
 
         % .table
         Table drawing : On
@@ -175,7 +179,8 @@ Detailed user visible changes
 Bugs fixed
 ----------
 
-- Fix handling of GFEN command to show all arguments
+- Fix handling of GFEN command to show all arguments. This also changes behavior so
+  that it is nop longer possible to only use the "set gfen on" shortcut.
 
 - Fixed a bug where device replies for commands with no reply argument was not
   properly received.  
