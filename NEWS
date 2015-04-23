@@ -62,7 +62,8 @@ Detailed user visible changes
 - The shell now indicates with a second level prompt when the input is
   within the argument list for a command.
 
-- Replaced "%" as command line prompt in shell with ">" 
+- Replaced "%" as command line prompt in shell with "g7ctrl>" and to "(arg)>> " 
+  while in command arguments.
 
 - Mail templates slightly updated with new look & feel
 
