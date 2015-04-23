@@ -246,6 +246,8 @@ Internal changes (visible for developers and packagers)
 - The README files and other text info files are being transformed to markdown
   syntax
 
+- The created file for source statistics in the manual is removed from the
+  repo since it is a constructed file and updates on a make of the manual.
 
 
 
