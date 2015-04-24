@@ -248,6 +248,7 @@ Internal changes (visible for developers and packagers)
 
 - The created file for source statistics in the manual is removed from the
   repo since it is a constructed file and updates on a make of the manual.
+  The stats are now created from the makefile in the docs/manual directory.
 
 
 
