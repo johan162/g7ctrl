@@ -160,7 +160,7 @@ static const struct option long_options [] = {
 char *cmd_list[] = {
     "get", "set", "do", "help", "db",
     "preset", ".date", ".cachestat", ".usb", ".target", ".ver", ".lc", ".ld",
-    ".address", ".table", ".nick", ".ln", ".dn", ".ratereset",
+    ".lookup", ".table", ".nick", ".ln", ".dn", ".ratereset",
     "exit", "quit",
     (char *) NULL
 };
@@ -210,7 +210,7 @@ char *onoff_cmd_list[] = {
 
 char *help_cmd_list[] = {
     "db", "preset", ".date", ".cachestat", ".usb", 
-    ".target", ".ver", ".lc", ".ld", ".address", ".table", ".nick", 
+    ".target", ".ver", ".lc", ".ld", ".lookup", ".table", ".nick", 
     ".ln", ".dn", ".ratereset",
     "address", "ver", "locg", "gfevt", "phone",
     "roam", "led", "gfen", "sleep", "loc",
