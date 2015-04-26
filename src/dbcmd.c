@@ -722,7 +722,7 @@ db_calc_distance(struct client_info *cli_info, ssize_t nf, char **fields) {
     return rc;
 }
 
-static int sort_order = 0;
+static int sort_order = SORT_ARRIVALTIME;
 
 /**
  * Sort order for the DB tail and DB head.

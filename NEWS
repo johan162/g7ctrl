@@ -13,8 +13,11 @@ This is a feature release which increases functionality, stability and fine-tune
 existing functionality in a number of areas. The major changes are: 
 
 1. more database commands to display and list entries in the DB
+
 2. improvements in geolocation lookup to handle failed API calls and Google rate limit
+
 3. context sensitive command completion in command shell and other improvements 
+
 4. a number of new configuration options (in *g7config.conf*)
 
     - Specification of a Google API key which is used in the geolocation lookups.
@@ -34,6 +37,7 @@ existing functionality in a number of areas. The major changes are:
     - A new setting to customize mail subject prefix
 
     - A new setting to choose to use a shorter form of device ID in subject header
+
 5. new server commands
     - **.date ** Prints current date and time on server
     - **.cachestat**  Prints statistics on the Geolcation caches
