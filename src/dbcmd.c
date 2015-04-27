@@ -999,12 +999,9 @@ mail_lastloc(struct client_info *cli_info) {
         add_keypair(keys, MAX_KEYPAIRS, "DATETIME", splitdatetime(res[0], dbuff), &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", res[1], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "LAT", res[2], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "LONG", res[3], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "LON", res[3], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "SPEED", res[4], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "HEADING", res[5], &keyIdx);
-        for (size_t i = 0; i < 6; ++i) {
-            free(res[i]);
-        }
         
         if (include_minimap) {
             
@@ -1029,7 +1026,7 @@ mail_lastloc(struct client_info *cli_info) {
             snprintf(imgsize,sizeof(imgsize),"%dx%d",minimap_width,minimap_height);
             const char *overview_filename = "overview_map.png";
             const char *detailed_filename = "detailed_map.png";
-            size_t overview_datasize=0, detailed_datasize=0;
+            size_t overview_datasize=0, detailed_datasize=0;           
 
             int rc1 = get_minimap_from_latlon(lat, lon, overview_zoom, minimap_width, minimap_height, &overview_imgdata, &overview_datasize);
             if( 0 == rc1 )
@@ -1062,7 +1059,10 @@ mail_lastloc(struct client_info *cli_info) {
                                     keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
         }
         
-        
+        for (size_t i = 0; i < 6; ++i) {
+            free(res[i]);
+        }
+                 
         if (-1 == rc) {
             logmsg(LOG_ERR, "Cannot send mail with last location ( %d : %s )", errno, strerror(errno));
             _writef(sockd, "[ERR] Could not send mail.");

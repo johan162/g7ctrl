@@ -1,10 +1,10 @@
 GM7 Last Received Location
 
-http://maps.google.com/maps?q=[LAT],[LONG]
+http://maps.google.com/maps?q=[LAT],[LON]
 
  Device: [NICK_DEVID]
    Date: [DATETIME]
-    Lat: [LAT]          Lon: [LONG]
+    Lat: [LAT]          Lon: [LON]
   Speed: [SPEED]
 Heading: [HEADING]
 
