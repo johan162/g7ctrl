@@ -737,6 +737,18 @@ db_set_sortorder(enum sort_order_t order) {
 }
 
 /**
+ * Get a human string representation of the sort order., The return value
+ * is a string pointer to a static internal string
+ * @return Pointer to static string
+ */
+const char *
+db_get_sortorder_string(void) {
+    static char const  *sort_order_string[] = {"By device time","By arrival time"};
+    return sort_order_string[sort_order];
+}
+
+
+/**
  * Internal helper. Store six char * values in buff[] it is the calling routines responsibility to free
  * the strings after usage.
  * @param buff Buffer to store result in

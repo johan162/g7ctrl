@@ -1966,6 +1966,8 @@ cmdinterp(char *cmdstr, struct client_info *cli_info) {
     } else if (0 < matchcmd("^db sort arrival" _PR_E, cmdstr, &field)) {        
         db_set_sortorder(SORT_ARRIVALTIME);        
         _writef(cli_info->cli_socket, "Table sort order: arrival");
+    } else if(0 < matchcmd("^db sort" _PR_E, cmdstr, &field)) {
+         _writef(cli_info->cli_socket, "Sort order: %s",db_get_sortorder_string());
     } else if (0 < matchcmd("^db deletelocations" _PR_E, cmdstr, &field)) {
         rc = db_empty_loc(cli_info);
     } else if (0 < (nf = matchcmd("^preset" _PR_S "(list|refresh)" _PR_E, cmdstr, &field))) {
