@@ -992,7 +992,7 @@ mail_lastloc(struct client_info *cli_info) {
                      use_short_devid ? short_devid : res[1]);
         }
 
-        snprintf(subjectbuff, sizeof (subjectbuff), "%s[%s] - Last location in DB",mail_subject_prefix, res[1]);
+        snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] - Last location in DB",mail_subject_prefix, nick_devid);
 
         add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
@@ -1036,8 +1036,9 @@ mail_lastloc(struct client_info *cli_info) {
                 logmsg(LOG_ERR, "Failed to get static map from Google. Are you using a correct API key?");
                 logmsg(LOG_ERR, "Sending mail without the static maps.");
                 rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
-                                "mail_event",
-                                keys, keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+                                "mail_lastloc",
+                                keys, keyIdx, MAX_KEYPAIRS, 
+                                NULL, 0, NULL);
             } else {
                 struct inlineimage_t *inlineimg_arr = calloc(2, sizeof (struct inlineimage_t));
                 setup_inlineimg(&inlineimg_arr[0], overview_filename, overview_datasize, overview_imgdata);
