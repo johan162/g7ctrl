@@ -1,6 +1,6 @@
 # ===============================================================================
 # Automake build script
-# Author:      Johan Persson (johan162@gmail.com)
+# Author: Johan Persson (johan162@gmail.com)
 #
 # Copyright (C) 2013-2015 Johan Persson
 #
@@ -47,7 +47,8 @@ dist_mailtemplates_DATA=mail_templates/mail_event.html  mail_templates/mail_last
 mail_templates/mail_with_export_attachment.html mail_templates/mail_event.txt mail_templates/mail_lastloc.txt \
 mail_templates/mail_tracker_conn.txt mail_templates/mail_with_export_attachment.txt \
 mail_templates/mail_quotalimit.txt mail_templates/mail_quotalimit.html \
-mail_templates/mail_event_img.html mail_templates/mail_event_img.txt
+mail_templates/mail_event_img.html mail_templates/mail_event_img.txt \
+mail_templates/mail_lastloc_img.html mail_templates/mail_lastloc_img.txt 
 
 # All sources
 g7ctrl_SOURCES = g7ctrl.c g7config.c futils.c utils.c lockfile.c xstr.c logger.c pcredmalloc.c \

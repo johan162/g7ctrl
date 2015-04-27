@@ -925,12 +925,10 @@ int
 mail_lastloc(struct client_info *cli_info) {
 
     const int sockd = cli_info->cli_socket;
-    const size_t max_keypairs = 50;
-
-    // FIXME: Update to real addresses
+    const size_t MAX_KEYPAIRS = 50;
 
     // Setup key replacements
-    struct keypairs *keys = new_keypairlist(max_keypairs);
+    struct keypairs *keys = new_keypairlist(MAX_KEYPAIRS);
     char valBuff[256];
     size_t keyIdx = 0;
 
@@ -938,24 +936,24 @@ mail_lastloc(struct client_info *cli_info) {
     time_t now = time(NULL);
     ctime_r(&now, valBuff);
     valBuff[strnlen(valBuff, sizeof (valBuff)) - 1] = 0; // Remove trailing newline
-    add_keypair(keys, max_keypairs, "SERVERTIME", valBuff, &keyIdx);
+    add_keypair(keys, MAX_KEYPAIRS, "SERVERTIME", valBuff, &keyIdx);
 
     // Include the server name in the mail
     gethostname(valBuff, sizeof (valBuff));
     valBuff[sizeof (valBuff) - 1] = '\0';
-    add_keypair(keys, max_keypairs, "SERVERNAME", valBuff, &keyIdx);
+    add_keypair(keys, MAX_KEYPAIRS, "SERVERNAME", valBuff, &keyIdx);
 
-    add_keypair(keys, max_keypairs, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
-    add_keypair(keys, max_keypairs, "FORMAT", "GPX", &keyIdx);
+    add_keypair(keys, MAX_KEYPAIRS, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
+    add_keypair(keys, MAX_KEYPAIRS, "FORMAT", "GPX", &keyIdx);
 
     // Add information on disk usage
     char ds_fs[64], ds_size[64], ds_avail[64], ds_used[64];
     int ds_use;
     if (0 == get_diskspace(db_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
-        add_keypair(keys, max_keypairs, "DISK_SIZE", ds_size, &keyIdx);
-        add_keypair(keys, max_keypairs, "DISK_USED", ds_used, &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "DISK_SIZE", ds_size, &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "DISK_USED", ds_used, &keyIdx);
         snprintf(valBuff, sizeof (valBuff), "%d", ds_use);
-        add_keypair(keys, max_keypairs, "DISK_PERCENT_USED", valBuff, &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "DISK_PERCENT_USED", valBuff, &keyIdx);
     }
 
 
@@ -963,37 +961,108 @@ mail_lastloc(struct client_info *cli_info) {
     int rc = _db_getlastloc(res);
     if (0 == rc) {
         char dbuff[32];
-        char to[128];
-        char subject[128];
+        char subjectbuff[128];
         // Translate dev id to nick name if it exists
         char nick[16];
         char nick_devid[32];
+        
+        char short_devid[8];        
+        *short_devid = '\0';            
+        if( use_short_devid ) {
+            const size_t devid_len = strlen(res[1]);
+            for( size_t i=0 ; i < 4; i++) {
+                short_devid[i] = res[1][devid_len-4+i];
+            }            
+            short_devid[4] = '\0';            
+            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", short_devid, &keyIdx);
+        } else {
+            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", res[1], &keyIdx);
+        }        
+        
         if (db_get_nick_from_devid(res[1], nick)) {
             // No nickname. Put device ID in its place
-            strncpy(nick, res[1], sizeof (nick) - 1);
+            xstrlcpy(nick, res[1], sizeof (nick) - 1);
             nick[sizeof (nick) - 1] = '\0';
-            strncpy(nick_devid, res[1], sizeof (nick_devid) - 1);
+            if( use_short_devid )
+                xstrlcpy(nick_devid, short_devid, sizeof (nick_devid) - 1);
+            else
+                xstrlcpy(nick_devid, res[1], sizeof (nick_devid) - 1);
         } else {
-            snprintf(nick_devid, sizeof (nick_devid), "%s (%s)", nick, res[1]);
+            snprintf(nick_devid, sizeof (nick_devid), "%s (%s)", nick, 
+                     use_short_devid ? short_devid : res[1]);
         }
 
-        snprintf(subject, sizeof (subject), "%s[%s] - Last location in DB",mail_subject_prefix, res[1]);
+        snprintf(subjectbuff, sizeof (subjectbuff), "%s[%s] - Last location in DB",mail_subject_prefix, res[1]);
 
-        add_keypair(keys, max_keypairs, "NICK", nick, &keyIdx);
-        add_keypair(keys, max_keypairs, "NICK_DEVID", nick_devid, &keyIdx);
-        add_keypair(keys, max_keypairs, "DATETIME", splitdatetime(res[0], dbuff), &keyIdx);
-        add_keypair(keys, max_keypairs, "DEVICEID", res[1], &keyIdx);
-        add_keypair(keys, max_keypairs, "LAT", res[2], &keyIdx);
-        add_keypair(keys, max_keypairs, "LONG", res[3], &keyIdx);
-        add_keypair(keys, max_keypairs, "SPEED", res[4], &keyIdx);
-        add_keypair(keys, max_keypairs, "HEADING", res[5], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "DATETIME", splitdatetime(res[0], dbuff), &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", res[1], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "LAT", res[2], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "LONG", res[3], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "SPEED", res[4], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "HEADING", res[5], &keyIdx);
         for (size_t i = 0; i < 6; ++i) {
             free(res[i]);
         }
-        char *templatename = "mail_lastloc";
-        strcpy(to, send_mailaddress);
-        rc = send_mail_template(subject, daemon_email_from, to, templatename, keys, keyIdx, max_keypairs, NULL, 0, NULL);
+        
+        if (include_minimap) {
+            
+            logmsg(LOG_DEBUG,"Adding minimap to mail");
 
+            char kval[32];
+            snprintf(kval,sizeof(kval),"%d",minimap_width);
+            add_keypair(keys, MAX_KEYPAIRS, "IMG_WIDTH", kval, &keyIdx);
+            
+            snprintf(kval,sizeof(kval),"%d",minimap_overview_zoom);
+            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_OVERVIEW", kval, &keyIdx);
+            
+            snprintf(kval,sizeof(kval),"%d",minimap_detailed_zoom);
+            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_DETAILED", kval, &keyIdx);
+
+            char *overview_imgdata, *detailed_imgdata;
+            const char *lat = res[2];
+            const char *lon = res[3];
+            const unsigned short overview_zoom = minimap_overview_zoom;
+            const unsigned short detailed_zoom = minimap_detailed_zoom;
+            char imgsize[12];
+            snprintf(imgsize,sizeof(imgsize),"%dx%d",minimap_width,minimap_height);
+            const char *overview_filename = "overview_map.png";
+            const char *detailed_filename = "detailed_map.png";
+            size_t overview_datasize=0, detailed_datasize=0;
+
+            int rc1 = get_minimap_from_latlon(lat, lon, overview_zoom, minimap_width, minimap_height, &overview_imgdata, &overview_datasize);
+            if( 0 == rc1 )
+                rc1 = get_minimap_from_latlon(lat, lon, detailed_zoom, minimap_width, minimap_height, &detailed_imgdata, &detailed_datasize);
+
+            if (-1 == rc1 ) {
+                logmsg(LOG_ERR, "Failed to get static map from Google. Are you using a correct API key?");
+                logmsg(LOG_ERR, "Sending mail without the static maps.");
+                rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
+                                "mail_event",
+                                keys, keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+            } else {
+                struct inlineimage_t *inlineimg_arr = calloc(2, sizeof (struct inlineimage_t));
+                setup_inlineimg(&inlineimg_arr[0], overview_filename, overview_datasize, overview_imgdata);
+                setup_inlineimg(&inlineimg_arr[1], detailed_filename, detailed_datasize, detailed_imgdata);
+
+                rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
+                                    "mail_lastloc_img",
+                                    keys, keyIdx, MAX_KEYPAIRS,
+                                    NULL, 2, inlineimg_arr);
+
+                free_inlineimg_array(inlineimg_arr, 2);
+                free(inlineimg_arr);
+
+            }
+
+        } else {
+        
+            rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, "mail_lastloc", keys, 
+                                    keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+        }
+        
+        
         if (-1 == rc) {
             logmsg(LOG_ERR, "Cannot send mail with last location ( %d : %s )", errno, strerror(errno));
             _writef(sockd, "[ERR] Could not send mail.");
@@ -1001,12 +1070,15 @@ mail_lastloc(struct client_info *cli_info) {
             return -1;
         }
 
-        _writef(sockd, "Mail with location sent to \"%s\"", to);
+        _writef(sockd, "Mail with location sent to \"%s\"", send_mailaddress);
         rc = 0;
+        
     } else {
+        
         logmsg(LOG_ERR, "Cannot get last location from DB");
         _writef(sockd, "[ERR] Cannot retrieve location from DB.");
         rc = -1;
+        
     }
     free(keys);
     return rc;
