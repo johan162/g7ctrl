@@ -748,8 +748,9 @@ db_get_sortorder_string(void) {
 }
 
 
+#define _DB_GETLOCLIST_COLS 7
 /**
- * Internal helper. Store six char * values in buff[] it is the calling routines responsibility to free
+ * Internal helper. Store seven char * values in buff[] it is the calling routines responsibility to free
  * the strings after usage.
  * @param buff Buffer to store result in
  * @return  0 on success, -1 on failure, -2 if DB empty
@@ -761,11 +762,11 @@ _db_getloclist(char *buff[],unsigned maxrows,_Bool head) {
         char *errMsg;
 
         char q[256];
-        snprintf(q,sizeof(q),"SELECT fld_datetime, fld_deviceid, fld_lat, fld_lon, fld_speed, fld_approxaddr FROM tbl_track ORDER BY %s %s LIMIT %u;",
+        snprintf(q,sizeof(q),"SELECT fld_datetime, fld_deviceid, fld_lat, fld_lon, fld_speed, fld_approxaddr, fld_voltage FROM tbl_track ORDER BY %s %s LIMIT %u;",
                 sort_order?"fld_timestamp":"fld_datetime",
                 head?"DESC":"ASC",maxrows);
         num_cb = 0;
-        num_cb_cols = 6;
+        num_cb_cols = _DB_GETLOCLIST_COLS;
         max_num_cb = maxrows;
         int rc = sqlite3_exec(sqlDB, q, sql_reslist_callback, buff, &errMsg);
         if (rc) {
@@ -786,12 +787,6 @@ _db_getloclist(char *buff[],unsigned maxrows,_Bool head) {
         return -1;
     }
 }
-
-int
-_db_getlastloc(char *buff[]) {
-    return _db_getloclist(buff,1,TRUE);
-}
-
 
 /**
  * Command to get the last stored location (regardless of even and device) and
@@ -815,7 +810,7 @@ db_lastloc(struct client_info *cli_info) {
 int
 db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
     const int sockd = cli_info->cli_socket;
-    const size_t cols = 6;
+    const size_t cols = _DB_GETLOCLIST_COLS;
 
     if (numrows > 1000) {
         logmsg(LOG_ERR, "Too many rows in db_loclist()");
@@ -915,6 +910,17 @@ db_tail(struct client_info *cli_info, unsigned size) {
     return db_loclist(cli_info, FALSE, size);
 }
 
+
+/**
+ * Internal helper function
+ * @param buff
+ * @return 
+ */
+static int
+_db_getlastloc(char *buff[]) {
+    return _db_getloclist(buff,1,TRUE);
+}
+
 /**
  * Mail the last stored location to the predefined mail address in the config
  * file.
@@ -956,8 +962,7 @@ mail_lastloc(struct client_info *cli_info) {
         add_keypair(keys, MAX_KEYPAIRS, "DISK_PERCENT_USED", valBuff, &keyIdx);
     }
 
-
-    char *res[6];
+    char *res[_DB_GETLOCLIST_COLS];
     int rc = _db_getlastloc(res);
     if (0 == rc) {
         char dbuff[32];
@@ -1001,7 +1006,10 @@ mail_lastloc(struct client_info *cli_info) {
         add_keypair(keys, MAX_KEYPAIRS, "LAT", res[2], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "LON", res[3], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "SPEED", res[4], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "HEADING", res[5], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "APPROX_ADDRESS", res[5], &keyIdx);
+        add_keypair(keys, MAX_KEYPAIRS, "VOLTAGE", res[6], &keyIdx);
+        
+        
         
         if (include_minimap) {
             

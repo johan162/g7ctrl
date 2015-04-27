@@ -4,9 +4,11 @@ http://maps.google.com/maps?q=[LAT],[LONG]
 
  Device: [NICK_DEVID]
    Date: [DATETIME]
-    Lat: [LAT]          Lon: [LONG]
+Address: [APPROX_ADDRESS]
+    Lat: [LAT]          
+    Lon: [LON]
   Speed: [SPEED]
-Heading: [HEADING]
+Voltage: [VOLTAGE]
 
 Server information
 ------------------
