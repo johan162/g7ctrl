@@ -827,13 +827,15 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
     
     logmsg(LOG_DEBUG, "db_loclist() : _db_getloclist(), rc=%d", rc);
     
-    char buff[32];
+    char buff[64];
     int size;
     _db_get_size(&size);
     if (0 == rc) {
 
         // Construct the array of data fields                
-        char *tdata[(numrows + 1)*(cols + 1)];
+        // The displayed table is one column less since we don't display the voltage
+        const size_t display_cols=cols-1;
+        char *tdata[(numrows + 1)*(display_cols+1)];
         memset(tdata, 0, sizeof (tdata));
         tdata[0] = strdup("#");
         tdata[1] = strdup("Date");
@@ -846,26 +848,28 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
         if (head) {
             for (int i = 0; i < num_cb; i++) {
                 snprintf(buff, sizeof (buff), "%04d", size - i);
-                tdata[(i + 1)*(cols + 1) + 0] = strdup(buff);
+                tdata[(i + 1)*(display_cols + 1) + 0] = strdup(buff);
                 splitdatetime(res[i * cols + 0], buff);
-                tdata[(i + 1)*(cols + 1) + 1] = strdup(buff);
-                for (size_t j = 2; j < cols + 1; ++j) {
-                    tdata[(i + 1)*(cols + 1) + j] = strdup(res[i * cols + (j - 1)]);
+                tdata[(i + 1)*(display_cols + 1) + 1] = strdup(buff);
+                for (size_t j = 2; j < display_cols + 1; ++j) {
+                    tdata[(i + 1)*(display_cols + 1) + j] = strdup(res[i * cols + (j - 1)]);
                 }
             }
         } else {
             for (int i = 0; i < num_cb; i++) {
                 snprintf(buff, sizeof (buff), "%04d", num_cb - i);
-                tdata[(i + 1)*(cols + 1) + 0] = strdup(buff);
+                tdata[(i + 1)*(display_cols + 1) + 0] = strdup(buff);
                 splitdatetime(res[(num_cb - i - 1) * cols + 0], buff);
-                tdata[(i + 1)*(cols + 1) + 1] = strdup(buff);
-                for (size_t j = 2; j < cols + 1; ++j) {
-                    tdata[(i + 1)*(cols + 1) + j] = strdup(res[(num_cb - i - 1) * cols + (j - 1)]);
+                tdata[(i + 1)*(display_cols + 1) + 1] = strdup(buff);
+                for (size_t j = 2; j < display_cols + 1; ++j) {
+                    tdata[(i + 1)*(display_cols + 1) + j] = strdup(res[(num_cb - i - 1) * cols + (j - 1)]);
                 }
             }
         }
 
-        table_t *t = utable_create_set(num_cb + 1, cols + 1, tdata);
+        logmsg(LOG_DEBUG, "db_loclist() : Setting up table for %d rows", num_cb);
+        table_t *t = utable_create_set(num_cb + 1, display_cols + 1, tdata);
+        logmsg(LOG_DEBUG, "db_loclist() : Created table table for %d rows", num_cb);
         utable_set_row_halign(t, 0, CENTERALIGN);                    
         if (cli_info->use_unicode_table) {
             utable_set_interior(t,TRUE,FALSE);
@@ -876,7 +880,7 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
         
         
         utable_free(t);
-        for (size_t i = 0; i < (numrows + 1)*(cols + 1); i++) {
+        for (size_t i = 0; i < (numrows + 1)*(display_cols + 1); i++) {
             free(tdata[i]);
         }
 

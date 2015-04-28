@@ -8,6 +8,7 @@
  *              run separately as a kind of micro unit test.
  *              gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: unicode_tbl.c 1010 2015-04-28 20:33:05Z ljp $
  *
  * Copyright (C) 2015 Johan Persson
  *
@@ -1289,7 +1290,7 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     if(buffleft < 1) return -1;
     
     _utable_stroke_verticals(buff, &buffleft, totwidth, eval, bottom_horizontal, bottom_up, bottom_up, NULL);
-    len=snprintf(pbuff, MAXPBUFF, "%s\n", bottom_right);
+    len=snprintf(pbuff, MAXPBUFF, "%s", bottom_right);
     xstrlcat(buff,pbuff,buffleft);
     buffleft -= len;
     if(buffleft < 1) return -1;
