@@ -62,13 +62,13 @@ Detailed user visible changes
 - Added smart context sensitive command completion in the command shell 
   invoked by the tab-key
 
-- The shell now indicates with a second level prompt when the input is
-  within the argument list for a command.
-
 - Replaced "%" as command line prompt in shell with "g7ctrl>" and to "(arg)>> " 
-  while in command arguments.
+  while in command arguments (second level).
 
 - Mail templates slightly updated with new look & feel
+
+- The information in last location mail template has been updated to be in line
+  with the other mail templates
 
 - Mail templates updated to try to circumvent Googles stupidity in auto-trimming
   of mails when the mail recipient uses a GMail account. This is not a 100% fix
@@ -89,13 +89,13 @@ Detailed user visible changes
 - Added server command ".cachestat" to return statistics on cache hits and
   usage.
 
-- Added server command ".date"
+- Added server command ".date" to print server current date and time
 
 - Added server command ".lookup" to toggle address lookup when storing
   locations in DB. Default value on startup is read from the configuration file.
 
 - Added server command "db sort [arrival|device]" to specify sort order for
-  "db head" and "db tail" commands.
+  "db head" and "db tail" commands. Only "db sort" prints the current sort order.
 
 - Added "subject_prefix" setting the configuration file to allow customization
   of the prefix used in the subject header for all mails sent from the daemon.
@@ -131,8 +131,9 @@ Detailed user visible changes
 
 - Add server command ".table" to output result tables in nicer unicode table.
   The command itself toggles this option for the connected client.
-  This currently only affects the ".usb" and ".target" commands which outputs
-  result tables.
+  This affects all command with tabled output such as ".usb",".target",".ld"
+  and so on.
+
   For example:
 
         % .table
@@ -151,12 +152,13 @@ Detailed user visible changes
 - Added two DB commands "db tail" and "db head" which displays a list of location
   updates from the head or tail of the location table. Only the key fields
   position, timestamp, address, speed and device id fields are displayed.
-  The list is always sorted in descending order of date & time of location
-  so that the latest location update in the list is always at top. The oldest
-  location in the DB has number 1 and the newest the highest.
+  The list is sorted depending on the setting from the "db sort" command. By
+  default the sort order is by time of arrival. The oldest
+  location in the DB has number 1 and the newest the highest number (=equal the
+  number of locations in the DB).
 
   The newest location (according to the specified sort order) is always at the
-  top. The sort order can be set to either "byr arrival" or "by timestamp". See
+  top. The sort order can be set to either "by arrival" or "by timestamp". See
   the "db sort" command.
 
   For example:
@@ -194,6 +196,8 @@ Bugs fixed
 - The memcpy() used strlcpy() would read too much memory for short strings. This
   would never cause a buffer overwrite error but could be reading non-accessible
   memory and result in a **SIGSEGV**.
+
+- The field labels in the last location mail template was wrong
 
 
 Internal changes (visible for developers and packagers)
