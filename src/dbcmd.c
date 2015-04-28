@@ -947,8 +947,8 @@ mail_lastloc(struct client_info *cli_info) {
     // Include the server name in the mail
     gethostname(valBuff, sizeof (valBuff));
     valBuff[sizeof (valBuff) - 1] = '\0';
+    
     add_keypair(keys, MAX_KEYPAIRS, "SERVERNAME", valBuff, &keyIdx);
-
     add_keypair(keys, MAX_KEYPAIRS, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
     add_keypair(keys, MAX_KEYPAIRS, "FORMAT", "GPX", &keyIdx);
 
@@ -973,31 +973,26 @@ mail_lastloc(struct client_info *cli_info) {
         
         char short_devid[8];        
         *short_devid = '\0';            
-        if( use_short_devid ) {
-            const size_t devid_len = strlen(res[1]);
-            for( size_t i=0 ; i < 4; i++) {
-                short_devid[i] = res[1][devid_len-4+i];
-            }            
-            short_devid[4] = '\0';            
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", short_devid, &keyIdx);
-        } else {
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", res[1], &keyIdx);
-        }        
+
+        const size_t devid_len = strlen(res[1]);
+        for( size_t i=0 ; i < 4; i++) {
+            short_devid[i] = res[1][devid_len-4+i];
+        }            
+        short_devid[4] = '\0';            
         
         if (db_get_nick_from_devid(res[1], nick)) {
             // No nickname. Put device ID in its place
             xstrlcpy(nick, res[1], sizeof (nick) - 1);
             nick[sizeof (nick) - 1] = '\0';
-            if( use_short_devid )
-                xstrlcpy(nick_devid, short_devid, sizeof (nick_devid) - 1);
-            else
-                xstrlcpy(nick_devid, res[1], sizeof (nick_devid) - 1);
+            xstrlcpy(nick_devid, res[1], sizeof (nick_devid) - 1);
         } else {
+            // If we have a nickname we try o use the short devid to remind the user
+            // instead of long to save some space.
             snprintf(nick_devid, sizeof (nick_devid), "%s (%s)", nick, 
                      use_short_devid ? short_devid : res[1]);
         }
 
-        snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] - Last location in DB",mail_subject_prefix, nick_devid);
+        snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] - Last location in DB",mail_subject_prefix, use_short_devid?short_devid:nick_devid);
 
         add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
@@ -1008,9 +1003,7 @@ mail_lastloc(struct client_info *cli_info) {
         add_keypair(keys, MAX_KEYPAIRS, "SPEED", res[4], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "APPROX_ADDRESS", res[5], &keyIdx);
         add_keypair(keys, MAX_KEYPAIRS, "VOLTAGE", res[6], &keyIdx);
-        
-        
-        
+                        
         if (include_minimap) {
             
             logmsg(LOG_DEBUG,"Adding minimap to mail");
