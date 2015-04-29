@@ -9,16 +9,33 @@ v3.2.0 (may 2015)
 General notes for this release
 ------------------------------
 
-This is a feature release which increases functionality, stability and fine-tunes
-existing functionality in a number of areas. The major changes are: 
+This is a major feature release which increases functionality, stability and 
+fine-tunes existing functionality in a number of areas. The details of the 
+release can be found below. As a summary the highlights are: 
 
-1. more database commands to display and list entries in the DB
+1. Option to include two static miniature maps with different zoom factors in 
+   the various event notification mails that directly shows the location.
 
-2. improvements in geolocation lookup to handle failed API calls and Google rate limit
+2. improvements in geolocation lookup for more robustness in terms of handling
+   all possible returns from Google API calls and adapt to Google different 
+   user limits in number of and frequency of API calls allowed.
 
-3. context sensitive command completion in command shell and other improvements 
+3. context sensitive command completion have been introduced in the "g7sh"
+   shell.
 
-4. a number of new configuration options (in *g7config.conf*)
+4. full UTF8 multi-byte string handling now supported for all server output. 
+
+5. seven new server commands
+    - **.date ** Prints current date and time on server
+    - **.cachestat**  Prints statistics on the Geo-lcation caches
+    - **.lookup** Toggles the address lookup for received locations
+    - **db head** Print the *n* latest received location updates
+    - **db tail** Print the *n* first received locations
+    - **db sort** Controls the sorting order for the *db head* and *db tail*
+    - **.table** Toggles the printing of pretty-printed tables
+
+6. a number of new configuration options (in *g7config.conf*) to control the new
+   features.
 
     - Specification of a Google API key which is used in the geolocation lookups.
       This allows the specification of a commercial key to increase the allowed
@@ -31,22 +48,12 @@ existing functionality in a number of areas. The major changes are:
       possible to include two static mini-maps in the notification mails on event
       notifications for those event that carry a location. This is a small
       customizable static Google map centered around the current location of
-      the tracker at two zoom levels (overview and detailed). The exact zoom-levels
-      used are customizable
+      the tracker at two zoom levels (overview and detailed). The exact 
+      zoom-levels used are customizable
 
     - A new setting to customize mail subject prefix
 
     - A new setting to choose to use a shorter form of device ID in subject header
-
-5. new server commands
-    - **.date ** Prints current date and time on server
-    - **.cachestat**  Prints statistics on the Geolcation caches
-    - **.lookup** Toggles the address lookup for received locations
-    - **db head** Print the *n* latest received location updates
-    - **db tail** Print the *n* first received locations
-    - **db sort** Controls the sorting order for the *db head* and *db tail*
-    - **.table** Toggles the printing of pretty-printed tables
-
 
 -----
 **NOTE:** Since the configuration file has been updated it is recommended to
@@ -65,14 +72,10 @@ Detailed user visible changes
 - Replaced "%" as command line prompt in shell with "g7ctrl>" and to "(arg)>> " 
   while in command arguments (second level).
 
-- Mail templates slightly updated with new look & feel
+- Mail templates updated with new look & feel
 
 - The information in last location mail template has been updated to be in line
   with the other mail templates
-
-- Mail templates updated to try to circumvent Googles stupidity in auto-trimming
-  of mails when the mail recipient uses a GMail account. This is not a 100% fix
-  since Gmails auto-trimming is insanely diabolic.
 
 - Added options "include_minimap" to enable the inclusion of a small static map
   showing the current location (with both an overview and a detailed map) the the
@@ -145,8 +148,8 @@ Detailed user visible changes
         │ 01 │ *79.102.220.42 │ 2015-03-05 20:06 │ 3000000001 │
         └────┴────────────────┴──────────────────┴────────────┘
 
-- Improved geo location lookup. If a location does not have a street address
-  then see if it has a at least a postal code and in that case return that before
+- Improved geo -location lookup. If a location does not have a street address
+  then see if it has a at least a postal code and in that case return that
   before giving up.
 
 - Added two DB commands "db tail" and "db head" which displays a list of location
@@ -186,7 +189,7 @@ Bugs fixed
 ----------
 
 - Fix handling of GFEN command to show all arguments. This also changes behavior so
-  that it is nop longer possible to only use the "set gfen on" shortcut.
+  that it is no longer possible to only use the "set gfen on" as a shortcut.
 
 - Fixed a bug where device replies for commands with no reply argument was not
   properly received.  
@@ -251,8 +254,8 @@ Internal changes (visible for developers and packagers)
   it might need adjustment if a non standard location is used for the logfile.
   The logrotate script assumes that the logfile is "/var/log/g7ctrl/g7ctrl.log"
 
-- The README files and other text info files are being transformed to markdown
-  syntax
+- The README files and other text info files have been made compatible with
+  markdown syntax
 
 - The created file for source statistics in the manual is removed from the
   repo since it is a constructed file and updates on a make of the manual.

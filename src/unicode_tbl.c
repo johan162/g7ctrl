@@ -912,7 +912,7 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
 
 
 /**
- * Stroke the entire table in the specified style to specified file descriptor
+ * Stroke the entire table in the specified style to specified string buffer
  * @param t     Table pointer
  * @param fd    File descriptor to write to
  * @param style Table layout style to use
