@@ -867,10 +867,9 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
             }
         }
 
-        logmsg(LOG_DEBUG, "db_loclist() : Setting up table for %d rows", num_cb);
         table_t *t = utable_create_set(num_cb + 1, display_cols + 1, tdata);
-        logmsg(LOG_DEBUG, "db_loclist() : Created table table for %d rows", num_cb);
-        utable_set_row_halign(t, 0, CENTERALIGN);                    
+        utable_set_row_halign(t, 0, CENTERALIGN); 
+        utable_set_col_halign(t, 5, RIGHTALIGN);
         if (cli_info->use_unicode_table) {
             utable_set_interior(t,TRUE,FALSE);
             utable_stroke(t, sockd, TSTYLE_DOUBLE_V2);
