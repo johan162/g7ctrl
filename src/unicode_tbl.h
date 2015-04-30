@@ -4,6 +4,7 @@
  *              using unicode page U+25xx characters for output nicely
  *              formatted output to a terminal
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: unicode_tbl.h 944 2015-04-08 21:20:25Z ljp $
  *
  * Copyright (C) 2015 Johan Persson
  *
@@ -125,6 +126,9 @@ utable_get_cell_halign(table_t *t, int row, int col);
 
 int
 utable_set_cellpadding(table_t *t, size_t row, size_t col, size_t lpad, size_t rpad);
+
+void
+utable_set_col_cellpadding(table_t *t, size_t col, size_t lpad, size_t rpad);
 
 void
 utable_set_table_cellpadding(table_t *t, size_t lpad, size_t rpad);

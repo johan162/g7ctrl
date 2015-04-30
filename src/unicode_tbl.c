@@ -8,7 +8,7 @@
  *              run separately as a kind of micro unit test.
  *              gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: unicode_tbl.c 1010 2015-04-28 20:33:05Z ljp $
+ * SVN:         $Id: unicode_tbl.c 1011 2015-04-29 03:54:46Z ljp $
  *
  * Copyright (C) 2015 Johan Persson
  *
@@ -543,7 +543,22 @@ utable_set_cellpadding(table_t *t, size_t row, size_t col, size_t lpad, size_t r
     return 0;
 }
 
+/**
+ * Set the cell left and right padding
+ * @param t Table pointer
+ * @param lpad
+ * @param rpad
+ * @return 0 on success, -1 on failure
+ */
 void
+utable_set_col_cellpadding(table_t *t, size_t col, size_t lpad, size_t rpad) {
+    for (size_t r = 0; r < t->nRow; r++) {
+        utable_set_cellpadding(t, r, col, lpad, rpad);
+    }
+}
+
+
+static void
 _utable_get_cp(table_t *t, size_t row, size_t col, size_t *lpad, size_t *rpad) {
     if (t->c[TIDX(row, col)].merged) {
         row = t->c[TIDX(row, col)].pRow;
