@@ -870,6 +870,8 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
         table_t *t = utable_create_set(num_cb + 1, display_cols + 1, tdata);
         utable_set_row_halign(t, 0, CENTERALIGN); 
         utable_set_col_halign(t, 5, RIGHTALIGN);
+        utable_set_col_cellpadding(t, 5, 0, 1);
+        utable_set_cellpadding(t, 0, 5, 0, 0);
         if (cli_info->use_unicode_table) {
             utable_set_interior(t,TRUE,FALSE);
             utable_stroke(t, sockd, TSTYLE_DOUBLE_V2);
