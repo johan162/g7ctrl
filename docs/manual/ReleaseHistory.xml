@@ -14,8 +14,9 @@
                     <listitem>
                         <para><literal>x.y.z -> x.y.(z+1)</literal></para>
                         <para><emphasis role="bold">Maintenance release</emphasis> (defect or
-                            optimization fixes). No change in public interface or file/DB formats.
-                            Safe upgrade without user intervention..</para>
+                            optimization fixes). No change in public interface, feature set or
+                            file/DB formats or locations. Safe upgrade without user
+                            intervention.</para>
                     </listitem>
                     <listitem>
                         <para><literal>x.y.z -> x.(y+1).z</literal></para>
@@ -43,21 +44,21 @@
         <varlistentry>
             <term>v3.2.0 (May 2015)</term>
             <listitem>
-                <para>Introduce throttling of Google API call to avoid hitting the rate ceiling for
-                        anonymous call to Google. A notification mail is now sent when the 24 hour
-                        limit has been reached and further lookups are disabled until the 24 time
-                        period has expired, the daemon restarted or the ".ratereset" command given.
-                        Some Improvements in handling of <acronym>UTF8</acronym> characters have
-                        been added and pretty-printing of tabled output introduced (see the ".table"
-                        command, <xref linkend="cmd.srv-table"/>). A few more DB commands (db head,
-                        db tail) and some minor bug fixes. Configuration file modified by adding
-                        possibility to set a Google API key and moved the port settings to the
-                        "startup" section. Improvements of the <command>dlrec</command> command and
-                        some general documentation updates. Security audit for string routines and a
+                <para>Adds option to include miniature maps in the various event mails that shows
+                        the location. Also introduces throttling of Google API call to avoid hitting
+                        the rate ceiling for anonymous call to Google. A notification mail is now
+                        sent when the 24 hour limit has been reached and further lookups are
+                        disabled until the 24 time period has expired, the daemon restarted or the
+                        ".ratereset" command given. Some Improvements in handling of
+                            <acronym>UTF8</acronym> characters have been added and pretty-printing
+                        of tabled output introduced (see the ".table" command, <xref
+                            linkend="cmd.srv-table"/>). A few more DB commands (db head, db tail)
+                        and some minor bug fixes. Configuration file modified by adding possibility
+                        to set a Google API key and moved the port settings to the "startup"
+                        section. Improvements of the <command>dlrec</command> command and some
+                        general documentation updates. Security audit for string routines and a
                         complete Coverity check. The communication with command shell was improved
                         to be able to send larger amount of data without truncation.</para>
-                    <para>This release also adds the concept of "mini-maps" to the event mail as
-                        well as fixes some minor bugs.</para>
             </listitem>
         </varlistentry>        
             <varlistentry>

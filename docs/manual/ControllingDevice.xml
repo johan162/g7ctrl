@@ -41,7 +41,7 @@
             mode). </para>
         <para>The same command using the simplified daemon command set would be</para>
         <para>
-            <screen>> set roam on</screen>
+            <screen>g7ctrl> set roam on</screen>
         </para>
         <para>Perhaps not a gigantic difference but definitely easier to remember especially since
             the command structure is the same for a large number of commands. The greatest
@@ -58,7 +58,7 @@
             Using the daemons command version instead the following conversation between the user
             and the daemon would take place:</para>
         <para>
-            <screen>> set comm
+            <screen>g7ctrl> set comm
 CommSelect - Select primary type of communication
   0 - Use USB
   1 - Use SMS over GSM
@@ -68,11 +68,11 @@ CommSelect - Select primary type of communication
 Select (0/1/2/3/4)?
 >> </screen>
         </para>
-        <para>At this point user enters his selection after the "<literal>>></literal>" mark and
-            hits enter. The next question will be</para>
+        <para>At this point user enters his selection after the "<literal>(arg)> </literal>" mark
+            and hits enter. The next question will be</para>
         <para>
             <screen>SMS Base Phone - SMS base number to call
->></screen>
+(arg)> </screen>
         </para>
         <para>and the user can enter the corresponding phone number. This will be followed by the a
             clear question for each of the following command arguments. After the user have answered
@@ -185,7 +185,7 @@ preset help &lt;preset>   - Give more detailed help on the specified preset</scr
                     comm</command> command the interaction would be somewhat along the lines of (all
                 text <emphasis role="bold">in bold</emphasis> are user input):</para>
             <para>
-                <screen>> <emphasis role="bold">set comm</emphasis>
+                <screen>g7ctrl> <emphasis role="bold">set comm</emphasis>
 CommSelect - Select primary type of communication
   0 - Use USB
   1 - Use SMS over GSM
@@ -193,25 +193,25 @@ CommSelect - Select primary type of communication
   3 - UDP over GPRS
   4 - TCP/IP over GPRS
 Select (0/1/2/3/4)?
->> <emphasis role="bold">4</emphasis>
+(arg)> <emphasis role="bold">4</emphasis>
 SMS Base Phone - SMS base number to call?
->> <emphasis role="bold">[RETURN]</emphasis>
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
 CSD Base Phone - CSD base number &lt;reserved and not used>?
->> <emphasis role="bold">[RETURN]</emphasis>
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
 GPRS APN - The operators APN?
->> <emphasis role="bold">internet.telenor.se</emphasis>
+(arg)> <emphasis role="bold">internet.telenor.se</emphasis>
 GPRS User - User name if required?
->> <emphasis role="bold">[RETURN]</emphasis>
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
 GPRS Passwd - Password if required?
->> <emphasis role="bold">[RETURN]</emphasis>
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
 GPRS Server - Server IP address where the device reports back to?
->> <emphasis role="bold">mytracker.mydomain.com</emphasis>
+(arg)> <emphasis role="bold">mytracker.mydomain.com</emphasis>
 GPRS Server Port - TCP/IP Port to use on server?
->> <emphasis role="bold">3400</emphasis>
+(arg)> <emphasis role="bold">3400</emphasis>
 GPRS Keep Alive - Interval (in sec) between Keep Alive Packets?
->> <emphasis role="bold">120</emphasis>
+(arg)> <emphasis role="bold">120</emphasis>
 GPRS DNS - Optional DNS server for device to use.?
->> <emphasis role="bold">208.67.222.222</emphasis>
+(arg)> <emphasis role="bold">208.67.222.222</emphasis>
 [GM7] 4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222
       CommSelect: TCP/IP over GPRS
   SMS Base Phone: 
@@ -224,7 +224,7 @@ GPRS Server Port: 3400
  GPRS Keep Alive: 120
         GPRS DNS: 208.67.222.222
 
-% 
+g7ctrl> 
 </screen>
             </para>
             <para>Entering an empty line leaves the original value intact. To clear an old value (to
@@ -240,16 +240,16 @@ GPRS Server Port: 3400
             <para>So to enter the above command as a non-interactive command a user would
                 enter</para>
             <para>
-                <screen>% @@COMM(4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222)
+                <screen>g7ctrl> @@COMM(4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222)
 OK.
-% </screen>
+g7ctrl> </screen>
             </para>
             <para>As explained above it is necessary to use the empty string ("") to clear a value
                 instead of just leaving it empty which will keep the old value.</para>
             <para>
-                <screen>% @@COMM(4,"","",internet.telenor.se,"","",mytracker.mydomain.com,3400,120,208.67.222.222)
+                <screen>g7ctrl> @@COMM(4,"","",internet.telenor.se,"","",mytracker.mydomain.com,3400,120,208.67.222.222)
 OK.
-% </screen>
+g7ctrl>  </screen>
             </para>
             <para>
                 <note>
@@ -392,7 +392,7 @@ OK.
             this by requesting the last received location update stored in the database with the
             command</para>
         <para>
-            <screen>db lastloc</screen>
+            <screen>g7ctrl> db lastloc</screen>
         </para>
         <para>which would return something like</para>
         <para>
@@ -452,7 +452,7 @@ track(1,120,0,35,1,4,15)</programlisting>
             <para>Start by copying the template to a file without the <literal>.template</literal>
                 suffix.</para>
             <para>
-                <screen>cp gtrack.preset.template gtrack.preset</screen>
+                <screen>> cp gtrack.preset.template gtrack.preset</screen>
             </para>
             <para>Then change the IP-address of your server, the time interval and the
                     <literal>KEEP_ALIVE</literal> time. The template is shown in the listing below

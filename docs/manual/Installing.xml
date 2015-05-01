@@ -85,7 +85,7 @@
     <para>It will be helpful if you previously experience running <command>configure</command> and
                 <command>make</command>. The commands</para>
     <para>
-        <screen>./configure &amp;&amp; make
+        <screen>> ./configure &amp;&amp; make
 sudo make install</screen>
     </para>
     <para>is a standard way of compiling and installing Unix/<acronym>GNU</acronym> Linux software
@@ -97,7 +97,7 @@ sudo make install</screen>
             other places, for example under <filename>/usr/local/bin</filename>, then configure the
             daemon using the <literal>--prefix</literal> argument as</para>
     <para>
-        <screen>./configure --prefix=/usr/local &amp;&amp; make
+        <screen>> ./configure --prefix=/usr/local &amp;&amp; make
 sudo make install</screen>
     </para>
     <para>If you are not comfortable with this process or have never done this before it is
@@ -116,7 +116,7 @@ sudo make install</screen>
                 <literal>systemd</literal> service execute the following line after you have done
             the standard <literal>make install</literal> (still as root)</para>
         <para>
-            <screen>systemctl enable g7ctrl.service</screen>
+            <screen>> systemctl enable g7ctrl.service</screen>
         </para>
         <para>This will enable the <command>g7ctrl</command> service with <literal>systemd</literal>
             in multi-user mode. </para>
@@ -157,18 +157,18 @@ sudo make install</screen>
         <para>Assuming you have downloaded version 3.0.0 the commands to extract the source is
             first</para>
         <para>
-            <screen>tar xzf g7ctrl-3.0.0.tar.gz</screen>
+            <screen>> tar xzf g7ctrl-3.0.0.tar.gz</screen>
         </para>
         <para>or if you downloaded the "<literal>.xz</literal>" version (which is in general smaller
             but requires the <command>xz</command>-compression program, which makes use of the more
             efficient <acronym>LMZ2</acronym>)</para>
         <para>
-            <screen>tar xJf g7ctrl.3.0.0.tar.xz</screen>
+            <screen>> tar xJf g7ctrl.3.0.0.tar.xz</screen>
         </para>
         <para>In order to then configure and compile the sources (using default settings) do the
             following:</para>
         <para>
-            <screen>cd g7ctrl-3.0.0
+            <screen>> cd g7ctrl-3.0.0
 ./configure &amp;&amp; make -j8</screen>
         </para>
         <para>(the <literal>-j8</literal> is strictly speaking not necessary but will speed up the
@@ -178,7 +178,7 @@ sudo make install</screen>
             daemon needs to be installed. This requires <literal>root</literal> privileges. To
             install the daemon do the following</para>
         <para>
-            <screen>sudo make install</screen>
+            <screen>> sudo make install</screen>
         </para>
         <para>By default the installation process will install the binary in
                 <filename>/usr/bin</filename>, the configuration file in
@@ -187,7 +187,7 @@ sudo make install</screen>
             using the "<literal>--prefix</literal>" argument to "<literal>configure</literal>". For
             a complete list of options at configuration time please run </para>
         <para>
-            <screen>./configure --help</screen>
+            <screen>> ./configure --help</screen>
         </para>
     </section>
     <section xml:id="section.build-environment">
@@ -220,16 +220,16 @@ sudo make install</screen>
         <para>If you are on a <productname>Debian</productname> based system the following two steps
             are all that is needed to both checkout and setup a complete build system</para>
         <para>
-            <screen>svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
-cd g7ctrl
-sh ./bldscripts/bootstrap<emphasis role="bold">-deb</emphasis>.sh</screen>
+            <screen>> svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
+> cd g7ctrl
+> ./bldscripts/bootstrap<emphasis role="bold">-deb</emphasis>.sh</screen>
         </para>
         <para>and if you are on a <productname>OpenSuSE</productname> (<acronym>RPM</acronym>) based
             system use the following steps</para>
         <para>
-            <screen>svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
-cd g7ctrl
-sh ./bldscripts/bootstrap.sh</screen>
+            <screen>> svn co http://www.sourceforge.net/p/g7ctrl/trunk g7ctrl
+> cd g7ctrl
+> sh ./bldscripts/bootstrap.sh</screen>
         </para>
         <para>The bootstrap script will install all required pre-requisites including
                 <acronym>GNU</acronym>
@@ -304,8 +304,8 @@ and then then run "./mkrelease.sh" to create new releases.</screen>
             configuration file is installed in the default directory start by doing the
             following:</para>
         <para>
-            <screen>cd /etc/g7ctrl
-sudo cp g7ctrl.conf.template g7ctrl.conf</screen>
+            <screen>> cd /etc/g7ctrl
+> sudo cp g7ctrl.conf.template g7ctrl.conf</screen>
         </para>
         <para>The next step is to open the configuration file in your favourite editor and adjust a
             few settings in accordance with your preferences and system. There are very few settings

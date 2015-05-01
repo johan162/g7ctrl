@@ -18,22 +18,22 @@
         distance by looking at a blinking dot on green phosphorous screen (although I didn't know it
         was phosphor at the time) and I was entirely convinced that such technologies were in the
         hands of the "spy world". Unfortunately that was not true, it was only film-magic. The
-        technology available then did not make such a device practical possible. The only distant
-        positioning technology at that time was through radio-triangulation (or radar) like what was
-        later used and in fact enforced by commercial shipping, the Decca system, which was
-        eventually shut down in the early 2000. </para>
+        technology available at that time (even for spies!) did not make such a device practically
+        possible. The only distant positioning technology at that time was through
+        radio-triangulation (or radar) like what was later used and in fact enforced by commercial
+        shipping, the Decca system, which was eventually shut down in the early 2000. </para>
     <para>It is only in the last couple of years that such - once film-only-magic technology - has
         become available as a consumer product by combining different technology strands into one
         unit. In fact a modern GPS tracking device is the successful merge of three major technology
         tracks. The satellite navigational system, the digital radio communication (made financially
         possible by the mobile phone explosion) and the internet and its use of a packet switching
-        network based on the TCP/IP protocol stack. The development of these three technology track
-        together with its supporting technologies has literally made use of much the science
-        progress made in the last three hundred years. Specialist mathematical areas like Galois
-        theory and BCH error correcting code made reliable communication possible, the relativity
-        theory told us how to compensate when talking to satellites, chemical and physical
-        engineering pioneered in the 19:th century made it possible to construct everything from
-        batteries to rocket fuel and more. </para>
+        network based on the TCP/IP protocol stack. The development of these three technology tracks
+        together with its supporting technologies has literally made use of much of the science and
+        engineering progress made in the last three hundred years. Specialist mathematical areas
+        like Galois theory and BCH error correcting code made reliable communication possible, the
+        relativity theory told us how to compensate when talking to satellites, chemical and
+        physical engineering pioneered in the 19:th century made it possible to construct everything
+        from batteries to rocket fuel and more. </para>
     <para>Most people do not think about such thing when checking Google Maps for how to find that
         special café in Paris which their favourite magazine recommended (only to discover that they
         were not the only one reading that recommendation). Neither should they, but I cannot
@@ -49,27 +49,27 @@
     <para>I find this asymmetry sad. </para>
     <para>While Hemingway without doubt wrote some great books he has not had the impact on the
         everyday life of people in any way that comes even close to the way the latter names have
-        had (without most people knowing it) </para>
-    <para>Coming back to GPS technology and its rapid commoditization which actually poses a risk
-        that few people are fully aware of. The rapid fall in cost (after the GPS system was
-        released to the civil market by the US military - but only after congress threatened to kill
-        of the entire program due to cost) has tempted many manufacturer to replace older proven
-        technology with cheap mass-market GPS receivers in places not easily guessed. So was the
-        fact for example when the British navy commissioned a ship that specifically should be fully
-        functional with no GPS. During the tests when the GPS signal was jammed their sonar suddenly
-        stopped working. It turned out that the manufacturer of the sonar equipment had made use of
-        a GPS receiver inside the sonar (which nobody had thought of) since it was so cheap that
-        they practically got it for free. </para> 
+        had (without most people knowing it). </para>
+    <para>Coming back to GPS technology and its rapid commoditization actually poses a risk that few
+        people are fully aware of. The rapid fall in cost (after the GPS system was released to the
+        civil market by the US military - but only after congress threatened to kill of the entire
+        program due to cost) has tempted many manufacturer to replace older proven technology with
+        cheap mass-market GPS receivers in places not easily guessed. So was the fact for example
+        when the British navy commissioned a ship that specifically should be fully functional with
+        no GPS. During the tests when the GPS signal was jammed their sonar suddenly stopped
+        working. It turned out that the manufacturer of the sonar equipment had made use of a GPS
+        receiver inside the sonar (which nobody had thought of) since it was so cheap that they
+        practically got it for free. </para> 
     <para>It is therefore worth giving some thoughts about the risk of satellite communication and
         the dependency we as a society in a very short time has built up on this technology. Even
-        though getting the wrong position from your stolen car is not helpful it is also hardly a
-        life and death situation either. However, a false position for an airplane in mid-air flight
-        can cause some fairly interesting situations most people want to avoid. </para>
+        though getting the wrong position from an alarm in your stolen car is not helpful it is
+        unlikely to be a life and death situation either. However, a false position for an airplane
+        in mid-air flight can cause some fairly interesting situations most people want to avoid. </para>
     <para>What you first realize looking a bit deeper into satellite navigation is that this is a
         scaringly fragile technology. With equipment that can (almost) be purchased at the closest
         Wall-Mart for the cost of a better dinner you can interfere with equipment worth billions of
         dollars. The current GPS system was never truly designed to be a technology able to robustly
-        run the world to the extent we have now come to rely on as the following two recent stories
+        run the world to the extent we now have come to rely on as the following two recent stories
         illustrates.</para>
     <para>In 2011 Newark airport in the USA experienced sporadic problem with their GPS system to
         the extent that it was forced to divert airplanes to other airports or put them in long
@@ -106,16 +106,15 @@
         the airport in Soul. This is black mail on large scale and there is absolutely nothing
         (legally) to do about it. </para>
     <para>So even if the GPS tracker makes for a great anti-theft device for the average "joy-rider"
-        you should probably not just yet throw away your lock and key. It might also be a good idea
-        to teach you existing or future kids how to use a map &amp; compass and not just trust that
-        Google maps will always be available (or accurate)!</para>
+        you should probably not just yet throw away your lock and key. It might still be a good idea
+        to teach our kids how to use a map &amp; compass and not just trust that Google maps will
+        always be available (or accurate)!</para>
     <para>  </para>
     <para><emphasis role="bold">Happy tracking!</emphasis></para>
     <para>Johan Persson</para>
     <para>@ <emphasis role="italic">N 59.655070, E 14.867005</emphasis></para>
     <para>August 2014</para>
-    <para><emphasis role="italic">(Third printing may 2015 to match new features in
-            v3.2.x)</emphasis></para>
+    <para><emphasis role="italic">(Third printing may 2015)</emphasis></para>
     <para> </para>
     <section>
         <title>Acknowledgement</title>

@@ -63,12 +63,12 @@
         <para>The shell can be run either on the same server as the daemon or on a separate
             computer. Assuming the first case the shell can just be invoked as </para>
         <para>
-            <screen>$> g7sh</screen>
+            <screen>> g7sh</screen>
         </para>
         <para>If run from another computer them the server running the dameon must be specified on
             the command line. </para>
         <para>
-            <screen>$> g7sh -s 192.168.0.10</screen>
+            <screen>> g7sh -s 192.168.0.10</screen>
         </para>
         <para>The above commands assumes that the ports setup for the daemon are either the standard
             ports or given in the configuration file. If the config file can not be found in the
@@ -134,34 +134,34 @@
             press "tab" twice and the follwing command completions will be shown (the
                 <literal>&lt;TAB></literal> indicates pressing the tab-key)</para>
         <para>
-            <screen>> ge<emphasis role="bold">&lt;TAB></emphasis>
-> get <emphasis role="bold">&lt;TAB></emphasis>
+            <screen>g7ctrl> ge<emphasis role="bold">&lt;TAB></emphasis>
+g7ctrl> get <emphasis role="bold">&lt;TAB></emphasis>
 address  gfen     loc      nrec     roam     sms      vip
 batt     gfevt    locg     phone    sens     track    
 comm     imei     lowbatt  ps       sim      tz       
 config   led      mswitch  rec      sleep    ver      
-> get c<emphasis role="bold">&lt;TAB></emphasis>
-> get co<emphasis role="bold">n</emphasis><emphasis role="bold">&lt;TAB></emphasis>
-> get config</screen>
+g7ctrl> get c<emphasis role="bold">&lt;TAB></emphasis>
+g7ctrl> get co<emphasis role="bold">n</emphasis><emphasis role="bold">&lt;TAB></emphasis>
+g7ctrl> get config</screen>
         </para>
         <para><emphasis role="bold">Example 2.</emphasis> If instead the initial command is
                 "<literal>do</literal>" the completion list will be quite different and showing only
             the possible completion for the "<literal>do</literal>" statement.</para>
         <para>
-            <screen>> do<emphasis role="bold">&lt;TAB></emphasis>
+            <screen>g7ctrl> do<emphasis role="bold">&lt;TAB></emphasis>
 clrec   dlrec   reboot  reset   test    
-> do </screen>
+g7ctrl> do </screen>
         </para>
         <para><emphasis role="bold">Example 3.</emphasis> Finally , to get a list of all possible
             commands that a line can start with just press tab-key at the empty line</para>
         <para>
-            <screen>> <emphasis role="bold">&lt;TAB></emphasis>
+            <screen>g7ctrl> <emphasis role="bold">&lt;TAB></emphasis>
 .address    .ld         .target     exit        set
 .cachestat  .ln         .usb        get         
 .date       .nick       .ver        help        
 .dn         .ratereset  db          preset      
 .lc         .table      do          quit    
-> </screen>
+g7ctrl> </screen>
         </para>
     </section>
 </section>

@@ -697,6 +697,13 @@ readwrite(int readsock, int writesock, char *buffer, int maxbufflen) {
                 directory (see more information in <xref xlink:href="#section.build-environment"/>).
                 In addition to some helper script to setup a build environment a number of script
                 are used as utilities during development and help with debugging.</para>
+            <para>
+                <note>
+                    <para>The build scripts in the table below are not included in the release tar
+                        ball but only available in te source repository since these are developer
+                        tools and not needed for normal end user builds.</para>
+                </note>
+            </para>
             <table>
                 <title>Utility builds cripts in the <filename>bldscripts</filename> directory </title>
                 <tgroup cols="2">

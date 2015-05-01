@@ -40,7 +40,7 @@
             <listitem>
                 <para>Terminal text input/output. Example:</para>
                 <para>
-                    <screen>$>command-line</screen>
+                    <screen>g7ctrl> command-line</screen>
                 </para>
             </listitem>
             <listitem>
@@ -282,8 +282,8 @@
     </section>
     <section xml:id="section.known-defects">
         <title>Limitations and known defects in 3.x series</title>
-        <para>This lists known omissions and limitations in the current version. Some of them might
-            be addressed in future versions of the software.</para>
+        <para>This lists known omissions and limitations in the current version. Some limitations
+            might be lifted in future versions of the software.</para>
         <para>
             <note>
                 <para>Dates are always specified in European format: </para>
@@ -298,13 +298,7 @@
                         "<literal>0000</literal>"</para>
                 </listitem>
                 <listitem>
-                    <para>The daemon does not check that the <acronym>USB</acronym> connection is
-                        truly a <productname>GM7</productname> Tracker by checking <emphasis
-                            role="italic">manufacturer id</emphasis> over the <acronym>USB</acronym>
-                        connection.</para>
-                </listitem>
-                <listitem>
-                    <para>The daemon only support <acronym>TCP/IP</acronym> connections from the
+                    <para>The daemon only supports <acronym>TCP/IP</acronym> connections from the
                         device and not <acronym>UDP</acronym>. In practice this is no limitation but
                         should be mentioned for completeness.</para>
                 </listitem>
@@ -317,10 +311,10 @@
                 </listitem>
                 <listitem>
                     <para>The included shell (<command>g7sh</command>) for managing the daemon has a
-                        buffer limit on 1M of data to be received from the daemon. The only use case
-                        when this is a limit in practice is for a user needing to do a "<command>db
-                            head</command>" (or "<command>db tail</command>") and display more than
-                        around 10,000 rows from the DB.</para>
+                        buffer limit on 1MB of data to be received from the daemon. The only use
+                        case when this is a limit in practice is for a user needing to do a
+                            "<command>db head</command>" (or "<command>db tail</command>") and
+                        display more than around 10,000 rows from the DB.</para>
                 </listitem>
             </itemizedlist>
         </section>
