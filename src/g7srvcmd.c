@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 974 2015-04-20 05:41:45Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1017 2015-08-10 13:04:19Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -402,12 +402,12 @@ _srv_cmd_debug_info(struct client_info *cli_info) {
 }
 
 void
-_srv_device_report(struct client_info *cli_info, char *filename) {
+_srv_device_report(struct client_info *cli_info, char *filename, char *report_title) {
     char buf[256];
     int sockd = cli_info->cli_socket;
     snprintf(buf,sizeof(buf),"%s/%s.pdf","/tmp",filename);
     _writef(sockd,"Generating device report to \"%s\" (please wait) ... \n",buf);
-    int stat=export_g7ctrl_report(cli_info, buf);
+    int stat=export_g7ctrl_report(cli_info, buf, report_title);
     if( 0==stat ) {
         _writef(sockd,"Wrote device report to \"%s\"",buf);
     } else {
@@ -529,7 +529,9 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
     } else if (0 < matchcmd("^cachestat" _PR_E, cmdstr, &field)) {
         _srv_cache_stat(cli_info);                
     } else if (0 < matchcmd("^report" _PR_S _PR_FILEPATH _PR_E, cmdstr, &field)) {
-        _srv_device_report(cli_info,field[1]);        
+        _srv_device_report(cli_info,field[1],NULL);        
+    } else if (0 < matchcmd("^report" _PR_S _PR_FILEPATH _PR_S _PR_ANPS _PR_E, cmdstr, &field)) {
+        _srv_device_report(cli_info,field[1],field[2]);                
     } else if (0 < matchcmd("^usb" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {
         set_usb_device_target_by_index(cli_info,xatoi(field[1]));
     } else if (0 < matchcmd("^target" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {

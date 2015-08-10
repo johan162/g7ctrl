@@ -3,6 +3,7 @@
  * Description: A collection of small utility functions used by the rest
  *              of the server.
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: utils.h 945 2015-04-08 21:35:18Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -226,8 +227,11 @@ splitdatetime(char *datetime, char *buff);
 // Optional alphanumeric sequence
 #define _PR_ANO "([\\p{L}\\p{N}\\_\\-]*)"
 
-// Optional alphanumeric sequence including space
+// Optional alphanumeric sequence including space, dash and dot
 #define _PR_ANSO "([\\p{L}\\p{N}\\_\\- ]*)"
+
+// Required alphanumeric sequence including space, dash and dot
+#define _PR_ANS "([\\p{L}\\p{N}\\_\\-\\. ]+)"
 
 // Required alpha sequence
 #define _PR_A "([\\p{L}\\_]+)"

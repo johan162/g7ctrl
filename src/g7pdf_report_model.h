@@ -32,6 +32,8 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
+extern char report_header_title[128];
+
 char *
 cb_header_title(void *tag, size_t r, size_t c);
 

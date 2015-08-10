@@ -27,6 +27,7 @@
 #include "config.h"
 #include "g7pdf_report_model.h"
 
+char report_header_title[128] = {0};
 
 // Silent gcc about unused args in the callback functions
 #pragma GCC diagnostic push
@@ -36,8 +37,11 @@
 
 char *
 cb_header_title(void *tag, size_t r, size_t c) {
-    static char buf[64];
-    snprintf(buf,sizeof(buf),"Device report");
+    static char buf[128];
+    if( *report_header_title && strnlen(report_header_title,sizeof(report_header_title)) > 4 )
+        snprintf(buf,sizeof(buf),"%s",report_header_title);
+    else
+        snprintf(buf,sizeof(buf),"%s","Device report");
     return buf;
 }
 

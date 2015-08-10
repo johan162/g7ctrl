@@ -631,12 +631,13 @@ stroke_g7ctrl_report_table(hpdf_table_spec_t table_spec) {
     theme->title_style->color = HPDF_COLOR_FROMRGB(0xf0,0xf0,0xf0);
 
     theme->label_style->color = HPDF_COLOR_FROMRGB(0,0,140);
+    theme->content_style->font = HPDF_FF_COURIER_BOLD;
     int ret=hpdf_table_stroke_from_data(pdf_doc, pdf_page, table_spec, theme);
     if( -1 == ret ) {
         char *buf;
         int r,c;
         int tbl_err = hpdf_table_get_last_errcode(&buf,&r,&c);
-        fprintf(stderr,"*** ERROR in creating table from data. ( %d : \"%s\" ) @ [%d,%d]\n",tbl_err,buf,r,c);
+        logmsg(LOG_ERR,"HPDF Error in creating table from data. ( %d : \"%s\" ) @ [%d,%d]\n",tbl_err,buf,r,c);
     }
     hpdf_table_destroy_theme(theme);
     return 0;
@@ -813,19 +814,18 @@ error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data) {
 }
 
 
-
-
 /**
  * @brief Controller in the model-view-controller that structures the PDF report
  * 
+ * Create PDF report and export to named file.
  * 
- * 
- * Create PDF report and export to named file
+ * @param cli_info Client information to get hold of device reference
  * @param filename PDF report filename
+ * @param report_title The title set as a PDF attribute to the document
  * @return 0 on success, -1 on failure
  */
 int
-export_g7ctrl_report(struct client_info *cli_info, char *filename) {
+export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_title) {
     if (setjmp(_g7report_env)) {
         HPDF_Free (pdf_doc);
         return -1;
@@ -834,15 +834,19 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename) {
     // Setup the PDF document
     pdf_doc = HPDF_New(error_handler, NULL);    
     HPDF_SetCompressionMode(pdf_doc, HPDF_COMP_ALL);
-    
-    logmsg(LOG_DEBUG,"HPDF: Intenal doc created");
-    
+       
     char buf[256];
     snprintf(buf,sizeof(buf),"%s",PACKAGE_STRING);
     HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_CREATOR, buf);    
-    HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_TITLE,"GM7 Device Report");
-
-    logmsg(LOG_DEBUG,"HPDF: Attributes created");
+    
+    snprintf(buf,sizeof(buf),"GM7 Device Report : %u",cli_info->target_deviceid);
+    HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_TITLE,buf);
+    
+    if( report_title ) {
+        strncpy(report_header_title,report_title,sizeof(report_header_title)-1);
+    } else {
+        *report_header_title='\0';
+    }
     
     hpdf_table_set_origin_top_left(TRUE);
     add_a4page();
