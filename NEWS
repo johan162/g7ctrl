@@ -2,6 +2,45 @@ NEWS - Major releases
 ===========
 ***Highlights major changes for each release in reverse chronological order.***
 
+v3.3.0 (sep 2015)
+=================
+
+General notes for this release
+------------------------------
+This release focus on providing the option to generate a device report. This is
+a PDF document that summarizes all settings for a connected device in a nice
+overview layout.
+
+
+Detailed user visible changes
+-----------------------------
+
+ - Added command ".report [dev] [file]" to generate a report file in PDF format
+   for one of the connected devices. If only one device is connected the specification
+   of device is is optional. The filename given must be specified in a location 
+   writable by the daemon.
+
+
+Bugs fixed
+----------
+
+ - The "phone" command did not allow the specification of report method and 
+   VIP number.
+
+ - The documentation for "phone" and "mswitch" command was wrong
+
+
+Internal changes (visible for developers and packagers)
+-------------------------------------------------------
+
+ - New dependency "libharu" (called "libhpdf-dev" in Ubunto/debian). 
+   This is a generic PDF creation library.
+
+ - Several new files that deals with the creation of the PDF device report
+   They are divided between the view and model together with a supporting
+   report utility library to make it easier to produce a table based report.
+
+
 
 v3.2.0 (may 2015)
 ========================

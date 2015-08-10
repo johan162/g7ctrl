@@ -526,7 +526,8 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
 
                     <para>Set/Read the internal battery low level alert</para>
                     <para><emphasis role="bold">Synopsis:</emphasis></para>
-                    <para><command>[ get | set ] lowbatt</command></para>
+                    <para><command>set lowbatt &lt;report-action> &lt;VIP-mask></command></para>
+            <para><command>get lowbatt</command></para>
                     <para><emphasis role="bold">Arguments:</emphasis></para>
                     <para>
                         <itemizedlist>
@@ -576,8 +577,41 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                         detached from its position by affecting the micro switch under the
                         magnet)</para>
                     <para><emphasis role="bold">Synopsis:</emphasis></para>
-                    <para><command>set mswitch [ on | off ] </command></para>
+                    <para><command>set mswitch &lt;report-action> &lt;VIP-mask></command></para>
             <para><command>get mswitch</command></para>
+            <para><emphasis role="bold">Arguments:</emphasis></para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            <emphasis>Report action</emphasis> - Action to perform when detachment
+                            is detected</para>
+                        <para>Possible values and description:<itemizedlist>
+                                <listitem>
+                                    <para>
+                                        <parameter>0</parameter> - "Disable" </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        <parameter>1</parameter> - "Log on device" </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        <parameter>2</parameter> - "Send back to server" </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        <parameter>3</parameter> - "Both log and send back ro
+                                        server" </para>
+                                </listitem>
+                            </itemizedlist></para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
                         <screen>g7ctrl> get mswitch
@@ -605,12 +639,36 @@ https://www.google.com/maps?q=57.963183,18.152366</screen>
                 <title><command>phone</command></title>
 
                     <para>Enable the function "<emphasis role="italic">Get the current location by
-                    making a phone call</emphasis>". This allows you to make a normal phone call to
-                the device. After the phone call is finished the device will reply back with a text
+                    making a phone call</emphasis>". This allows one or more of the predefined VIP
+                numbers (see ???)  to make a phone call to the device to retrieve the current
+                location. After the phone call is finished the device will reply back with a text
                 message with the most recent location.</para>
                     <para><emphasis role="bold">Synopsis:</emphasis></para>
-                    <para><command>set phone [ on | off ] </command></para>
+                    <para><command>set phone [on | off]</command></para>
             <para><command>get phone</command></para>
+            <para><emphasis role="bold">Arguments:</emphasis></para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><emphasis>Enable/Disable</emphasis> this function.</para>
+                        <para>Possible values and desciption:</para>
+                        <para>
+                            <itemizedlist>
+                                <listitem>
+                                    <para><parameter>0</parameter> - Disabled</para>
+                                </listitem>
+                                <listitem>
+                                    <para><parameter>1</parameter> - Enabled</para>
+                                </listitem>
+                            </itemizedlist>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis>VIP Number</emphasis> - Bitmask for allowed VIP numbers that
+                            can make a call to the device</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
                     <para><emphasis role="bold">Example:</emphasis></para>
                     <para>
                         <screen>g7ctrl> get phone

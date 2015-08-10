@@ -1,4 +1,5 @@
 # ===============================================================================
+# $Id: Makefile.am 969 2015-04-15 06:17:16Z ljp $
 # Automake build script
 # 
 # ===============================================================================
@@ -18,7 +19,7 @@ uninstall-local:
 
 EXTRA_DIST=assets 
 assetsdir=${prefix}/share/@PACKAGE@/assets
-assets_DATA=assets/trainxbell.mp3 assets/dumpdb.sh
+assets_DATA=assets/trainxbell.mp3 assets/dumpdb.sh assets/gm7_tracker_small.jpg
 
 
 DISTCLEANFILES=.dep.inc

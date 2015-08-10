@@ -1,8 +1,9 @@
 # ===============================================================================
 # Automake build script
-# Author: Johan Persson (johan162@gmail.com)
+# Author:      Johan Persson (johan162@gmail.com)
+# SVN:         $Id$
 #
-# Copyright (C) 2013-2015 Johan Persson
+# Copyright (C) 2014 Johan Persson
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,13 +31,13 @@ bin_PROGRAMS = g7ctrl
 BUILDNBR_FILE=buildnumber.txt
 
 # Recurse into there directories
-SUBDIRS = libiniparser libsmtpmail . shell etc
+SUBDIRS = libiniparser libsmtpmail libhpdftbl . shell etc
 
-# For development builds, as indicated by the stack trace flag, we want two 
+# For development builds, as indicated by the stack trace flag, we want two
 # additional features:
 # 1) We need to include all symbols for the back trace to give proper function names
 # 2) We also build the emulator
-if STACKTRACE 
+if STACKTRACE
     AM_CFLAGS += -rdynamic
     SUBDIRS += emul
 endif
@@ -54,9 +55,11 @@ mail_templates/mail_lastloc_img.html mail_templates/mail_lastloc_img.txt
 g7ctrl_SOURCES = g7ctrl.c g7config.c futils.c utils.c lockfile.c xstr.c logger.c pcredmalloc.c \
 socklistener.c serial.c g7cmd.c tracker.c connwatcher.c dbcmd.c presets.c rkey.c mailutil.c gpsdist.c \
 g7srvcmd.c g7sendcmd.c sighandling.c nicks.c export.c geoloc.c wreply.c unicode_tbl.c \
+g7pdf_report_model.c g7pdf_report_view.c \
 g7ctrl.h g7config.h futils.h utils.h xstr.h logger.h lockfile.h pcredmalloc.h build.h socklistener.h \
 serial.h g7cmd.h tracker.h connwatcher.h dbcmd.h presets.h rkey.h mailutil.h gpsdist.h \
-g7srvcmd.h g7sendcmd.h sighandling.h nicks.h export.h geoloc.h wreply.h unicode_tbl.h
+g7srvcmd.h g7sendcmd.h sighandling.h nicks.h export.h geoloc.h wreply.h unicode_tbl.h \
+g7pdf_report_model.h g7pdf_report_view.h
 
 
 # If we are using gcc then we construct the build number and date as "fake"
@@ -73,14 +76,14 @@ endif
 # If the system already have iniparser we use the system version. Otherwise we use our
 # own version included with the daemon.
 if have_iniparser
-    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a
-    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a
+    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a
+    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a
 else
-    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a 
-    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a
+    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a
+    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a
 endif
 
-# In order to have access to the build variables and path settings in the the 
+# In order to have access to the build variables and path settings in the the
 # daemon we create an include file where we dump most of the config variables
 # Listed in the same order as the GNU makefile conventions, and
 # provided by autoconf 2.59c+ or 2.70.
@@ -131,7 +134,7 @@ DISTCLEANFILES=config.h $(BUILDNBR_FILE)
 
 CLEANFILES=*~ g7ctrl configmake.h configmake.h-t
 
-# Increase the build number each time we ruing make or initialize the build 
+# Increase the build number each time we ruing make or initialize the build
 # to one if it doesn't exist whenever an object file has been updated so that
 # we have a new executable.
 $(BUILDNBR_FILE): $(g7ctrl_OBJECTS)

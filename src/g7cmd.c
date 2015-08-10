@@ -2,6 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7cmd.c 999 2015-04-27 16:49:04Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -274,8 +275,10 @@ struct cmdargs {
 
 /**
  * All the commands that allows "set" must have their arguments described in this structure.
- * It is possible for a command to have zero argument, for example "set led". They must however
- * be included here and explicitly be set to have 0 arguments.
+ * It is possible for a some commands to have zero explicit arguments, for example "set led". 
+ * Those commands still send an argument to the device
+ * They must however be included here and explicitly be set to have 0 user arguments.
+ * 
  * There is no need to include "get" and "do" only commands here since they never take any arguments
  */
 static struct cmdargs cmdargs_list[] = {
@@ -295,9 +298,9 @@ static struct cmdargs cmdargs_list[] = {
                     {0, 0}
                 }}
         }},
-    { "phone", 0,
+    { "phone", 1,
         {
-            {0, 0, 0, 0,
+            {"VIP mask", "Bitmask for allowed VIP numbers", ARGT_INT, 0,
                 {
                     {0, 0}
                 }}
@@ -1934,7 +1937,7 @@ cmdinterp(char *cmdstr, struct client_info *cli_info) {
         exec_help_commandlist(cli_info);
     } else if (0 < matchcmd("^help" _PR_S _PR_AN _PR_E, cmdstr, &field)) {
         exec_help_for_command(cli_info, field[1]);
-    } else if (0 < (nf = matchcmd("^\\." _PR_ANSO _PR_E, cmdstr, &field))) {
+    } else if (0 < (nf = matchcmd("^\\." _PR_ANPSO _PR_E, cmdstr, &field))) {
         exec_srv_command(cli_info, cmdstr);
     } else if (0 < matchcmd("^\\$WP\\+" _PR_ANP _PR_E, cmdstr, &field)) {
         exec_native_command(cli_info, cmdstr);
@@ -1967,7 +1970,7 @@ cmdinterp(char *cmdstr, struct client_info *cli_info) {
         db_set_sortorder(SORT_ARRIVALTIME);        
         _writef(cli_info->cli_socket, "Table sort order: arrival");
     } else if(0 < matchcmd("^db sort" _PR_E, cmdstr, &field)) {
-         _writef(cli_info->cli_socket, "Sort order: %s",db_get_sortorder_string());
+        _writef(cli_info->cli_socket, "Sort order: %s",db_get_sortorder_string());
     } else if (0 < matchcmd("^db deletelocations" _PR_E, cmdstr, &field)) {
         rc = db_empty_loc(cli_info);
     } else if (0 < (nf = matchcmd("^preset" _PR_S "(list|refresh)" _PR_E, cmdstr, &field))) {

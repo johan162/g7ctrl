@@ -1,9 +1,11 @@
 # ===============================================================================
+# $Id$
 # Autoconf script for the g7ctrl daemon
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.2.0],[johan162@gmail.com])
+AC_INIT([g7ctrl],[3.3.0-beta],[johan162@gmail.com])
+AC_REVISION([$Id$])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2015 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
@@ -19,6 +21,7 @@ Makefile
 src/Makefile
 src/libiniparser/Makefile
 src/libsmtpmail/Makefile
+src/libhpdftbl/Makefile
 src/shell/Makefile
 src/emul/Makefile
 src/etc/g7ctrl.conf.template
@@ -227,6 +230,10 @@ AC_CHECK_LIB(pcre, pcre_compile,,AC_MSG_ERROR([No pcre library found. Please ins
 AC_CHECK_LIB(xml2, xmlStrcmp,,AC_MSG_ERROR([No xml2 library found. Please install libxml2-dev (or similar)]))
 
 AC_CHECK_LIB(curl, curl_global_init,,AC_MSG_ERROR([No curl library found. Please install libcurl-dev (or similar)]))
+
+AC_CHECK_LIB(hpdf, HPDF_New,,AC_MSG_ERROR([No Haru PDF library found. Please install libhpdf-dev (or similar)]))
+
+
 
 # ===============================================================================
 # Check for working fork and mktime functions just to be on the safe side
