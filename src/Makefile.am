@@ -83,6 +83,11 @@ else
     g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a
 endif
 
+# In Linux iconv() exists in glibc but in OSX we must add the iconv.dylib library to get that function
+if is_osx
+    g7ctrl_LDADD += /usr/lib/libiconv.2.dylib
+endif
+
 # In order to have access to the build variables and path settings in the the
 # daemon we create an include file where we dump most of the config variables
 # Listed in the same order as the GNU makefile conventions, and

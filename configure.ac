@@ -116,8 +116,10 @@ if test x$SYSTEM_NAME = xDarwin; then
     AC_SUBST(DEFAULT_STTY_DEVICE,1411)
 else
     AC_DEFINE(IS_OSX,0,[True if system type is Apple OSX])
-    AC_SUBST(DEFAULT_STTY_DEVICE,0)
+    AC_SUBST(DEFAULT_STTY_DEVICE,0)   
 fi
+
+ AM_CONDITIONAL(is_osx,[test x$SYSTEM_NAME = xDarwin])
 
 # ===============================================================================
 # Setup directory for systemd service file 
