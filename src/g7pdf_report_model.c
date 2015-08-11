@@ -76,12 +76,14 @@ cb_DEVICE_TZ(void *tag, size_t r, size_t c) {
 
 _Bool
 cb_DEVICE_LED(void *tag, size_t r, size_t c) {
-    return 1;
+    return 0;
 }
 
-_Bool
+char *
 cb_DEVICE_RA(void *tag, size_t r, size_t c) {
-    return 0;
+    static char buf[8];
+    snprintf(buf,sizeof(buf),"%s","2,4");
+    return buf;
 }
 
 size_t

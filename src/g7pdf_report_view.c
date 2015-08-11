@@ -69,6 +69,77 @@ jmp_buf _g7report_env;
 HPDF_Doc pdf_doc;
 HPDF_Page pdf_page;
 
+
+
+void
+cb_widget_draw_VIP_state(HPDF_Doc doc, HPDF_Page page, HPDF_REAL xpos, HPDF_REAL ypos, size_t VIP_idx) {
+    
+        const HPDF_RGBColor white = HPDF_COLOR_FROMRGB(255,255,255);
+        const HPDF_RGBColor darkorange = HPDF_COLOR_FROMRGB(255,140,0);
+        const HPDF_RGBColor grey = HPDF_COLOR_FROMRGB(170,170,170);
+        //const HPDF_RGBColor darkgrey = HPDF_COLOR_FROMRGB(70,70,70);
+        HPDF_RGBColor VIP_on_background = darkorange;
+        HPDF_RGBColor VIP_off_background = grey;
+        HPDF_RGBColor on_color = white;
+        HPDF_RGBColor off_color = grey;
+        
+        char VIP_buf[2];
+        snprintf(VIP_buf,sizeof(VIP_buf),"%zu",VIP_idx);
+        const HPDF_REAL VIP_width=12;
+        const HPDF_REAL VIP_height=12;
+        _Bool state=VIP_idx > 0;         
+        hpdf_table_widget_letter_buttons(doc, page, xpos, ypos, VIP_width, VIP_height, 
+                on_color, off_color,
+                VIP_on_background, VIP_off_background, VIP_buf, &state);
+    
+}
+
+
+// G7ctrl specific combination widget to show the state of a property that needs
+// to indicate wheter an "on" state sends back to server, logs message or both
+void
+cb_widget_draw_LS_VIP_state(HPDF_Doc doc, HPDF_Page page,  
+                     HPDF_REAL xpos, HPDF_REAL ypos, size_t device_status, size_t VIP_idx) {
+    
+    const HPDF_RGBColor green = HPDF_COLOR_FROMRGB(60,179,113);
+    //const HPDF_RGBColor red = HPDF_COLOR_FROMRGB(210,42,0);
+    const HPDF_RGBColor white = HPDF_COLOR_FROMRGB(255,255,255);
+    //const HPDF_RGBColor black = HPDF_COLOR_FROMRGB(0,0,0);
+    const HPDF_RGBColor grey = HPDF_COLOR_FROMRGB(180,180,180);
+    //const HPDF_RGBColor lightgrey = HPDF_COLOR_FROMRGB(240,240,240);
+    const HPDF_RGBColor darkgrey = HPDF_COLOR_FROMRGB(70,70,70);
+    
+    const HPDF_REAL slide_width=30;
+    const HPDF_REAL slide_height=14;
+
+    hpdf_table_widget_slide_button(doc, page, xpos, ypos, slide_width, slide_height, device_status);
+        
+    if( device_status ) {
+        HPDF_RGBColor on_background = green;
+        HPDF_RGBColor off_background = grey;
+        HPDF_RGBColor on_color = white;
+        HPDF_RGBColor off_color = darkgrey;
+        
+        const char *letters = "LS";
+        _Bool state[2];
+        state[0] = device_status & 1;
+        state[1] = device_status & 2;
+        const HPDF_REAL LS_width=26;
+        const HPDF_REAL LS_height=12;
+        hpdf_table_widget_letter_buttons(doc, page, xpos+slide_width+10, ypos, LS_width, LS_height, 
+                on_color, off_color,
+                on_background, off_background, letters, state);     
+        
+        if( VIP_idx > 0 ) {
+            cb_widget_draw_VIP_state(doc, page, xpos+slide_width+10+LS_width+8, ypos, VIP_idx);        
+        }
+
+    }
+}
+
+
+
+
 /* ===============================================
  * DEVICE TABLE AND CALLBACKS
  */
@@ -77,13 +148,16 @@ HPDF_Page pdf_page;
 void
 cb_DEVICE_LED_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
                      HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
-    hpdf_table_widget_slide_button(doc, page, xpos, ypos, width, height, cb_DEVICE_LED(tag,r,c));
+    hpdf_table_widget_slide_button(doc, page, xpos, ypos, width/2, height, cb_DEVICE_LED(tag,r,c));
 }
 
 void
 cb_DEVICE_RA_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
                      HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
-    hpdf_table_widget_slide_button(doc, page, xpos, ypos, width, height, cb_DEVICE_RA(tag,r,c));
+    const char *stat=cb_DEVICE_RA(tag,r,c);   
+    const size_t dev_stat = (stat[0]-'0');
+    const size_t vip_idx = (stat[2]-'0');
+    cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);    
 }
 
 

@@ -53,7 +53,7 @@ char *
 cb_DEVICE_TZ(void *tag, size_t r, size_t c);
 _Bool
 cb_DEVICE_LED(void *tag, size_t r, size_t c);
-_Bool
+char *
 cb_DEVICE_RA(void *tag, size_t r, size_t c);
 size_t
 cb_DEVICE_GSENS(void *tag, size_t r, size_t c);
