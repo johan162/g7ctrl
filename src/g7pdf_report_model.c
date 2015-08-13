@@ -159,7 +159,7 @@ cb_BATTERY_VOLTAGE(void *tag, size_t r, size_t c) {
 
 float
 cb_BATTERY_PERCENT(void *tag, size_t r, size_t c) {
-    return 0.6;
+    return 0.76;
 }
 
 char *

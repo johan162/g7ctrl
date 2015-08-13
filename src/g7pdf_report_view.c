@@ -94,8 +94,8 @@ cb_widget_draw_VIP_state(HPDF_Doc doc, HPDF_Page page, HPDF_REAL xpos, HPDF_REAL
         _Bool state=VIP_idx > 0;
         hpdf_table_widget_letter_buttons(doc, page, xpos, ypos, VIP_width, VIP_height,
                 on_color, off_color,
-                VIP_on_background, VIP_off_background, 
-                fsize,                
+                VIP_on_background, VIP_off_background,
+                fsize,
                 VIP_buf, &state);
 
 }
@@ -130,11 +130,11 @@ cb_widget_draw_LS_VIP_state(HPDF_Doc doc, HPDF_Page page,
         state[1] = device_status & 2;
         const HPDF_REAL LS_width=26;
         const HPDF_REAL LS_height=12;
-        const HPDF_REAL fsize=8;        
+        const HPDF_REAL fsize=8;
         hpdf_table_widget_letter_buttons(doc, page, xpos+slide_width+10, ypos+4, LS_width, LS_height,
                 on_color, off_color,
-                on_background, off_background, 
-                fsize,                
+                on_background, off_background,
+                fsize,
                 letters, state);
 
         if( VIP_idx > 0 ) {
@@ -204,20 +204,19 @@ cb_BATTERY_draw_segment(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_
     const HPDF_RGBColor green = HPDF_COLOR_FROMRGB(60,179,113);
 
     const size_t num_segments=10;
-    const float capacity = round(cb_BATTERY_PERCENT(tag, r, c)*10.0)/10.0;
-    const size_t num_on_segments = lround(capacity*num_segments);
+    const double val_percent = round(cb_BATTERY_PERCENT(tag, r, c)*10.0)/10.0;
 
     HPDF_RGBColor color;
-    if( capacity >= 0.55 ) {
+    if( val_percent >= 0.55 ) {
         color=green;
-    } else if( capacity > 0.25 ) {
+    } else if( val_percent > 0.25 ) {
         color=yellow;
     } else {
         color=red;
     }
 
-    const HPDF_REAL segment_tot_width = width/3;
-    const HPDF_REAL segment_height = height/3;
+    const HPDF_REAL segment_tot_width = 70;
+    const HPDF_REAL segment_height = 10;
     const HPDF_REAL segment_xpos = xpos+45;//width/2;
     const HPDF_REAL segment_ypos = ypos+4;//height/2;
 
@@ -226,10 +225,10 @@ cb_BATTERY_draw_segment(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_
 
     if( use_segment_meter ) {
         hpdf_table_widget_segment_hbar(doc, page,segment_xpos, segment_ypos, segment_tot_width, segment_height,
-                                       num_segments, color, num_on_segments, FALSE);
+                                       num_segments, color, val_percent, FALSE);
     } else {
         hpdf_table_widget_hbar(doc, page,segment_xpos, segment_ypos, segment_tot_width, segment_height,
-                               color, capacity,FALSE);
+                               color, val_percent, FALSE);
     }
 
 }
@@ -253,13 +252,13 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {0,0,1,1,"ID:",cb_DEVICE_ID,cb_DEVICE_ID_style,NULL},
         {0,1,1,1,"Nick-name:",cb_DEVICE_nick,cb_DEVICE_ID_style,NULL},
         {0,2,1,1,"PIN:",cb_DEVICE_PIN,NULL,NULL},
-        {0,3,1,1,"Test:",cb_DEVICE_TEST,NULL,NULL},        
+        {0,3,1,1,"Test:",cb_DEVICE_TEST,NULL,NULL},
         {0,4,1,1,"SW Ver:",cb_DEVICE_SW_VER,NULL,NULL},
         {1,0,1,2,"Removal Alert:",NULL,NULL,cb_DEVICE_RA_draw_slide_button},
-        {1,2,1,1,"G-Sensitivity:",NULL,NULL,cb_DEVICE_draw_gsens}, 
-        {1,3,1,1,"TZ:",cb_DEVICE_TZ,NULL,NULL},        
+        {1,2,1,1,"G-Sensitivity:",NULL,NULL,cb_DEVICE_draw_gsens},
+        {1,3,1,1,"TZ:",cb_DEVICE_TZ,NULL,NULL},
         {1,4,1,1,"LED:",NULL,NULL,cb_DEVICE_LED_draw_slide_button},
-        {2,0,1,2,"Battery Low Alert:",NULL,NULL,cb_BATTERY_draw_low_warning},                
+        {2,0,1,2,"Battery Low Alert:",NULL,NULL,cb_BATTERY_draw_low_warning},
         {2,2,1,3,"Voltage:",cb_BATTERY_VOLTAGE,NULL,cb_BATTERY_draw_segment},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
@@ -422,9 +421,9 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {0,2,1,1,"SMS No:",cb_GSM_SMS_NBR,NULL,NULL},
         {0,3,1,1,"CSD No:",cb_GSM_CSD_NBR,NULL,NULL},
         {1,0,1,1,"Location on call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
-        {1,1,1,1,"Roaming:",NULL,NULL,cb_GSM_ROAMING_draw_slide_button},        
+        {1,1,1,1,"Roaming:",NULL,NULL,cb_GSM_ROAMING_draw_slide_button},
         {1,2,1,1,"SIM ID:",cb_SIM_ID,NULL,NULL},
-        {1,3,1,1,"SIM Pin:",cb_SIM_PIN,NULL,NULL},        
+        {1,3,1,1,"SIM Pin:",cb_SIM_PIN,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -728,7 +727,7 @@ static int
 stroke_g7ctrl_report_table(hpdf_table_spec_t table_spec) {
     hpdf_table_theme_t *theme = hpdf_table_get_default_theme();
     theme->title_style->background = HPDF_COLOR_FROMRGB(0x88,0x8a,0x63);
-    theme->title_style->color = HPDF_COLOR_FROMRGB(0xf0,0xf0,0xf0);
+    theme->title_style->color = HPDF_COLOR_FROMRGB(0xf8,0xf8,0xf8);
 
     theme->label_style->color = HPDF_COLOR_FROMRGB(0,0,140);
     theme->content_style->font = HPDF_FF_COURIER_BOLD;
@@ -837,7 +836,7 @@ layout_g7ctrl_report(void) {
         {NRP_SAME,report_full_width, _tbl_device},
 
         {NRP_ROW,report_full_width, _tbl_VIP},
-        
+
         // Row 2 of tables
         /*{NRP_ROW,report_full_width, _tbl_SIM},*/
 
@@ -846,7 +845,7 @@ layout_g7ctrl_report(void) {
 
         // Row 4 of tables
         {NRP_ROW, report_full_width, _tbl_GSM},
-        
+
 
         // Row 5 of tables
         {NRP_ROW, report_full_width, _tbl_GPRS},
