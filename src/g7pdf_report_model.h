@@ -81,7 +81,7 @@ cb_PH_VIP(void *tag, size_t r, size_t c);
 char *
 cb_PH_TIMER(void *tag, size_t r, size_t c);
 char *
-cb_PH_REPORT_WAKE(void *tag, size_t r, size_t c);
+cb_POWER_WAKEUP(void *tag, size_t r, size_t c);
 char *
 cb_POWER_SLEEP(void *tag, size_t r, size_t c);
 
@@ -111,7 +111,8 @@ char *
 cb_GSM_CSD_NBR(void *tag, size_t r, size_t c);
 char *
 cb_GSM_LOCATION(void *tag, size_t r, size_t c);
-
+char *
+cb_GSM_IMEI(void *tag, size_t r, size_t c);
 /***/
 
 
@@ -178,6 +179,14 @@ char *
 cb_GFENCE_type(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_action(void *tag, size_t r, size_t c);
+
+/***/
+
+char *
+cb_LOGGED_number(void *tag, size_t r, size_t c);
+
+char *
+cb_LOGGED_dates(void *tag, size_t r, size_t c);
 
 /***/
 

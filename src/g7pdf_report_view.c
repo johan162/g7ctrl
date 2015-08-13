@@ -215,7 +215,7 @@ cb_BATTERY_draw_segment(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_
         color=red;
     }
 
-    const HPDF_REAL segment_tot_width = 70;
+    const HPDF_REAL segment_tot_width = 50;
     const HPDF_REAL segment_height = 10;
     const HPDF_REAL segment_xpos = xpos+45;//width/2;
     const HPDF_REAL segment_ypos = ypos+4;//height/2;
@@ -252,14 +252,14 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {0,0,1,1,"ID:",cb_DEVICE_ID,cb_DEVICE_ID_style,NULL},
         {0,1,1,1,"Nick-name:",cb_DEVICE_nick,cb_DEVICE_ID_style,NULL},
         {0,2,1,1,"PIN:",cb_DEVICE_PIN,NULL,NULL},
-        {0,3,1,1,"Test:",cb_DEVICE_TEST,NULL,NULL},
-        {0,4,1,1,"SW Ver:",cb_DEVICE_SW_VER,NULL,NULL},
+        {0,3,1,2,"SW Ver:",cb_DEVICE_SW_VER,NULL,NULL},
         {1,0,1,2,"Removal Alert:",NULL,NULL,cb_DEVICE_RA_draw_slide_button},
-        {1,2,1,1,"G-Sensitivity:",NULL,NULL,cb_DEVICE_draw_gsens},
+        {1,2,1,1,"Test:",cb_DEVICE_TEST,NULL,NULL},
         {1,3,1,1,"TZ:",cb_DEVICE_TZ,NULL,NULL},
         {1,4,1,1,"LED:",NULL,NULL,cb_DEVICE_LED_draw_slide_button},
         {2,0,1,2,"Battery Low Alert:",NULL,NULL,cb_BATTERY_draw_low_warning},
-        {2,2,1,3,"Voltage:",cb_BATTERY_VOLTAGE,NULL,cb_BATTERY_draw_segment},
+        {2,2,1,2,"Voltage:",cb_BATTERY_VOLTAGE,NULL,cb_BATTERY_draw_segment},
+        {2,4,1,1,"G-Sensitivity:",NULL,NULL,cb_DEVICE_draw_gsens},        
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -329,26 +329,35 @@ cb_POWER_sleep_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t
     cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
 }
 
+void
+cb_POWER_wakeup_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
+                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
+    const char *stat=cb_POWER_WAKEUP(tag,r,c);
+    const size_t dev_stat = (stat[0]-'0');
+    const size_t vip_idx = (stat[2]-'0');
+    cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
+}
 
 static int
 _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback
-        {0,0,1,1,"Mode:",cb_PH_MODE,NULL,NULL},
-        {0,1,1,1,"Interval:",cb_PH_INTERVAL,NULL,NULL},
-        {0,2,1,1,"Sleep report:",NULL,NULL,cb_POWER_sleep_draw_slide_button},
+        {0,0,1,2,"Mode:",cb_PH_MODE,NULL,NULL},
+        {0,2,1,1,"Interval:",cb_PH_INTERVAL,NULL,NULL},
+        {0,3,1,3,"Sleep report:",NULL,NULL,cb_POWER_sleep_draw_slide_button},
         /*{0,2,1,1,"VIP:",cb_PH_VIP,NULL,NULL},
         {0,3,1,1,"Wake report:",cb_PH_REPORT_WAKE,NULL,NULL},*/
         {1,0,1,1,"Timer 1:",cb_PH_TIMER,NULL,NULL},
         {1,1,1,1,"Timer 2:",cb_PH_TIMER,NULL,NULL},
         {1,2,1,1,"Timer 3:",cb_PH_TIMER,NULL,NULL},
+        {1,3,1,3,"Wake-up report:",NULL,NULL,cb_POWER_wakeup_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Power handling", 2, 3,      /* Title, rows, cols   */
+        "Power handling", 2, 6,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -416,20 +425,21 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback
-        {0,0,1,1,"Mode:",cb_GSM_MODE,NULL,NULL},
+        {0,0,1,1,"Comm select:",cb_GSM_MODE,NULL,NULL},
         {0,1,1,1,"SMS mode:",cb_GSM_SMS,NULL,NULL},
         {0,2,1,1,"SMS No:",cb_GSM_SMS_NBR,NULL,NULL},
         {0,3,1,1,"CSD No:",cb_GSM_CSD_NBR,NULL,NULL},
-        {1,0,1,1,"Location on call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
-        {1,1,1,1,"Roaming:",NULL,NULL,cb_GSM_ROAMING_draw_slide_button},
-        {1,2,1,1,"SIM ID:",cb_SIM_ID,NULL,NULL},
+        {1,0,1,2,"Return Location By Call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
+        {1,2,1,1,"Roaming:",NULL,NULL,cb_GSM_ROAMING_draw_slide_button},
         {1,3,1,1,"SIM Pin:",cb_SIM_PIN,NULL,NULL},
+        {2,0,1,2,"IMEI:",cb_GSM_IMEI,NULL,NULL},
+        {2,2,1,2,"SIM ID:",cb_SIM_ID,NULL,NULL},        
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "GSM", 2, 4,      /* Title, rows, cols   */
+        "GSM", 3, 4,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -622,6 +632,32 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     return stroke_g7ctrl_report_table(tbl);
 }
 
+/* ====================================================================
+ * Information on stored location on device
+ */
+static int
+_tbl_LOGGED(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
+    // Specified the layout of each row
+    hpdf_table_data_spec_t cells[] = {
+        // row,col,rowspan,colspan,lable-string,content-callback
+        {0,0,1,1,"Number of locations:",cb_LOGGED_number,NULL,NULL},
+        {0,1,1,1,"Dates recorded:",cb_LOGGED_dates,NULL,NULL},
+        {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
+    };
+
+    // Overall table layout
+    hpdf_table_spec_t tbl = {
+        "Stored Locations", 1, 2,      /* Title, rows, cols   */
+        xpos, ypos,         /* xpos, ypos          */
+        width, 0,          /* width, height       */
+        cells,             /* A pointer to the specification of each row in the table */
+        NULL               /* Post processing callback */
+    };
+
+    return stroke_g7ctrl_report_table(tbl);
+}
+
+
 /*
  * TODO: Add tracking mode
  *
@@ -723,6 +759,12 @@ report_page_header(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     return  stroke_g7ctrl_report_table(tbl);
 }
 
+
+
+
+/* ====================================================================
+ * 
+ */
 static int
 stroke_g7ctrl_report_table(hpdf_table_spec_t table_spec) {
     hpdf_table_theme_t *theme = hpdf_table_get_default_theme();
@@ -835,34 +877,31 @@ layout_g7ctrl_report(void) {
         // Page 1: Row 1 of tables
         {NRP_SAME,report_full_width, _tbl_device},
 
+        // Row 2  of tables
         {NRP_ROW,report_full_width, _tbl_VIP},
 
-        // Row 2 of tables
-        /*{NRP_ROW,report_full_width, _tbl_SIM},*/
-
         // Row 3 of tables
-        //{NRP_ROW,report_full_width, _tbl_BATT},
-
-        // Row 4 of tables
         {NRP_ROW, report_full_width, _tbl_GSM},
 
-
-        // Row 5 of tables
+        // Row 4 of tables
         {NRP_ROW, report_full_width, _tbl_GPRS},
 
-        // Row 6 of tables
+        // Row 5 of tables
         {NRP_ROW, report_full_width, _tbl_POWER},
 
-        // Row 7 of tables
+        // Row 6 of tables
         {NRP_ROW, report_half_width, _tbl_llog},
         {NRP_SAME,report_half_width, _tbl_ltrack},
 
-        // Row 8 of tables
-        {NRP_ROW, report_full_width, _tbl_gfence},
+        // Row 7 of tables
+        {NRP_ROW, report_full_width, _tbl_LOGGED},
 
         // Page 2: Row 1 of tables
-        {NRP_PAGE, report_full_width, _tbl_gfence_event},
-
+        {NRP_PAGE, report_full_width, _tbl_gfence},
+        
+        // Page 2: Row 2 of tables
+        {NRP_ROW, report_full_width, _tbl_gfence_event},
+        
         {0,0,NULL},
     };
 

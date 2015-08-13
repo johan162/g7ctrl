@@ -66,7 +66,7 @@ cb_DEVICE_PIN(void *tag, size_t r, size_t c) {
 
 char *
 cb_DEVICE_SW_VER(void *tag, size_t r, size_t c) {
-    return "sw ver";
+    return "M7'0.002STD'rev02,V1";
 }
 
 char *
@@ -101,7 +101,7 @@ cb_DEVICE_TEST(void *tag, size_t r, size_t c) {
 
 char *
 cb_SIM_ID(void *tag, size_t r, size_t c) {
-    return "SIM id";
+    return "12345678901234567890";
 }
 
 char *
@@ -139,8 +139,8 @@ cb_PH_TIMER(void *tag, size_t r, size_t c) {
 }
 
 char *
-cb_PH_REPORT_WAKE(void *tag, size_t r, size_t c) {
-    return "PS wake";
+cb_POWER_WAKEUP(void *tag, size_t r, size_t c) {
+    return "1,12";
 }
 
 char *
@@ -201,7 +201,10 @@ cb_GSM_LOCATION(void *tag, size_t r, size_t c) {
     return "1,3";
 }
 
-
+char *
+cb_GSM_IMEI(void *tag, size_t r, size_t c) {
+    return "123456789012345";
+}
 /***/
 
 
@@ -340,6 +343,19 @@ cb_GFENCE_type(void *tag, size_t r, size_t c) {
 char *
 cb_GFENCE_action(void *tag, size_t r, size_t c) {
     return "GFENCE act";
+}
+
+
+/***/
+
+char *
+cb_LOGGED_number(void *tag, size_t r, size_t c) {
+    return "3150";
+}
+
+char *
+cb_LOGGED_dates(void *tag, size_t r, size_t c) {
+    return "20150123100712-20150223173228";
 }
 
 
