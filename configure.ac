@@ -276,6 +276,8 @@ DOCBOOK_XSL=
     done
 AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
 AC_CHECK_PROG(XML2CONFIG,xml2-config,xml2-config,)
+# AC_PATH_PROG (variable, prog-to-check-for, [value-if-not-found], [path])
+
 
 XSLTPROC_WORKS=no
 if test  "$XSLTPROC" -a "$XML2CONFIG" ; then
@@ -301,6 +303,11 @@ AC_CHECK_PROG(LINKS_WWW,links,yes,no)
 AM_CONDITIONAL(have_links, test "$LINKS_WWW" = "yes")
 
 AC_CHECK_PROG(JAVAFOP,fop,yes,no)
+if test "$JAVAFOP" = "no"; then
+    AC_PATH_PROG(FOP,fop,fop,)
+else
+    AC_PATH_PROG(FOP,fop,fop,)
+fi
 AM_CONDITIONAL(have_javafop, test "$JAVAFOP" = "yes")
 
 AC_SUBST(DOCBOOK_XSL)
@@ -413,6 +420,7 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
     else
         AC_MSG_NOTICE([  - Working Docbook5 setup detected. Will rebuild documentation. ])
         AC_MSG_NOTICE([  - Stylesheets: ${DOCBOOK_XSL} ])
+        AC_MSG_NOTICE([  - fop executable: ${FOP} ])
         AC_MSG_NOTICE([    In case of errors rebuilding PDF regarding missing hyphenation])
         AC_MSG_NOTICE([    please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html ])
     fi

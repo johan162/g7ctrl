@@ -223,8 +223,8 @@ out/pdf/Manual-A4-duplex.pdf: $(XML_FILES) xsl_stylesheets/fo.xsl xsl_stylesheet
 	done ;							    \
 	fi	
 	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl $<
-	- fop -q out/pdf/Manual.fo $@  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
-	rm out/pdf/Manual.fo
+	- ${FOP} -q out/pdf/Manual.fo $@  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
+#rm out/pdf/Manual.fo
 	@echo " ================================================================================================"
 	@echo " == INFORMATION: It is safe to ignore warnings about paragraph overflows and font substitution =="
 	@echo " ================================================================================================"
