@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 999 2015-04-27 16:49:04Z ljp $
+ * SVN:         $Id: g7cmd.c 1017 2015-08-10 13:04:19Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

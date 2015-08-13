@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1017 2015-08-10 13:04:19Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1019 2015-08-10 23:05:18Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *

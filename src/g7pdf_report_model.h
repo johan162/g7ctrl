@@ -57,6 +57,8 @@ char *
 cb_DEVICE_RA(void *tag, size_t r, size_t c);
 size_t
 cb_DEVICE_GSENS(void *tag, size_t r, size_t c);
+char *
+cb_DEVICE_TEST(void *tag, size_t r, size_t c);
 
 /***/
 
@@ -65,7 +67,7 @@ char *
 cb_SIM_ID(void *tag, size_t r, size_t c);
 char *
 cb_SIM_PIN(void *tag, size_t r, size_t c);
-char *
+_Bool
 cb_SIM_ROAMING(void *tag, size_t r, size_t c);
 
 /***/
@@ -81,7 +83,7 @@ cb_PH_TIMER(void *tag, size_t r, size_t c);
 char *
 cb_PH_REPORT_WAKE(void *tag, size_t r, size_t c);
 char *
-cb_PH_REPORT_SLEEP(void *tag, size_t r, size_t c);
+cb_POWER_SLEEP(void *tag, size_t r, size_t c);
 
 /***/
 
@@ -92,8 +94,8 @@ float
 cb_BATTERY_PERCENT(void *tag, size_t r, size_t c);
 char *
 cb_BATTERY_LOW(void *tag, size_t r, size_t c);
-char *
-cb_BATTERY_VIP(void *tag, size_t r, size_t c);
+//char *
+//cb_BATTERY_VIP(void *tag, size_t r, size_t c);
 
 /***/
 
@@ -107,7 +109,7 @@ char *
 cb_GSM_SMS_NBR(void *tag, size_t r, size_t c);
 char *
 cb_GSM_CSD_NBR(void *tag, size_t r, size_t c);
-_Bool
+char *
 cb_GSM_LOCATION(void *tag, size_t r, size_t c);
 
 /***/

@@ -57,6 +57,7 @@ hpdf_table_widget_letter_buttons(HPDF_Doc doc, HPDF_Page page,
                      HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height, 
                      const HPDF_RGBColor on_color, const HPDF_RGBColor off_color, 
                      const HPDF_RGBColor on_background, const HPDF_RGBColor off_background,
+                     const HPDF_REAL fsize,
                      const char *letters, _Bool *state ) {
 
     // Text colors
@@ -66,10 +67,10 @@ hpdf_table_widget_letter_buttons(HPDF_Doc doc, HPDF_Page page,
     
     const HPDF_REAL button_width=width/num;        
     const HPDF_REAL button_height=height;
-    const HPDF_REAL fsize=8;
+    //const HPDF_REAL fsize=8;
         
     HPDF_REAL x=xpos;
-    HPDF_REAL y=ypos+4;
+    HPDF_REAL y=ypos;
     
 
     
@@ -134,10 +135,10 @@ hpdf_table_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
     const HPDF_REAL line_width=0.8;
 
     // Bounding box for slide button
-    const HPDF_REAL button_width = 38;
-    const HPDF_REAL button_height = 11;
-    const HPDF_REAL button_xpos = xpos+(width-button_width)/2;
-    const HPDF_REAL button_ypos = ypos+4;
+    const HPDF_REAL button_width = width; //38;
+    const HPDF_REAL button_height = height; //11;
+    const HPDF_REAL button_xpos = xpos; //+(width-button_width)/2;
+    const HPDF_REAL button_ypos = ypos; //+4;
     const HPDF_REAL button_rad = 4;
 
     // Default to on setting of "push-button"
@@ -159,7 +160,7 @@ hpdf_table_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
         HPDF_Page_SetRGBFill(page, white.r, white.g, white.b);
         HPDF_Page_SetTextRenderingMode(page, HPDF_FILL);
 
-        HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA, HPDF_TABLE_DEFAULT_TARGET_ENCODING), 8);
+        HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA_BOLD, HPDF_TABLE_DEFAULT_TARGET_ENCODING), 8);
         HPDF_Page_TextOut(page, button_xpos+8, button_ypos+button_height/2-3, "ON");
         HPDF_Page_EndText(page);
 
@@ -174,7 +175,7 @@ hpdf_table_widget_slide_button(HPDF_Doc doc, HPDF_Page page,
         HPDF_Page_SetRGBFill(page, gray.r, gray.g, gray.b);
         HPDF_Page_SetTextRenderingMode(page, HPDF_FILL);
 
-        HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA, HPDF_TABLE_DEFAULT_TARGET_ENCODING), 8);
+        HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA_BOLD, HPDF_TABLE_DEFAULT_TARGET_ENCODING), 8);
         HPDF_Page_TextOut(page, button_xpos+button_height+4, button_ypos+button_height/2-3, "OFF");
         HPDF_Page_EndText(page);
 
@@ -275,15 +276,16 @@ hpdf_table_widget_hbar(const HPDF_Doc doc, const HPDF_Page page,
 void
 hpdf_table_widget_segment_hbar(const HPDF_Doc doc, const HPDF_Page page,
                                 const HPDF_REAL xpos, const HPDF_REAL ypos, const HPDF_REAL width, const HPDF_REAL height,
-                                const size_t num_segments, const HPDF_RGBColor on_color, const size_t num_on_segments) {
+                                const size_t num_segments, const HPDF_RGBColor on_color, const size_t num_on_segments, const _Bool text_below) {
 
     const HPDF_RGBColor segment_border_color = HPDF_COLOR_FROMRGB(128,128,128);
     const HPDF_RGBColor segment_off_color = HPDF_COLOR_FROMRGB(240,240,240);
-    const HPDF_RGBColor segment_text_color = HPDF_COLOR_FROMRGB(90,90,90);
+    const HPDF_RGBColor segment_text_color = HPDF_COLOR_FROMRGB(40,40,40);
 
     const HPDF_REAL inter_segment_space = 1.5;
     const HPDF_REAL segment_width = (width - inter_segment_space*(num_segments-1)) / num_segments;
     const HPDF_REAL line_width=0.8;
+    const HPDF_REAL fsize=8;
 
     HPDF_Page_SetLineWidth(page,line_width);
     HPDF_Page_SetRGBStroke(page,segment_border_color.r,segment_border_color.g,segment_border_color.b);
@@ -311,9 +313,13 @@ hpdf_table_widget_segment_hbar(const HPDF_Doc doc, const HPDF_Page page,
     HPDF_Page_SetRGBFill(page, segment_text_color.r, segment_text_color.g, segment_text_color.b);
     HPDF_Page_SetTextRenderingMode(page, HPDF_FILL);
 
-    HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA, HPDF_TABLE_DEFAULT_TARGET_ENCODING), 8);
-    HPDF_Page_TextOut(page, xpos-2, ypos-9, "0");
-    HPDF_Page_TextOut(page, xpos+width-8, ypos-9, "100%");
+    HPDF_Page_SetFontAndSize(page, HPDF_GetFont(doc, HPDF_FF_HELVETICA, HPDF_TABLE_DEFAULT_TARGET_ENCODING), fsize);
+    if( text_below ) {
+        HPDF_Page_TextOut(page, xpos-2, ypos-9, "0");
+        HPDF_Page_TextOut(page, xpos+width-8, ypos-9, "100%");
+    } else {
+        HPDF_Page_TextOut(page, xpos+width+5, ypos+(height-fsize)/2.0+1, "100%");        
+    }
 
     HPDF_Page_EndText(page);
 }
