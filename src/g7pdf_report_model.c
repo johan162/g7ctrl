@@ -23,15 +23,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 
 #include "config.h"
+#include "g7ctrl.h"
+#include "logger.h"
+#include "xstr.h"
+#include "g7sendcmd.h"
 #include "g7pdf_report_model.h"
 
 char report_header_title[128] = {0};
 
-// Silent gcc about unused args in the callback functions
+// Silent gcc about unused args and vars in the callback functions
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 
 /***/
 
@@ -51,36 +57,43 @@ cb_header_title(void *tag, size_t r, size_t c) {
 
 char *
 cb_DEVICE_ID(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "3000000001";
 }
 
 char *
 cb_DEVICE_nick(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "nick-name";
 }
 
 char *
 cb_DEVICE_PIN(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "pin";
 }
 
 char *
 cb_DEVICE_SW_VER(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "M7'0.002STD'rev02,V1";
 }
 
 char *
 cb_DEVICE_TZ(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "tz";
 }
 
 _Bool
 cb_DEVICE_LED(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 0;
 }
 
 char *
 cb_DEVICE_RA(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     static char buf[8];
     snprintf(buf,sizeof(buf),"%s","2,4");
     return buf;
@@ -88,11 +101,13 @@ cb_DEVICE_RA(void *tag, size_t r, size_t c) {
 
 size_t
 cb_DEVICE_GSENS(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 3;
 }
 
 char *
 cb_DEVICE_TEST(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "PASSED";
 }
 
@@ -101,16 +116,19 @@ cb_DEVICE_TEST(void *tag, size_t r, size_t c) {
 
 char *
 cb_SIM_ID(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "12345678901234567890";
 }
 
 char *
 cb_SIM_PIN(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "SIM pin";
 }
 
 _Bool
 cb_SIM_ROAMING(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 1;
 }
 
@@ -120,31 +138,37 @@ cb_SIM_ROAMING(void *tag, size_t r, size_t c) {
 
 char *
 cb_PH_MODE(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "PS mode";
 }
 
 char *
 cb_PH_INTERVAL(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "PS interval";
 }
 
 char *
 cb_PH_VIP(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "PS VIP";
 }
 
 char *
 cb_PH_TIMER(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "PS Timer";
 }
 
 char *
 cb_POWER_WAKEUP(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "1,12";
 }
 
 char *
 cb_POWER_SLEEP(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "1,2";
 }
 
@@ -154,16 +178,19 @@ cb_POWER_SLEEP(void *tag, size_t r, size_t c) {
 
 char *
 cb_BATTERY_VOLTAGE(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "3.97V";
 }
 
 float
 cb_BATTERY_PERCENT(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 0.76;
 }
 
 char *
 cb_BATTERY_LOW(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "1,5";
 }
 
@@ -178,31 +205,37 @@ cb_BATTERY_LOW(void *tag, size_t r, size_t c) {
 
 char *
 cb_GSM_MODE(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GSM mode";
 }
 
 char *
 cb_GSM_SMS(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GSM sms";
 }
 
 char *
 cb_GSM_SMS_NBR(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GSM sms nbr";
 }
 
 char *
 cb_GSM_CSD_NBR(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GSM csd nbr";
 }
 
 char *
 cb_GSM_LOCATION(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "1,3";
 }
 
 char *
 cb_GSM_IMEI(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "123456789012345";
 }
 /***/
@@ -210,36 +243,43 @@ cb_GSM_IMEI(void *tag, size_t r, size_t c) {
 
 char *
 cb_GPRS_APN(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GPRS apn";
 }
 
 char *
 cb_GPRS_server(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "aditus.asuscomm.com";
 }
 
 char *
 cb_GPRS_port(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "9999";
 }
 
 char *
 cb_GPRS_user(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GPRS user";
 }
 
 char *
 cb_GPRS_pwd(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GPRS pwd";
 }
 
 char *
 cb_GPRS_DNS(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "192.34.34.34";
 }
 
 char *
 cb_GPRS_keep_alive(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GPRS keep";
 }
 
@@ -249,31 +289,37 @@ cb_GPRS_keep_alive(void *tag, size_t r, size_t c) {
 
 char *
 cb_LLOG_mode(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LLOG mode";
 }
 
 char *
 cb_LLOG_timer(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LLOG timer";
 }
 
 char *
 cb_LLOG_dist(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LLOG dist";
 }
 
 char *
 cb_LLOG_number(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LLOG lim";
 }
 
 char *
 cb_LLOG_heading(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LLOG head";
 }
 
 _Bool
 cb_LLOG_waitGPS(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 1;
 }
 
@@ -283,31 +329,37 @@ cb_LLOG_waitGPS(void *tag, size_t r, size_t c) {
 
 char *
 cb_LTRACK_mode(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LTRACK mode";
 }
 
 char *
 cb_LTRACK_timer(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LTRACK timer";
 }
 
 char *
 cb_LTRACK_dist(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LTRACK dist";
 }
 
 char *
 cb_LTRACK_number(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LTRACK lim";
 }
 
 char *
 cb_LTRACK_heading(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "LTRACK head";
 }
 
 _Bool
 cb_LTRACK_waitGPS(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return 0;
 }
 
@@ -317,45 +369,127 @@ cb_LTRACK_waitGPS(void *tag, size_t r, size_t c) {
 
 char *
 cb_GFENCE_status(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE stat";
 }
 
 char *
 cb_GFENCE_lat(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE lat";
 }
 
 char *
 cb_GFENCE_lon(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE lon";
 }
 
 char *
 cb_GFENCE_radius(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE rad";
 }
 
 char *
 cb_GFENCE_type(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE type";
 }
 
 char *
 cb_GFENCE_action(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFENCE act";
 }
 
 
 /***/
+char *ERR_STRING="??";
+
+_Bool
+chk_ok(const char *reply, const char *errmsg) {
+    if (strncmp(reply, "$OK:", 4)) {
+        logmsg(LOG_ERR, "%s (%s)",errmsg, reply);
+        return 0;
+    }    
+    return 1;
+}
+
+static char logged_dates[64];
+static char logged_number[8];
+
+
+static _Bool
+init_LOGGED_number_dates(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
+    int numrec = 0;
+    char reply[128];
+    const char *cmd="DLREC";
+    static _Bool init_logged=0;
+    
+    // Only execute every second time called since there are two callbacks
+    // using this function and we want to minimize the number of calls.
+    if( init_logged ) {
+        init_logged = 0;
+        return 1;
+    }
+    
+    // The reply has the format
+    // $OK:DLREC[+TAG]=17254(20140107231903-20140109231710)   
+    if (-1 == send_cmdquery_reply(cli_info, cmd, reply, sizeof (reply))) {        
+        return 0;
+    }
+    if( !chk_ok(reply,cmd) ){
+        return 0;
+    }
+    
+    char *sptr = reply; // Second digit (there is always one digit))
+    // The number of records always comes after the '=' sign
+    while (*sptr && *sptr != '=')
+        sptr++;
+    if (! *sptr) {
+        logmsg(LOG_ERR, "Invalid response from %s (%s)", cmd, reply);
+        return 0;
+    }
+    sptr++;
+    int dcnt = 0;
+    while (dcnt < 6 && *sptr != '(') {
+        logged_number[dcnt++] = *sptr++;
+    }
+    if (dcnt >= 6) {
+        logmsg(LOG_ERR, "Invalid response from %s (%s)", cmd, reply);
+        return 0;
+    }
+    logged_number[dcnt] = '\0';
+    
+    
+    // Extract logged dates
+    if( *sptr=='(' ) {
+        size_t i=0;
+        *logged_dates = '\0';
+        sptr++;
+        while(*sptr && *sptr != ')' && i < sizeof(logged_dates)-1) {
+            logged_dates[i++] = *sptr++;
+        }
+        logged_dates[i]='\0';
+    } else {
+        logmsg(LOG_ERR, "Invalid response from %s (%s)", cmd, reply);
+        return 0;        
+    }
+    
+    init_logged=1;
+    return 1;   
+}
 
 char *
 cb_LOGGED_number(void *tag, size_t r, size_t c) {
-    return "3150";
+    return init_LOGGED_number_dates(tag, r, c) ? logged_number : ERR_STRING;
 }
 
 char *
 cb_LOGGED_dates(void *tag, size_t r, size_t c) {
-    return "20150123100712-20150223173228";
+    return init_LOGGED_number_dates(tag, r, c) ? logged_dates : ERR_STRING;
 }
 
 
@@ -364,36 +498,43 @@ cb_LOGGED_dates(void *tag, size_t r, size_t c) {
 
 char *
 cb_GFENCE_EVENT_ID(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT ID";
 }
 
 char *
 cb_GFENCE_EVENT_status(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT stat";
 }
 
 char *
 cb_GFENCE_EVENT_lat(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT lat";
 }
 
 char *
 cb_GFENCE_EVENT_lon(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT lon";
 }
 
 char *
 cb_GFENCE_EVENT_radius(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT rad";
 }
 
 char *
 cb_GFENCE_EVENT_type(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT type";
 }
 
 char *
 cb_GFENCE_EVENT_action(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
     return "GFEVT act";
 }
 

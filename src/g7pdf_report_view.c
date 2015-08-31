@@ -146,6 +146,27 @@ cb_widget_draw_LS_VIP_state(HPDF_Doc doc, HPDF_Page page,
 
 
 
+/*
+ * This holds holds the client information structure for the client that currently is
+ * connected. It is used to set the "tag" information in the table to be able to pass
+ * along the current client in the actual model callbacms (which fetches the data from 
+ * the device).
+ * This means that it is NOT thread safe and the report can only be called by one
+ * client at a time. However, the edge case of multiple clients calling the report
+ * function is very, very unlikely and this reduction in flexibility greatly simplifies
+ * the overall code.
+ */
+static struct client_info *cli_info_for_callback;
+
+/**
+ * Callback function that is called just after a table has been created statically but befpre
+ * the data is populated.
+ * @param t The table
+ */
+static void 
+cb_tbl_post_process(hpdf_table_t t) {
+    hpdf_table_set_tag(t,(void *)cli_info_for_callback);
+}
 
 /* ===============================================
  * DEVICE TABLE AND CALLBACKS
@@ -248,7 +269,7 @@ static int
 _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"ID:",cb_DEVICE_ID,cb_DEVICE_ID_style,NULL},
         {0,1,1,1,"Nick-name:",cb_DEVICE_nick,cb_DEVICE_ID_style,NULL},
         {0,2,1,1,"PIN:",cb_DEVICE_PIN,NULL,NULL},
@@ -269,7 +290,7 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,                            /* A pointer to the specification of each row in the table */
-        NULL         /* Post processing callback */
+        cb_tbl_post_process         /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -342,7 +363,7 @@ static int
 _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,2,"Mode:",cb_PH_MODE,NULL,NULL},
         {0,2,1,1,"Interval:",cb_PH_INTERVAL,NULL,NULL},
         {0,3,1,3,"Sleep report:",NULL,NULL,cb_POWER_sleep_draw_slide_button},
@@ -361,7 +382,7 @@ _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -424,7 +445,7 @@ static int
 _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Comm select:",cb_GSM_MODE,NULL,NULL},
         {0,1,1,1,"SMS mode:",cb_GSM_SMS,NULL,NULL},
         {0,2,1,1,"SMS No:",cb_GSM_SMS_NBR,NULL,NULL},
@@ -443,7 +464,7 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -482,7 +503,7 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -504,7 +525,7 @@ static int
 _tbl_VIP(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"No 1:",cb_VIP_no,NULL,NULL},
         {0,1,1,1,"No 2:",cb_VIP_no,NULL,NULL},
         {0,2,1,1,"No 3:",cb_VIP_no,NULL,NULL},
@@ -519,7 +540,7 @@ _tbl_VIP(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -540,7 +561,7 @@ static int
 _tbl_llog(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Mode:",cb_LLOG_mode,NULL,NULL},
         {0,1,1,1,"Timer:",cb_LLOG_timer,NULL,NULL},
         {0,2,1,1,"Dist:",cb_LLOG_dist,NULL,NULL},
@@ -556,7 +577,7 @@ _tbl_llog(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -578,7 +599,7 @@ static int
 _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Mode:",cb_LTRACK_mode,NULL,NULL},
         {0,1,1,1,"Timer:",cb_LTRACK_timer,NULL,NULL},
         {0,2,1,1,"Dist:",cb_LTRACK_dist,NULL,NULL},
@@ -594,7 +615,7 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -610,7 +631,7 @@ static int
 _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Status:",cb_GFENCE_status,NULL,NULL},
         {0,1,1,1,"Lat:",cb_GFENCE_lat,NULL,NULL},
         {0,2,1,1,"Lon:",cb_GFENCE_lon,NULL,NULL},
@@ -626,7 +647,7 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -639,7 +660,7 @@ static int
 _tbl_LOGGED(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Number of locations:",cb_LOGGED_number,NULL,NULL},
         {0,1,1,1,"Dates recorded:",cb_LOGGED_dates,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
@@ -651,7 +672,7 @@ _tbl_LOGGED(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -696,7 +717,7 @@ _tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     int ret =  stroke_g7ctrl_report_table(tbl);
@@ -740,7 +761,7 @@ static int
 report_page_header(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
-        // row,col,rowspan,colspan,lable-string,content-callback
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,3,"Title:",cb_header_title,cb_header_style,NULL},
         {0,3,1,3,"Generated:",cb_header_date_time,cb_header_style,NULL},
         {0,6,1,1,"Page:",cb_header_pgnum,cb_header_style,NULL},
@@ -753,7 +774,7 @@ report_page_header(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        NULL               /* Post processing callback */
+        cb_tbl_post_process               /* Post processing callback */
     };
 
     return  stroke_g7ctrl_report_table(tbl);
@@ -981,6 +1002,9 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_
     char buf[256];
     snprintf(buf,sizeof(buf),"%s",PACKAGE_STRING);
     HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_CREATOR, buf);
+    
+    // Remember the client info structure for the table callcacks
+    cli_info_for_callback = cli_info;
 
     snprintf(buf,sizeof(buf),"GM7 Device Report : %u",cli_info->target_deviceid);
     HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_TITLE,buf);
