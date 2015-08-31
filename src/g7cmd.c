@@ -1601,6 +1601,7 @@ exec_help_commandlist(struct client_info *cli_info) {
     _writef(sockd, ".ln                    - List all registered nicks\n");
     _writef(sockd, ".nick                  - Register a nick-name for connected device\n");    
     _writef(sockd, ".ratereset             - Reset Geolocation lookup rate suspension\n");
+    _writef(sockd, ".report                - Generate a PDF report of connected device to specified file\n");
     _writef(sockd, ".table                 - Switch between ASCII and Unicode box drawing characters for output tables\n");
     _writef(sockd, ".target                - List devices connected over GPRS or set active GPRS connection\n");    
     _writef(sockd, ".usb                   - List devices on USB or set active USB connection\n");

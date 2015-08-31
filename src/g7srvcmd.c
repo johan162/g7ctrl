@@ -160,6 +160,13 @@ struct srvcmd_help srvcmd_help_list [] = {
        "",
        ".ratereset"
     },
+    {"report",
+       "Generate a PDF report for the current attached device",
+       "filename [title]",
+       "filename - Filename of the generated report (without the .pdf suffix)\n"
+       "[title] - The title as printed on the report",
+       ".report dev01 Motorcycle"
+    },    
     {"date",
        "Print server date and time",
        "",
