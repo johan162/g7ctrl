@@ -2,6 +2,7 @@
  * File:        g7sendcmd.h
  * Description: Low level routinces to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7sendcmd.h 1042 2015-09-01 21:37:03Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -85,7 +86,7 @@ int
 send_cmdquery_reply(struct client_info *cli_info, const char *cmd,char *reply, const size_t maxreply);
 
 int
-extract_devcmd_reply_simple(const char *raw,char *reply,size_t maxreply);
+extract_devcmd_reply_first_field(const char *raw,char *reply,size_t maxreply);
 
 int
 extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct splitfields *flds);
@@ -101,6 +102,10 @@ get_numrec(struct client_info *cli_info, int *numrec);
 
 int
 get_devid(struct client_info *cli_info, unsigned *device_id);
+
+int
+device_strerr(const int errcode, char **errmsg);
+
 
 #ifdef	__cplusplus
 }

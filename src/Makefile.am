@@ -55,11 +55,11 @@ mail_templates/mail_lastloc_img.html mail_templates/mail_lastloc_img.txt
 g7ctrl_SOURCES = g7ctrl.c g7config.c futils.c utils.c lockfile.c xstr.c logger.c pcredmalloc.c \
 socklistener.c serial.c g7cmd.c tracker.c connwatcher.c dbcmd.c presets.c rkey.c mailutil.c gpsdist.c \
 g7srvcmd.c g7sendcmd.c sighandling.c nicks.c export.c geoloc.c wreply.c unicode_tbl.c \
-g7pdf_report_model.c g7pdf_report_view.c \
+g7pdf_report_model.c g7pdf_report_view.c assocarray.c \
 g7ctrl.h g7config.h futils.h utils.h xstr.h logger.h lockfile.h pcredmalloc.h build.h socklistener.h \
 serial.h g7cmd.h tracker.h connwatcher.h dbcmd.h presets.h rkey.h mailutil.h gpsdist.h \
 g7srvcmd.h g7sendcmd.h sighandling.h nicks.h export.h geoloc.h wreply.h unicode_tbl.h \
-g7pdf_report_model.h g7pdf_report_view.h
+g7pdf_report_model.h g7pdf_report_view.h assocarray.h
 
 
 # If we are using gcc then we construct the build number and date as "fake"

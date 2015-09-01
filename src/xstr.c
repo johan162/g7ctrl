@@ -2,6 +2,7 @@
  * File:        XSTR.C
  * Description: Some extra string utility functions
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: xstr.c 1042 2015-09-01 21:37:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -23,7 +24,6 @@
 // We want the full POSIX and C99 standard
 #define _GNU_SOURCE
 
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -37,9 +37,9 @@
 #include <stdarg.h>
 
 #include "xstr.h"
-#include "utils.h"
-#include "logger.h"
 
+#define TRUE 1
+#define FALSE 0
 
 #ifdef __APPLE__
 
@@ -107,7 +107,7 @@ xstrlcat(char *dst, const char *src, size_t size) {
  */
 size_t
 xvstrncat(char *dst, size_t size, const char *format, ...) {
-    const int blen = SIZE_50KB;
+    const int blen = 1024*50;
 
     char *tmpbuff = calloc(1, blen);
     if (NULL == tmpbuff) {

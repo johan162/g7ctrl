@@ -34,6 +34,9 @@ extern "C" {
 
 extern char report_header_title[128];
 
+int
+init_model_from_device(void *tag);
+
 char *
 cb_header_title(void *tag, size_t r, size_t c);
 
@@ -98,7 +101,10 @@ cb_BATTERY_LOW(void *tag, size_t r, size_t c);
 //cb_BATTERY_VIP(void *tag, size_t r, size_t c);
 
 /***/
+char *
+cb_VIP_no(void *tag, size_t r, size_t c); 
 
+/***/
 
 
 char *

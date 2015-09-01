@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1019 2015-08-10 23:05:18Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1042 2015-09-01 21:37:03Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -221,28 +221,28 @@ _srvcmd_nick(struct client_info *cli_info, const char *nick,const char *phone) {
     if( -1 == send_cmdquery_reply(cli_info, "CONFIG",_config,sizeof(_config)) ) {
         return -1;
     }
-    extract_devcmd_reply_simple(_config,devid,sizeof(devid));
+    extract_devcmd_reply_first_field(_config,devid,sizeof(devid));
 
     // "$OK:IMEI=352964052600039"
     _writef_reply_interactive(sockd,"[25%%]..");
     if( -1 == send_cmdquery_reply(cli_info, "IMEI",_imei,sizeof(_imei)) ) {
         return -1;
     }
-    extract_devcmd_reply_simple(_imei,imei,sizeof(imei));
+    extract_devcmd_reply_first_field(_imei,imei,sizeof(imei));
 
     // "$OK:SIMID=89460844007000101944"
     _writef_reply_interactive(sockd,"[50%%]..");
     if( -1 == send_cmdquery_reply(cli_info, "SIM",_sim,sizeof(_sim)) ) {
         return -1;
     }
-    extract_devcmd_reply_simple(_sim,sim,sizeof(sim));
+    extract_devcmd_reply_first_field(_sim,sim,sizeof(sim));
 
     // "$OK:VER=M7 2.005 GP rev00c,V2"
     _writef_reply_interactive(sockd,"[75%%]..");
     if( -1 == send_cmdquery_reply(cli_info, "VER",_fwver,sizeof(_fwver)) ) {
         return -1;
     }
-    extract_devcmd_reply_simple(_fwver,fwver,sizeof(fwver));
+    extract_devcmd_reply_first_field(_fwver,fwver,sizeof(fwver));
 
     _writef_reply_interactive(sockd,"[100%%]\n");
     int rc = db_update_nick(nick,devid,imei,sim,phone,fwver);

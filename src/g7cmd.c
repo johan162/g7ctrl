@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 1017 2015-08-10 13:04:19Z ljp $
+ * SVN:         $Id: g7cmd.c 1042 2015-09-01 21:37:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -666,15 +666,17 @@ static struct cmdargs cmdargs_list[] = {
 // Size of cmdargs_list (number of entries)
 const size_t cmdargs_list_len = sizeof (cmdargs_list) / sizeof (struct cmdargs);
 
+
 /**
- * Translate the command reply into plaintext
- * @param sockd Client socket to communicate on
- * @param devcmd Device command to translate
- * @param flds The arguments to the device command
- * @return 0 on success, -1 on failure
+ * Helper function for cmdarg_to_text()
+ * @param str String buffer to write result to
+ * @param maxlen Maximum length of string buffer
+ * @param devcmd The device commadn used
+ * @param flds All the fields in the reply
+ * @return 0 on success -1 on failure
  */
 int
-cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
+cmdarg_to_text_string(char *str, const size_t maxlen, const char *devcmd, struct splitfields *flds) {
     char srvcmd[15];
     if (get_srvcmd_from_devcmd(devcmd, srvcmd, sizeof (srvcmd))) {
         logmsg(LOG_ERR, "Unknown device command");
@@ -698,10 +700,11 @@ cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
         return 0;
     }
     
+    *str='\0';
     if( CMD_TYPE_GETSET_BINARY == g7command_list[cmdidx].type ) {
         
         if( 1 == flds->nf ) {
-            _writef(sockd, "\n%16s: %s\n", "Status",flds->fld[0][0]=='1' ? "On" : "Off");
+            snprintf(str, maxlen, "\n%16s: %s\n", "Status",flds->fld[0][0]=='1' ? "On" : "Off");
         } else {
             logmsg(LOG_ERR, "Wrong number of arguments for %s. Found %zd but expected %d",
                     devcmd, flds->nf, 1);
@@ -715,7 +718,9 @@ cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
                     devcmd, flds->nf, cmdargs_list[idx].numargs);
             return -1;
         }
-        _writef(sockd, "\n");
+        snprintf(str, maxlen, "\n");
+        char buff[1024];
+        *buff='\0';
         size_t nsel = 0;
         for (size_t i = 0; i < cmdargs_list[idx].numargs; i++) {
             switch (cmdargs_list[idx].argl[i].type) {
@@ -723,7 +728,7 @@ cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
                 case ARGT_INT:
                 case ARGT_FLOAT:
                 case ARGT_STRING:
-                    _writef(sockd, "%16s: %s\n", cmdargs_list[idx].argl[i].arglabel, flds->fld[i]);
+                    xvstrncat(str, maxlen, "%16s: %s\n", cmdargs_list[idx].argl[i].arglabel, flds->fld[i]);
                     break;
                 case ARGT_SELECT: // selection
                     nsel = cmdargs_list[idx].argl[i].nsel;
@@ -734,7 +739,7 @@ cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
                         logmsg(LOG_ERR, "Unknown argument value (%s) for select for command %s", flds->fld[i], devcmd);
                         return -1;
                     }
-                    _writef(sockd, "%16s: %s\n", cmdargs_list[idx].argl[i].arglabel, cmdargs_list[idx].argl[i].select[j].selectlabel);
+                    xvstrncat(str, maxlen,  "%16s: %s\n", cmdargs_list[idx].argl[i].arglabel, cmdargs_list[idx].argl[i].select[j].selectlabel);
                     break;
                 default:
                     logmsg(LOG_CRIT, "Internal error. Unknown command type=%d", cmdargs_list[idx].argl[i].type);
@@ -744,6 +749,32 @@ cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
     }
     return 0;
 }
+
+/**
+ * Translate the command reply into plaintext
+ * @param sockd Client socket to communicate on
+ * @param devcmd Device command to translate
+ * @param flds The arguments to the device command
+ * @return 0 on success, -1 on failure
+ */
+int
+cmdarg_to_text(const int sockd, const char *devcmd, struct splitfields *flds) {
+    const int maxlen=1025;
+    char *str = calloc(maxlen,sizeof(char));
+    if( str==NULL ) {
+        logmsg(LOG_ERR,"Out of memory in cmdarg_to_text");
+        return -1;
+    }
+    int rc;
+    if( -1 == (rc=cmdarg_to_text_string(str, maxlen, devcmd, flds)) ) {
+        logmsg(LOG_ERR,"Failed to translate command back to human readable strings!");
+    }
+    
+    _writef(sockd,"%s",str);
+    free(str);
+    return rc;
+}
+
 
 /*============================================================================
  * Generic command templates used by device commands
@@ -997,6 +1028,25 @@ get_devcmd_from_srvcmd(const char *srvcmd, size_t maxlen, char *devcmd) {
     return 0;
 }
 
+
+/**
+ * Find the device command corresponding to the specified command index
+ * @param idx Command index
+ * @param devcmd Filled with the corresponding device command
+ * @param maxlen Maximum buffer length for device command
+ * @return 0 if command was found, -1 if the command index is out of range
+ */
+int
+get_devcmd(size_t idx, char *devcmd, size_t maxlen) {
+
+    if( idx < g7command_list_len ) {
+        strncpy(devcmd, g7command_list[idx].cmdstr, maxlen - 1);
+        devcmd[maxlen - 1] = '\0';
+        return 0;
+    }
+    return -1;
+}
+
 /**
  * Internal helper. Write error string to client
  * @param sockd Socket to communicate with client on
@@ -1039,6 +1089,7 @@ prepare_cmd_to_device(struct client_info *cli_info, const int cmdidx, const int 
     }
 
     if (CMD_MODE_W == mode) {
+        
         // Command prefix $WP+<cmd>[+<tag>]=<pwd>
         if (*tagbuffer) {
             snprintf(buffer, sizeof (buffer) - 1, "$WP+%s+%s=%s",
@@ -1047,12 +1098,13 @@ prepare_cmd_to_device(struct client_info *cli_info, const int cmdidx, const int 
             snprintf(buffer, sizeof (buffer) - 1, "$WP+%s=%s",
                     g7command_list[cmdidx].cmdstr, pinbuffer);
         }
-        if (*argstrlist) {
+        if (argstrlist && *argstrlist) {
             strcat(buffer, ",");
             strncat(buffer, argstrlist, sizeof (buffer) - strlen(buffer) - 1);
         }
-
+        
     } else {
+        
         // Command prefix $WP+<cmd>[+<tag>]=<pwd>,?
         if (*tagbuffer) {
             if (argstrlist && *argstrlist) {
@@ -1067,7 +1119,7 @@ prepare_cmd_to_device(struct client_info *cli_info, const int cmdidx, const int 
                 snprintf(buffer, sizeof (buffer) - 1, "$WP+%s=%s,?", g7command_list[cmdidx].cmdstr, pinbuffer);
             }
         }
-        return send_rawcmd(cli_info, buffer, tagbuffer);
+        
     }
     return send_rawcmd(cli_info, buffer, tagbuffer);
 }

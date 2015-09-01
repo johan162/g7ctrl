@@ -164,7 +164,7 @@ static struct client_info *cli_info_for_callback;
  * @param t The table
  */
 static void 
-cb_tbl_post_process(hpdf_table_t t) {
+cb_tbl_set_tag(hpdf_table_t t) {
     hpdf_table_set_tag(t,(void *)cli_info_for_callback);
 }
 
@@ -290,7 +290,7 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,                            /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process         /* Post processing callback */
+        cb_tbl_set_tag         /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -382,7 +382,7 @@ _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -464,7 +464,7 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -492,7 +492,7 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {0,6,1,2,"DNS:",cb_GPRS_DNS,NULL,NULL},
         /* {0,2,1,1,"Port:",cb_GPRS_port,NULL,NULL},*/
         {1,0,1,3,"User:",cb_GPRS_user,NULL,NULL},
-        {1,3,1,3,"PWD:",cb_GPRS_pwd,NULL,NULL},
+        {1,3,1,3,"Password:",cb_GPRS_pwd,NULL,NULL},
         {1,6,1,2,"Keep alive interval:",cb_GPRS_keep_alive,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
@@ -503,7 +503,7 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -513,13 +513,6 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
  * VIP TABLE AND CALLBACKS
  * ===============================================
  */
-
-static char *
-cb_VIP_no(void *tag, size_t r, size_t c) {
-    static char buf[64];
-    snprintf(buf,sizeof(buf),"VIP no %zu",r*2+c+1);
-    return buf;
-}
 
 static int
 _tbl_VIP(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
@@ -540,7 +533,7 @@ _tbl_VIP(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -577,7 +570,7 @@ _tbl_llog(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -615,7 +608,7 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -647,7 +640,7 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -672,7 +665,7 @@ _tbl_LOGGED(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return stroke_g7ctrl_report_table(tbl);
@@ -717,7 +710,7 @@ _tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     int ret =  stroke_g7ctrl_report_table(tbl);
@@ -774,7 +767,7 @@ report_page_header(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_post_process               /* Post processing callback */
+        cb_tbl_set_tag               /* Post processing callback */
     };
 
     return  stroke_g7ctrl_report_table(tbl);
@@ -1018,6 +1011,8 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_
     hpdf_table_set_origin_top_left(TRUE);
     add_a4page();
 
+    logmsg(LOG_DEBUG,"Initializing the model from device");
+    init_model_from_device( (void *)cli_info);
     logmsg(LOG_DEBUG,"HPDF: Starting report layout");
     layout_g7ctrl_report();
 
