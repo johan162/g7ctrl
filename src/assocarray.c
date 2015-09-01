@@ -280,13 +280,15 @@ assoc_sort(struct assoc_array_t *a) {
  * @return 0 on success, -1 on error
  */
 int
-assoc_tostring(struct assoc_array_t *a, char *buff, size_t maxlen) {
-    if( a==NULL ) return -1;
+assoc_to_json(struct assoc_array_t *a, char *buff, size_t maxlen) {
+    if( a==NULL ) 
+        return -1;
     
-    snprintf(buff, maxlen, "{\n  num_values:%04zu,\n  max_values:%04zu,\n  pairs : [\n",a->num_values, a->max_values);
-    for(size_t i=0; i < a->num_values; i++) {
+    snprintf(buff, maxlen, "{\n  \"num_values\":%zu,\n\"max_values\":%zu,\n\"pairs\":[\n",a->num_values, a->max_values);
+    for(size_t i=0; i < a->num_values-1; i++) {
         xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" },\n", a->a[i].name, a->a[i].value);
     }
+    xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" }\n", a->a[a->num_values-1].name, a->a[a->num_values-1].value);
     xvstrncat(buff, maxlen, "  ]\n}\n");    
     return 0;
 }

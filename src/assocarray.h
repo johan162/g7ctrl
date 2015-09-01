@@ -71,7 +71,7 @@ int
 assoc_destroy(struct assoc_array_t *a);
 
 int
-assoc_tostring(struct assoc_array_t *a, char *buff, size_t maxlen);
+assoc_to_json(struct assoc_array_t *a, char *buff, size_t maxlen);
 
 int
 assoc_sort(struct assoc_array_t *a);
