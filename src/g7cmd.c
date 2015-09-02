@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 1043 2015-09-02 06:59:54Z ljp $
+ * SVN:         $Id: g7cmd.c 1044 2015-09-02 19:46:01Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -336,7 +336,7 @@ static struct cmdargs cmdargs_list[] = {
         {
             {"Report action", "Action to perform at low battery voltage", ARGT_SELECT, 4,
                 {
-                    {"0", "Disable"},
+                    {"0", "Disabled"},
                     {"1", "Log on device"},
                     {"2", "Send back to server"},
                     {"3", "Both log and send back"}
@@ -351,8 +351,8 @@ static struct cmdargs cmdargs_list[] = {
         {
             {"Mode", "Set format for SMS sent back", ARGT_SELECT, 2,
                 {
-                    {"0", "Use PDU mode"},
-                    {"1", "Use text mode"}
+                    {"0", "PDU mode"},
+                    {"1", "Text mode"}
                 }}
         }},
     { "sens", 1,
@@ -512,10 +512,10 @@ static struct cmdargs cmdargs_list[] = {
         {
             {"Mode", "When to enable sleep mode", ARGT_SELECT, 4,
                 {
-                    {"0", "Sleep after 3min if no movement. Wake on movements. GSM=Stdby, GPRS=GPS=Off, G=On"},
-                    {"1", "Sleep after 3min, wake every n min. GSM=GPRS=GPS=G=Off"},
-                    {"2", "Sleep after 3min. wake on timer. GSM=GPRS=GPS=G=Off"},
-                    {"3", "Sleep after 3min. wake on movement. GSM=GPRS=GPS=Off, G=On"}
+                    {"0", "Sleep in 3min if stationary, wake on movements. GSM=Stdby, GPRS=GPS=Off, G=On"},
+                    {"1", "Sleep in 3min, wake every n min. GSM=GPRS=GPS=G=Off"},
+                    {"2", "Sleep in 3min, wake on timer. GSM=GPRS=GPS=G=Off"},
+                    {"3", "Sleep in 3min, wake on movement. GSM=GPRS=GPS=Off, G=On"}
                 }},
             {"Sleep interval", "Used with mode 1, Interval in min between wake ups", ARGT_INT, 0,
                 {
@@ -523,7 +523,7 @@ static struct cmdargs cmdargs_list[] = {
                 }},
             {"Wake up report", "Action when awaken", ARGT_SELECT, 4,
                 {
-                    {"0", "Disable"},
+                    {"0", "Disabled"},
                     {"1", "Log on device"},
                     {"2", "Send back to server"},
                     {"3", "Both log and send back"}
@@ -630,7 +630,7 @@ static struct cmdargs cmdargs_list[] = {
         {
             {"Mode", "When should logging be done", ARGT_SELECT, 10,
                 {
-                    {"0", "Disable"},
+                    {"0", "Disabled"},
                     {"1", "Time mode, log every n seconds"},
                     {"2", "Distance mode, log every n meters"},
                     {"3", "Time AND Distance mode"},

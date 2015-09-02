@@ -36,8 +36,13 @@ extern char report_header_title[128];
 
 int
 init_model_from_device(void *tag);
+
 void
 cleanup_and_free_model(void);
+
+int
+export_model_to_json(char *fname);
+
 
 char *
 cb_header_title(void *tag, size_t r, size_t c);
@@ -161,6 +166,8 @@ cb_LLOG_waitGPS(void *tag, size_t r, size_t c);
 
 char *
 cb_LTRACK_mode(void *tag, size_t r, size_t c);
+char *
+cb_LTRACK_commselect(void *tag, size_t r, size_t c);
 char *
 cb_LTRACK_timer(void *tag, size_t r, size_t c);
 char *

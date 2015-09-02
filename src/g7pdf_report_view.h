@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 int
-export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_title);
+export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfilename, char *report_title);
 
 
 #ifdef	__cplusplus

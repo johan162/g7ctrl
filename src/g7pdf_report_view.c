@@ -50,6 +50,7 @@
 #include "config.h"
 #include "logger.h"
 #include "g7config.h"
+#include "xstr.h"
 
 // The output after running the program will be written to this file
 
@@ -450,7 +451,7 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Comm select:",cb_GSM_MODE,NULL,NULL},
-        {0,1,1,1,"SMS mode:",cb_GSM_SMS,NULL,NULL},
+        {0,1,1,1,"SMS PDU/Text:",cb_GSM_SMS,NULL,NULL},
         {0,2,1,1,"SMS No:",cb_GSM_SMS_NBR,NULL,NULL},
         {0,3,1,1,"CSD No:",cb_GSM_CSD_NBR,NULL,NULL},
         {1,0,1,2,"Return Location By Call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
@@ -558,18 +559,18 @@ _tbl_llog(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
-        {0,0,1,1,"Mode:",cb_LLOG_mode,NULL,NULL},
-        {0,1,1,1,"Timer:",cb_LLOG_timer,NULL,NULL},
-        {0,2,1,1,"Dist:",cb_LLOG_dist,NULL,NULL},
-        {1,0,1,1,"Limit:",cb_LLOG_number,NULL,NULL},
-        {1,1,1,1,"Heading:",cb_LLOG_heading,NULL,NULL},
-        {1,2,1,1,"waitGPS:",NULL,NULL,cb_LLOG_waitGPS_draw_slide_button},
+        {0,0,1,5,"Mode:",cb_LLOG_mode,NULL,NULL},
+        {1,0,1,1,"Timer:",cb_LLOG_timer,NULL,NULL},
+        {1,1,1,1,"Dist:",cb_LLOG_dist,NULL,NULL},
+        {1,2,1,1,"Limit:",cb_LLOG_number,NULL,NULL},
+        {1,3,1,1,"Heading:",cb_LLOG_heading,NULL,NULL},
+        {1,4,1,1,"waitGPS:",NULL,NULL,cb_LLOG_waitGPS_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Locations logging", 2, 3,      /* Title, rows, cols   */
+        "Locations logging", 2, 5,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -596,18 +597,19 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
-        {0,0,1,1,"Mode:",cb_LTRACK_mode,NULL,NULL},
-        {0,1,1,1,"Timer:",cb_LTRACK_timer,NULL,NULL},
-        {0,2,1,1,"Dist:",cb_LTRACK_dist,NULL,NULL},
-        {1,0,1,1,"Limit:",cb_LTRACK_number,NULL,NULL},
-        {1,1,1,1,"Heading:",cb_LTRACK_heading,NULL,NULL},
-        {1,2,1,1,"waitGPS:",NULL,NULL,cb_LTRACK_waitGPS_draw_slide_button},
+        {0,0,1,3,"Mode:",cb_LTRACK_mode,NULL,NULL},
+        {0,3,1,2,"Comm select:",cb_LTRACK_commselect,NULL,NULL},
+        {1,0,1,1,"Timer:",cb_LTRACK_timer,NULL,NULL},
+        {1,1,1,1,"Dist:",cb_LTRACK_dist,NULL,NULL},
+        {1,2,1,1,"Limit:",cb_LTRACK_number,NULL,NULL},
+        {1,3,1,1,"Heading:",cb_LTRACK_heading,NULL,NULL},
+        {1,4,1,1,"waitGPS:",NULL,NULL,cb_LTRACK_waitGPS_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Locations tracking", 2, 3,      /* Title, rows, cols   */
+        "Locations tracking", 2, 5,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -658,13 +660,13 @@ _tbl_LOGGED(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Number of locations:",cb_LOGGED_number,NULL,NULL},
-        {0,1,1,1,"Dates recorded:",cb_LOGGED_dates,NULL,NULL},
+        {0,1,1,3,"Dates recorded:",cb_LOGGED_dates,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Stored Locations", 1, 2,      /* Title, rows, cols   */
+        "Stored Locations", 1, 4,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -887,7 +889,7 @@ layout_g7ctrl_report(void) {
     const HPDF_REAL page_width = HPDF_Page_GetWidth(pdf_page);
     const HPDF_REAL page_height = HPDF_Page_GetHeight(pdf_page);
     const HPDF_REAL report_full_width = round(page_width - left_margin - right_margin);
-    const HPDF_REAL report_half_width = report_full_width/2.0;
+    //const HPDF_REAL report_half_width = report_full_width/2.0;
 
 
     tbl_spec_t table_spec[] = {
@@ -907,14 +909,16 @@ layout_g7ctrl_report(void) {
         {NRP_ROW, report_full_width, _tbl_POWER},
 
         // Row 6 of tables
-        {NRP_ROW, report_half_width, _tbl_llog},
-        {NRP_SAME,report_half_width, _tbl_ltrack},
+        {NRP_ROW, report_full_width, _tbl_llog},
+        
+        // Row 7 of tables
+        {NRP_ROW,report_full_width, _tbl_ltrack},
 
         // Row 7 of tables
-        {NRP_ROW, report_full_width, _tbl_LOGGED},
+        {NRP_PAGE, report_full_width, _tbl_LOGGED},
 
         // Page 2: Row 1 of tables
-        {NRP_PAGE, report_full_width, _tbl_gfence},
+        {NRP_ROW, report_full_width, _tbl_gfence},
         
         // Page 2: Row 2 of tables
         {NRP_ROW, report_full_width, _tbl_gfence_event},
@@ -985,7 +989,7 @@ error_handler (HPDF_STATUS error_no, HPDF_STATUS detail_no, void *user_data) {
  * @return 0 on success, -1 on failure
  */
 int
-export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_title) {
+export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfilename, char *report_title) {
     if (setjmp(_g7report_env)) {
         HPDF_Free (pdf_doc);
         return -1;
@@ -995,7 +999,7 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_
     pdf_doc = HPDF_New(error_handler, NULL);
     HPDF_SetCompressionMode(pdf_doc, HPDF_COMP_ALL);
 
-    char buf[256];
+    char buf[1024];
     snprintf(buf,sizeof(buf),"%s",PACKAGE_STRING);
     HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_CREATOR, buf);
     
@@ -1016,10 +1020,17 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_
 
     logmsg(LOG_DEBUG,"Initializing the model from device");
     init_model_from_device( (void *)cli_info);
-    logmsg(LOG_DEBUG,"HPDF: Starting report layout");
+    
+    logmsg(LOG_DEBUG,"Exporting report in JSON");
+    export_model_to_json(filename); 
+    
+    logmsg(LOG_DEBUG,"Starting report layout");
     layout_g7ctrl_report();
 
-    logmsg(LOG_DEBUG,"HPDF: Trying to save PDF document to file: \"%s\"",filename);
+    logmsg(LOG_DEBUG,"Exporting report as PDF to file: \"%s\"",filename);
+    snprintf(buf,sizeof(buf),"%s.pdf",filename);
+    xstrlcpy(filename,buf,maxfilename);
+    
     HPDF_SaveToFile (pdf_doc, filename);
     HPDF_Free (pdf_doc);
     

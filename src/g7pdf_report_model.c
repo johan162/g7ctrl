@@ -27,6 +27,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "config.h"
 #include "g7ctrl.h"
@@ -37,6 +38,7 @@
 #include "g7pdf_report_model.h"
 #include "assocarray.h"
 #include "nicks.h"
+#include "utils.h"
 
 char report_header_title[128] = {0};
 
@@ -50,7 +52,7 @@ char report_header_title[128] = {0};
 char *
 cb_header_title(void *tag, size_t r, size_t c) {
     static char buf[128];
-    if( *report_header_title && strnlen(report_header_title,sizeof(report_header_title)) > 4 )
+    if( *report_header_title && strnlen(report_header_title,sizeof(report_header_title)) > 1 )
         snprintf(buf,sizeof(buf),"%s",report_header_title);
     else
         snprintf(buf,sizeof(buf),"%s","Device report");
@@ -205,12 +207,20 @@ struct get_dev_info_command_t dev_report_cmd_list[] = {
 // All responses collected in the associative info array
 struct assoc_array_t *device_info = NULL;
 
+/**
+ * Make the returned dates and number of location logged on the device  more
+ * human friendly to read
+ * @param flds
+ * @param idx
+ * @return 
+ */
+
 int
 extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     // $OK:DLREC[+TAG]=17254(20140107231903-20140109231710)  
     char *ptr=flds->fld[0];
     char number[8], *nptr;
-    char dates[64], *dptr;
+    char dates[128], *dptr;
     nptr=number;
 
     // Exatrct the number of logs
@@ -219,19 +229,25 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     }
     *nptr='\0';
     if( '(' == *ptr ) {
-        // Exatrct the dates. We insert a space between the date and times to make
+        // Extract the dates. We insert a space between the date and times to make
         // it more readable
         ptr++;
         dptr=dates;      
         int cnt=0;
         while( *ptr && *ptr!=')' ) {
             *dptr++ = *ptr++;
+            if( cnt==3 || cnt==5 || cnt==18 || cnt==20 ) {
+                *dptr++ = '-';
+            }
+            if( cnt==9 || cnt==11 || cnt==24 || cnt==26 ) {
+                *dptr++ = ':';
+            }
             if( cnt==7 || cnt==13 || cnt==14 || cnt==22 ) {
                 *dptr++ = ' ';
             }
             cnt++;
         }
-        dptr='\0';
+        *dptr='\0';
         if( *ptr != ')' ) 
             return -1;
         else {
@@ -259,6 +275,7 @@ init_model_from_device(void *tag) {
     device_info = assoc_new(128);
     
     size_t i=0;
+    _writef(cli_info->cli_socket,"[0%%].");
     while( dev_report_cmd_list[i].cmd_name ) {
         
         logmsg(LOG_DEBUG,"Running \"%s\"", dev_report_cmd_list[i].cmd_name);
@@ -293,28 +310,48 @@ init_model_from_device(void *tag) {
         }
         
         i++;
+        
         usleep(4000);
         
+        if( 0==i%4 && i < 20 ) {
+            _writef(cli_info->cli_socket,"[%zu%%].",i*5);
+        }
+
     }
+    
     static char date_buf[64];
     time_t t = time(NULL);
     ctime_r(&t,date_buf);
     date_buf[strlen(date_buf)-2]='\0'; // Get rid of the '\n'
     assoc_put(device_info,"generated_time",date_buf);
+
+    _writef(cli_info->cli_socket,"[100%%]\n");
     
+    return 0;
+}
+
+int
+export_model_to_json(char *fname) {
+    char filename[256];
     const size_t maxlen=10*1024;
     char *buf=calloc(maxlen,sizeof(char));
+    if( NULL==buf )
+        return -1;
     assoc_sort(device_info);
-    assoc_to_json(device_info,buf,maxlen);
-    //logmsg(LOG_DEBUG,"%s",buf);
-    char fname[128];
-    snprintf(fname,sizeof(fname),"/tmp/dev_%s.json",assoc_get(device_info,FLD_DEVICE_ID));
-    FILE *fp=fopen(fname,"w");
+    assoc_to_json(device_info,buf,maxlen);    
+    
+    snprintf(filename,sizeof(filename),"%s_%s.json",fname,assoc_get(device_info,FLD_DEVICE_ID));
+    FILE *fp=fopen(filename,"w");
+    if( fp==NULL ) {
+        logmsg(LOG_ERR,"Cannot open file for JSON export \"%s\" (%d : %s)",fname,errno,strerror(errno));
+        return -1;
+    }
     fprintf(fp,"%s\n",buf);
     fclose(fp);
-    logmsg(LOG_DEBUG,"Saved JSON device info \"%s\"",fname);
+    logmsg(LOG_DEBUG,"Saved JSON device info to \"%s\"",filename);    
     free(buf);
     return 0;
+
 }
 
 void
@@ -522,13 +559,19 @@ cb_BATTERY_LOW(void *tag, size_t r, size_t c) {
 char *
 cb_GSM_MODE(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_COMM_SELECT);
+    static char buf[128];
+    translate_cmd_argval_to_string("comm", 0, GET(FLD_COMM_SELECT), buf, sizeof(buf));
+    assoc_update(device_info,FLD_COMM_SELECT,buf);
+    return buf;
 }
 
 char *
 cb_GSM_SMS(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_SMS_MODE);
+    static char buf[64];
+    translate_cmd_argval_to_string("sms", 0, GET(FLD_SMS_MODE), buf, sizeof(buf));
+    assoc_update(device_info,FLD_SMS_MODE,buf);
+    return buf;        
 }
 
 char *
@@ -608,7 +651,10 @@ cb_GPRS_keep_alive(void *tag, size_t r, size_t c) {
 char *
 cb_LLOG_mode(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_REC_MODE);
+    static char buf[128];
+    translate_cmd_argval_to_string("rec", 0, GET(FLD_REC_MODE), buf, sizeof(buf));
+    assoc_update(device_info,FLD_REC_MODE,buf);
+    return buf;
 }
 
 char *
@@ -648,7 +694,19 @@ cb_LLOG_waitGPS(void *tag, size_t r, size_t c) {
 char *
 cb_LTRACK_mode(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_TRACK_MODE);
+    static char buf[128];
+    translate_cmd_argval_to_string("track", 0, GET(FLD_TRACK_MODE), buf, sizeof(buf));
+    assoc_update(device_info,FLD_TRACK_MODE,buf);
+    return buf;
+}
+
+char *
+cb_LTRACK_commselect(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
+    static char buf[128];
+    translate_cmd_argval_to_string("track", 5, GET(FLD_TRACK_COMMSELECT), buf, sizeof(buf));
+    assoc_update(device_info,FLD_TRACK_COMMSELECT,buf);
+    return buf;
 }
 
 char *
