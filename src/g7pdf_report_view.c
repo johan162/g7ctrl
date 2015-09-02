@@ -188,8 +188,7 @@ cb_DEVICE_RA_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r
     cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
 }
 
-
-static _Bool
+_Bool
 cb_DEVICE_ID_style(void *tag, size_t r, size_t c, hpdf_text_style_t *style) {
     style->color = HPDF_COLOR_FROMRGB(150,60,0);
     style->font = HPDF_FF_COURIER_BOLD;
@@ -341,13 +340,13 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
  * ===============================================
  */
 
+
 void
 cb_POWER_sleep_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
                      HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
     const char *stat=cb_POWER_SLEEP(tag,r,c);
     const size_t dev_stat = (stat[0]-'0');
-    const size_t vip_idx = (stat[2]-'0');
-    cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
+   cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, -1);
 }
 
 void
@@ -359,20 +358,24 @@ cb_POWER_wakeup_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_
     cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
 }
 
+_Bool
+cb_POWER_mode_style(void *tag, size_t r, size_t c, hpdf_text_style_t *style) {    
+    style->font = HPDF_FF_COURIER_BOLD;
+    style->fsize = 9;
+    return TRUE;
+}
 static int
 _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
-        {0,0,1,2,"Mode:",cb_PH_MODE,NULL,NULL},
-        {0,2,1,1,"Interval:",cb_PH_INTERVAL,NULL,NULL},
-        {0,3,1,3,"Sleep report:",NULL,NULL,cb_POWER_sleep_draw_slide_button},
-        /*{0,2,1,1,"VIP:",cb_PH_VIP,NULL,NULL},
-        {0,3,1,1,"Wake report:",cb_PH_REPORT_WAKE,NULL,NULL},*/
-        {1,0,1,1,"Timer 1:",cb_PH_TIMER,NULL,NULL},
-        {1,1,1,1,"Timer 2:",cb_PH_TIMER,NULL,NULL},
-        {1,2,1,1,"Timer 3:",cb_PH_TIMER,NULL,NULL},
-        {1,3,1,3,"Wake-up report:",NULL,NULL,cb_POWER_wakeup_draw_slide_button},
+        {0,0,1,6,"Mode:",cb_POWER_MODE,cb_POWER_mode_style,NULL},
+        {1,0,1,1,"Interval:",cb_POWER_INTERVAL,NULL,NULL},
+        {1,1,1,1,"Timer 1:",cb_POWER_TIMER,NULL,NULL},
+        {1,2,1,1,"Timer 2:",cb_POWER_TIMER,NULL,NULL},
+        {1,3,1,1,"Timer 3:",cb_POWER_TIMER,NULL,NULL},
+        {1,4,1,1,"Sleep report:",NULL,NULL,cb_POWER_sleep_draw_slide_button},        
+        {1,5,1,1,"Wake-up report:",NULL,NULL,cb_POWER_wakeup_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -493,7 +496,7 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         /* {0,2,1,1,"Port:",cb_GPRS_port,NULL,NULL},*/
         {1,0,1,3,"User:",cb_GPRS_user,NULL,NULL},
         {1,3,1,3,"Password:",cb_GPRS_pwd,NULL,NULL},
-        {1,6,1,2,"Keep alive interval:",cb_GPRS_keep_alive,NULL,NULL},
+        {1,6,1,2,"Keep alive interval (s):",cb_GPRS_keep_alive,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -1019,6 +1022,8 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, char *report_
     logmsg(LOG_DEBUG,"HPDF: Trying to save PDF document to file: \"%s\"",filename);
     HPDF_SaveToFile (pdf_doc, filename);
     HPDF_Free (pdf_doc);
+    
+    cleanup_and_free_model();
 
     return 0;
 }

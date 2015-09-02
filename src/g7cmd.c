@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 1042 2015-09-01 21:37:03Z ljp $
+ * SVN:         $Id: g7cmd.c 1043 2015-09-02 06:59:54Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -158,7 +158,7 @@ static struct g7command g7command_list[] = {
     /* 0 */
     { "roam", "ROAMING", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable/Disable GPRS roaming function", ""},
     /* 1 */
-    { "phone", "VLOCATION", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable the function \"Get the current location by making a phone call\"", ""},
+    { "phone", "VLOCATION", cmd_binary_template, CMD_TYPE_GETSET, CMD_MODE_RW, "Enable the function \"Get the current location by making a phone call\"", ""},
     /* 2 */
     { "led", "ELED", cmd_binary_template, CMD_TYPE_GETSET_BINARY, CMD_MODE_RW, "Enable/Disable the LED indicator on/off", ""},
     /* 3 */
@@ -298,8 +298,13 @@ static struct cmdargs cmdargs_list[] = {
                     {0, 0}
                 }}
         }},
-    { "phone", 1,
+    { "phone", 2,
         {
+            {"On/Off", "Enable disable location by phone", ARGT_SELECT, 2,
+                {
+                    {"0", "Disabled"},
+                    {"1", "Enabled"}
+                }},
             {"VIP mask", "Bitmask for allowed VIP numbers", ARGT_INT, 0,
                 {
                     {0, 0}
@@ -660,6 +665,36 @@ static struct cmdargs cmdargs_list[] = {
         }},
 };
 
+/**
+ * If devcmd is "test" then return 0 and set the buffer to the translated test
+ * result. The test command needs special handling since it is a command that needs
+ * to translate a list but it has not list as input, only output
+ * @param devcmd
+ * @param flds
+ * @return 0 if command was "test" and the result could be translated
+ */
+int
+cmd_test_reply_to_text(const char *strval, char *buf, size_t maxlen) {
+    
+    int val = *strval - '0';
+    if( val < 0 || val > 3) {
+        logmsg(LOG_ERR,"Value returned by \"test\" command is out of range = %d", val);
+        return -1;
+    }
+    
+    if( 0 == val )  {
+        snprintf(buf,maxlen,"%s","PASS");
+    } else if( 1 == val ) {
+        snprintf(buf,maxlen,"%s","GSM Failure");
+    } else if( 2 == val ) {
+        snprintf(buf,maxlen,"%s","GPS Failure");
+    } else {
+        snprintf(buf,maxlen,"%s","GSM and GPS failure");
+    }
+    return 0;
+}
+
+
 #pragma clang diagnostic pop
 #pragma GCC diagnostic pop
 
@@ -956,7 +991,7 @@ get_event_cmd(const int eventid, char *cmd, char *desc) {
 /**
  * Get the the index into the argument table corresponding to a specific command
  * @param cmdidx Command index
- * @return -1 on not found, >= 0 teh argument index
+ * @return -1 on not found, >= 0 the argument index
  */
 int
 get_argidx_for_cmdidx(int cmdidx) {
@@ -971,6 +1006,7 @@ get_argidx_for_cmdidx(int cmdidx) {
     }
     return i;
 }
+
 
 /**
  * Return the corresponding index in command table for the specified command
@@ -988,6 +1024,62 @@ get_cmdidx_from_srvcmd(const char *cmdname) {
         return i;
     }
     return -1;
+}
+
+
+/**
+ * Get the the index into the argument table corresponding to a specific server command
+ * @param cmdname Server command name
+ * @return -1 if the command does not have a argument list, >= 0 on success which is the arg table index
+ */
+int
+get_argidx_for_srvcmd(const char *cmdname) {
+    int cmdidx=get_cmdidx_from_srvcmd(cmdname);
+    if( cmdidx==-1 )
+        return -1;
+    return get_argidx_for_cmdidx(cmdidx);
+}
+
+/**
+ * Translate a single returned value from command to the corresponding human readable
+ * string corresponding to the given value
+ * @param cmdname The server command name (the command given in the shell, not the raw device command)
+ * @param argnum The unmber of the argument to be translate (starts at 0)
+ * @param val The value to the translated
+ * @param human_string The corresponding human string
+ * @param maxlen The maximum length of the human string
+ * @return 0 on success, -1 on failure
+ */
+int
+translate_cmd_argval_to_string(const char *cmdname, size_t argnum, char *val, char *human_string, size_t maxlen) {
+    int argidx = get_argidx_for_srvcmd(cmdname);
+    if( argidx < 0 ) {
+        // Command does not have any arguments. Just return the value
+        xstrlcpy(human_string,val,maxlen);
+        return 0;
+    }
+    struct cmdargs *args = &cmdargs_list[argidx]; 
+    if( argnum >= args->numargs )
+        return -1;
+     
+    // It's only select value we need to translate other values such as 
+    // float and ints are used verbatim
+    if( args->argl[argnum].type == ARGT_SELECT ) {
+        size_t i=0;
+        while( i < args->argl[argnum].nsel && strcmp(val,args->argl[argnum].select[i].val) ) {
+            i++;
+        }
+        if( i == args->argl[argnum].nsel ) {
+            // Unknown value
+            xstrlcpy(human_string,val,maxlen);
+            return -1;
+        } else {
+            xstrlcpy(human_string,args->argl[argnum].select[i].selectlabel,maxlen);
+            return 0;
+        }
+    }
+    xstrlcpy(human_string,val,maxlen);
+    return 0;
 }
 
 /**

@@ -36,6 +36,8 @@ extern char report_header_title[128];
 
 int
 init_model_from_device(void *tag);
+void
+cleanup_and_free_model(void);
 
 char *
 cb_header_title(void *tag, size_t r, size_t c);
@@ -76,13 +78,13 @@ cb_SIM_ROAMING(void *tag, size_t r, size_t c);
 /***/
 
 char *
-cb_PH_MODE(void *tag, size_t r, size_t c);
+cb_POWER_MODE(void *tag, size_t r, size_t c);
 char *
-cb_PH_INTERVAL(void *tag, size_t r, size_t c);
+cb_POWER_INTERVAL(void *tag, size_t r, size_t c);
 char *
-cb_PH_VIP(void *tag, size_t r, size_t c);
+cb_POWER_VIP(void *tag, size_t r, size_t c);
 char *
-cb_PH_TIMER(void *tag, size_t r, size_t c);
+cb_POWER_TIMER(void *tag, size_t r, size_t c);
 char *
 cb_POWER_WAKEUP(void *tag, size_t r, size_t c);
 char *

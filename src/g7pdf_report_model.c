@@ -26,6 +26,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "g7ctrl.h"
@@ -58,10 +59,10 @@ cb_header_title(void *tag, size_t r, size_t c) {
 
 
 int
-send_command_get_replies(struct client_info *cli_info, char *dev_cmd, struct splitfields *flds) {
-    logmsg(LOG_DEBUG,"Running send_command_get_replies(%s) for PDF report",dev_cmd);
+send_command_get_replies(struct client_info *cli_info, char *dev_srvcmd, struct splitfields *flds) {
+    logmsg(LOG_DEBUG,"Running send_command_get_replies(%s) for PDF report",dev_srvcmd);
     char reply[1024];
-    if( -1 == send_cmdquery_reply(cli_info, dev_cmd, reply, sizeof(reply)) ) {
+    if( -1 == send_cmdquery_reply(cli_info, dev_srvcmd, reply, sizeof(reply)) ) {
         logmsg(LOG_DEBUG,"Failed send_cmdquery_reply()");
         return 0;
     }
@@ -70,7 +71,7 @@ send_command_get_replies(struct client_info *cli_info, char *dev_cmd, struct spl
     char devtag[16];
     int rc = extract_devcmd_reply(reply, &isok, cmdname, devtag, flds);    
     if (rc) {        
-        logmsg(LOG_ERR, "Incomplete reply from device command (%s): \"%s\" ", dev_cmd, reply);
+        logmsg(LOG_ERR, "Incomplete reply from device command (%s): \"%s\" ", dev_srvcmd, reply);
         rc = -1;
     } else {
 
@@ -81,7 +82,7 @@ send_command_get_replies(struct client_info *cli_info, char *dev_cmd, struct spl
             int errcode = xatoi(flds->fld[0]);
             char *errstr;
             device_strerr(errcode, &errstr);
-            logmsg(LOG_ERR, "Device error reply for %s: (%d : %s)", dev_cmd, errcode, errstr);
+            logmsg(LOG_ERR, "Device error reply for %s: (%d : %s)", dev_srvcmd, errcode, errstr);
             rc = -1;
         } else {    
             rc = 0;
@@ -212,15 +213,23 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     char dates[64], *dptr;
     nptr=number;
 
+    // Exatrct the number of logs
     while( *ptr && *ptr!='(' ) {
         *nptr++ = *ptr++;
     }
     *nptr='\0';
     if( '(' == *ptr ) {
+        // Exatrct the dates. We insert a space between the date and times to make
+        // it more readable
         ptr++;
-        dptr=dates;        
+        dptr=dates;      
+        int cnt=0;
         while( *ptr && *ptr!=')' ) {
             *dptr++ = *ptr++;
+            if( cnt==7 || cnt==13 || cnt==14 || cnt==22 ) {
+                *dptr++ = ' ';
+            }
+            cnt++;
         }
         dptr='\0';
         if( *ptr != ')' ) 
@@ -267,6 +276,7 @@ init_model_from_device(void *tag) {
                 dev_report_cmd_list[i].cb_extract(&flds,i);
             } else {
                 
+                char buf[256];
                 if( flds.nf ==  dev_report_cmd_list[i].num_reply_fields ) {
                     // Extract all responses and store them i the assocarray
                     for( size_t j=0; j < flds.nf; j++) {
@@ -283,10 +293,18 @@ init_model_from_device(void *tag) {
         }
         
         i++;
+        usleep(4000);
         
     }
+    static char date_buf[64];
+    time_t t = time(NULL);
+    ctime_r(&t,date_buf);
+    date_buf[strlen(date_buf)-2]='\0'; // Get rid of the '\n'
+    assoc_put(device_info,"generated_time",date_buf);
+    
     const size_t maxlen=10*1024;
     char *buf=calloc(maxlen,sizeof(char));
+    assoc_sort(device_info);
     assoc_to_json(device_info,buf,maxlen);
     //logmsg(LOG_DEBUG,"%s",buf);
     char fname[128];
@@ -297,6 +315,11 @@ init_model_from_device(void *tag) {
     logmsg(LOG_DEBUG,"Saved JSON device info \"%s\"",fname);
     free(buf);
     return 0;
+}
+
+void
+cleanup_and_free_model(void) {
+    assoc_destroy(device_info);
 }
 
 #define GET(f) assoc_get2(device_info, f, FLD_ERR_STR)
@@ -340,7 +363,7 @@ cb_DEVICE_TZ(void *tag, size_t r, size_t c) {
 _Bool
 cb_DEVICE_LED(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_LED);
+    return atoi(GET(FLD_LED));
 }
 
 char *
@@ -360,7 +383,13 @@ cb_DEVICE_GSENS(void *tag, size_t r, size_t c) {
 char *
 cb_DEVICE_TEST(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_TEST_RESULT);
+    static char buf[32];
+    if( 0==cmd_test_reply_to_text(GET(FLD_TEST_RESULT), buf, sizeof(buf)) ) {
+        assoc_update(device_info,FLD_TEST_RESULT,buf);
+        return buf;
+    } else {
+        return FLD_ERR_STR;
+    }
 }
 
 /***/
@@ -411,25 +440,28 @@ cb_SIM_ROAMING(void *tag, size_t r, size_t c) {
 
 
 char *
-cb_PH_MODE(void *tag, size_t r, size_t c) {
+cb_POWER_MODE(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_PS_MODE);
+    static char buf[128];
+    translate_cmd_argval_to_string("ps", 0, GET(FLD_PS_MODE), buf, sizeof(buf));
+    assoc_update(device_info,FLD_PS_MODE,buf);
+    return buf;
 }
 
 char *
-cb_PH_INTERVAL(void *tag, size_t r, size_t c) {
+cb_POWER_INTERVAL(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     return GET(FLD_PS_SLEEP_INTERVAL);
 }
 
 char *
-cb_PH_VIP(void *tag, size_t r, size_t c) {
+cb_POWER_VIP(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     return GET(FLD_PS_VIP);
 }
 
 char *
-cb_PH_TIMER(void *tag, size_t r, size_t c) {
+cb_POWER_TIMER(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     if( 0==c )
         return GET(FLD_PS_TIMER1);
@@ -442,13 +474,13 @@ cb_PH_TIMER(void *tag, size_t r, size_t c) {
 char *
 cb_POWER_WAKEUP(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return "1,12";
+    return GET(FLD_PS_WAKEUP_ACTION);
 }
 
 char *
 cb_POWER_SLEEP(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return "1,2";
+    return GET(FLD_SLEEP_ACTION);
 }
 
 
@@ -458,7 +490,9 @@ cb_POWER_SLEEP(void *tag, size_t r, size_t c) {
 char *
 cb_BATTERY_VOLTAGE(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_TEST_BATT);
+    static char buf[16];
+    snprintf(buf,sizeof(buf),"%sV",GET(FLD_TEST_BATT));
+    return buf;    
 }
 
 float

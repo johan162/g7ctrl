@@ -2,7 +2,7 @@
  * File:        G7CMD.H
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.h 1042 2015-09-01 21:37:03Z ljp $
+ * SVN:         $Id: g7cmd.h 1043 2015-09-02 06:59:54Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -138,6 +138,12 @@ extract_devcmd_reply_first_field(const char *raw,char *reply,size_t maxreply);
 
 int
 cmdarg_to_text_string(char *str, const size_t maxlen, const char *devcmd, struct splitfields *flds);
+
+int
+translate_cmd_argval_to_string(const char *cmdname, size_t argnum, char *val, char *human_string, size_t maxlen);
+
+int
+cmd_test_reply_to_text(const char *strval, char *buf, size_t maxlen);
 
 
 #ifdef	__cplusplus
