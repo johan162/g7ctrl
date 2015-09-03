@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 1044 2015-09-02 19:46:01Z ljp $
+ * SVN:         $Id: g7cmd.c 1045 2015-09-03 21:19:30Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -300,7 +300,7 @@ static struct cmdargs cmdargs_list[] = {
         }},
     { "phone", 2,
         {
-            {"On/Off", "Enable disable location by phone", ARGT_SELECT, 2,
+            {"Status", "Enable disable location by phone", ARGT_SELECT, 2,
                 {
                     {"0", "Disabled"},
                     {"1", "Enabled"}
@@ -388,9 +388,10 @@ static struct cmdargs cmdargs_list[] = {
 
     { "gfen", 5,
         {
-            {"Enable", "Turn option on/off", ARGT_BOOL, 0,
+            {"Status", "Turn option on/off", ARGT_SELECT, 2,
                 {
-                    {0, 0}
+                    {"0", "Disabled"},
+                    {"1", "Enabled"}
                 }},
             {"Radius", "Radius in meter for fence. Radius is counted from the center where M7 sleeps (last recorded pos)", ARGT_INT, 0,
                 {
@@ -398,8 +399,8 @@ static struct cmdargs cmdargs_list[] = {
                 }},
             {"Zone trigger", "Trigger when leaving or entering zone", ARGT_SELECT, 2,
                 {
-                    {"1", "Inside zone, moving inside->outside"},
-                    {"2", "Outside zone,  moving inside->outside"}
+                    {"1", "Trigger on enter"},
+                    {"2", "Trigger on leave"}
                 }},
             {"Report action", "What to do on event", ARGT_SELECT, 4,
                 {
@@ -586,15 +587,16 @@ static struct cmdargs cmdargs_list[] = {
                 }},
         }},
 
-    { "gfevt", 7,
+    { "gfevt", 8,
         {
             {"Event ID", "Event ID. Maximum of 50 events. In range 50-99", ARGT_INT, 0,
                 {
                     {0, 0}
                 }},
-            {"Enabled", "Enable/Disable event", ARGT_BOOL, 0,
+            {"Status", "Enable/Disable event", ARGT_SELECT, 2,
                 {
-                    {0, 0}
+                    {"0", "Disabled"},
+                    {"1", "Enabled"}
                 }},
             {"Longitude", "Longitude for center of event zone", ARGT_FLOAT, 0,
                 {
@@ -608,13 +610,15 @@ static struct cmdargs cmdargs_list[] = {
                 {
                     {0, 0}
                 }},
-            {"ZoneControl", "HOw to trigger event", ARGT_SELECT, 2,
+            {"Zone Control", "How to trigger event", ARGT_SELECT, 2,
                 {
+                    {"0", "Disabled"},
                     {"1", "Entering zone"},
                     {"2", "Leaving zone"}
                 }},
-            {"Action", "What to do on event", ARGT_SELECT, 3,
+            {"Action", "What to do on event", ARGT_SELECT, 4,                    
                 {
+                    {"0", "Disabled"},
                     {"1", "Log to device"},
                     {"2", "Send to server"},
                     {"3", "Both log and send"}

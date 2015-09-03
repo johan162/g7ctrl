@@ -2,7 +2,7 @@ NEWS - Major releases
 ===========
 ***Highlights major changes for each release in reverse chronological order.***
 
-v3.3.0 (sep 2015)
+v3.3.0 (okt 2015)
 =================
 
 General notes for this release
@@ -28,6 +28,10 @@ Bugs fixed
    VIP number.
 
  - The documentation for "phone" and "mswitch" command was wrong
+
+ - The "gfen" command did not properly handle the enable/disable setting
+
+ - The "gfevt" had the wrong number of arguments defined
 
 
 Internal changes (visible for developers and packagers)

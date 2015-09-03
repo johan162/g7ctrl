@@ -746,7 +746,10 @@ cb_LTRACK_waitGPS(void *tag, size_t r, size_t c) {
 char *
 cb_GFENCE_status(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_GFEN_STATUS);
+    static char buf[128];
+    translate_cmd_argval_to_string("gfen", 0, GET(FLD_GFEN_STATUS), buf, sizeof(buf));
+    assoc_update(device_info,FLD_GFEN_STATUS,buf);    
+    return buf;
 }
 
 char *
@@ -770,14 +773,26 @@ cb_GFENCE_radius(void *tag, size_t r, size_t c) {
 char *
 cb_GFENCE_type(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_GFEN_INOUT);
+    static char buf[128];
+    translate_cmd_argval_to_string("gfen", 2, GET(FLD_GFEN_INOUT), buf, sizeof(buf));
+    assoc_update(device_info,FLD_GFEN_INOUT,buf);    
+    return buf;    
 }
 
 char *
 cb_GFENCE_action(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
-    return GET(FLD_GFEN_ACTION);
+    static char buf[16];
+    snprintf(buf,sizeof(buf),"%s,%s",GET(FLD_GFEN_ACTION),GET(FLD_GFEN_VIP));
+    return buf;    
 }
+
+char *
+cb_GFENCE_vip(void *tag, size_t r, size_t c) {
+    struct client_info *cli_info = (struct client_info *)tag;
+    return GET(FLD_GFEN_VIP);
+}
+
 
 
 /***/

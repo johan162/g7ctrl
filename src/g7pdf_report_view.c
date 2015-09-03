@@ -624,6 +624,18 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
  * GEO FENCE TABLE AND CALLBACKS
  * ===============================================
  */
+void
+cb_GFENCE_action_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
+                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
+    const char *stat=cb_GFENCE_action(tag,r,c);
+    const size_t dev_stat = (stat[0]-'0');
+    const size_t vip_idx = (stat[2]-'0');
+    if( dev_stat <= 3 && vip_idx <= 5 ) {
+        cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
+    } else {
+        logmsg(LOG_ERR,"Vales for gfen out of range (%c, %c)",stat[0],stat[2]);
+    }
+}
 
 static int
 _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
@@ -631,17 +643,15 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Status:",cb_GFENCE_status,NULL,NULL},
-        {0,1,1,1,"Lat:",cb_GFENCE_lat,NULL,NULL},
-        {0,2,1,1,"Lon:",cb_GFENCE_lon,NULL,NULL},
-        {0,3,1,1,"Radius:",cb_GFENCE_radius,NULL,NULL},
-        {0,4,1,1,"Type:",cb_GFENCE_type,NULL,NULL},
-        {0,5,1,1,"Action:",cb_GFENCE_action,NULL,NULL},
+        {0,1,1,1,"Radius:",cb_GFENCE_radius,NULL,NULL},
+        {0,2,1,3,"Zone control:",cb_GFENCE_type,NULL,NULL},
+        {0,5,1,2,"Action:",NULL,NULL,cb_GFENCE_action_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Geo fence", 1, 6,      /* Title, rows, cols   */
+        "Geo fence", 1, 7,      /* Title, rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
@@ -704,7 +714,7 @@ _tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         cells[2+idx*7] = (hpdf_table_data_spec_t){idx,2,1,1,"Lat:",cb_GFENCE_EVENT_lat,NULL,NULL};
         cells[3+idx*7] = (hpdf_table_data_spec_t){idx,3,1,1,"Lon:",cb_GFENCE_EVENT_lon,NULL,NULL};
         cells[4+idx*7] = (hpdf_table_data_spec_t){idx,4,1,1,"Radius:",cb_GFENCE_EVENT_radius,NULL,NULL};
-        cells[5+idx*7] = (hpdf_table_data_spec_t){idx,5,1,1,"Type:",cb_GFENCE_EVENT_type,NULL,NULL};
+        cells[5+idx*7] = (hpdf_table_data_spec_t){idx,5,1,1,"Zone control:",cb_GFENCE_EVENT_type,NULL,NULL};
         cells[6+idx*7] = (hpdf_table_data_spec_t){idx,6,1,1,"Action:",cb_GFENCE_EVENT_action,NULL,NULL};
     }
     cells[num_events*7] = (hpdf_table_data_spec_t){0,0,0,0,NULL,NULL,NULL,NULL};
