@@ -36,13 +36,13 @@
  * @param initial_size Inital size of array
  * @return A pointer to a new associative array, NULL on error
  */
-struct assoc_array_t *
+assoc_array_t
 assoc_new(size_t initial_size) {
-    struct assoc_array_t *pa=calloc(1,sizeof(struct assoc_array_t));
+    assoc_array_t pa=calloc(1,sizeof(struct assoc_array));
     if( pa == NULL || initial_size < 8) {
         return NULL;
     }
-    pa->a = calloc(initial_size, sizeof(struct assoc_pair_t));
+    pa->a = calloc(initial_size, sizeof(struct assoc_pair));
     if( pa->a == NULL ) {
         free(pa);
         return NULL;
@@ -58,7 +58,7 @@ assoc_new(size_t initial_size) {
  * @return A pointer to the value, NULL of not found
  */
 char *
-assoc_get(struct assoc_array_t *a, char *name) {
+assoc_get(assoc_array_t a, char *name) {
     if( a==NULL || name == NULL || *name == '\0' || a->num_values == 0 )
         return NULL;
     
@@ -81,7 +81,7 @@ assoc_get(struct assoc_array_t *a, char *name) {
  * @return Value of string in "Notfound"
  */
 char *
-assoc_get2(struct assoc_array_t *a, char *name, char *notfound) {
+assoc_get2(assoc_array_t a, char *name, char *notfound) {
     char *ret = assoc_get(a, name);
     if( NULL == ret )
         return notfound;
@@ -91,27 +91,53 @@ assoc_get2(struct assoc_array_t *a, char *name, char *notfound) {
 
 
 /**
- * Deep copy of two associative arrays
+ * Deep copy of source to destination array. Existing elements in dest will be removed
  * @param dest Destination
  * @param src Source
  * @return 0 on success, -1 if the destination array does not have enough space
  */
 int
-assoc_copy(struct assoc_array_t *dest,struct assoc_array_t *src) {
-    if( dest->max_values < src->max_values )
-        return -1;
-    for(size_t i=0; i < dest->num_values ; i++) {
-        free(dest->a[i].name);
-        free(dest->a[i].value);
-    }
-    dest->num_values = src->num_values;
-    for(size_t i=0; i < dest->num_values ; i++) {
-        dest->a[i].name = strdup(src->a[i].name);
-        dest->a[i].value = strdup(src->a[i].value);
-        if( dest->a[i].name == NULL || dest->a[i].value == NULL ) {
+assoc_copy(assoc_array_t dest,assoc_array_t src) {
+    assoc_clear(dest);
+    return assoc_add(dest,src);
+}
+
+/**
+ * Add the values in source to existing values in destination. All existing
+ * values in destination will be preserved
+ * @param dest Destination array
+ * @param src Source array
+ * @return 0 on success, -1 on failure (indicates out of memory error)
+ */
+int
+assoc_add(assoc_array_t dest, assoc_array_t src) {
+    for(size_t i=0; i < src->num_values ; i++) {
+        if( -1 == assoc_put(dest, src->a[i].name, src->a[i].value) )
             return -1;
+    }
+    return 0;    
+}
+
+/**
+ * Create the intersection of two array and store in destinateion. The
+ * intersection consists of all values existing in both arrays
+ * @param dest Destination
+ * @param a1 First input array
+ * @param a2 Second input array
+ * @return 0 on success, -1 on failure
+ */
+int
+assoc_intersection(assoc_array_t dest, assoc_array_t a1, assoc_array_t a2) {
+    assoc_clear(dest);
+    // Loop over the shorter array
+    assoc_array_t tmp1 = a1->num_values < a2->num_values ? a1 : a2;
+    assoc_array_t tmp2 = a1->num_values < a2->num_values ? a2 : a1;
+    for(size_t i=0; i < tmp1->num_values; i++) {
+        if( assoc_get(tmp2, tmp1->a[i].name) ) {
+            if( -1 == assoc_put(dest, tmp1->a[i].name, tmp1->a[i].value) )
+                return -1;
         }
-    }    
+    }
     return 0;
 }
 
@@ -123,7 +149,7 @@ assoc_copy(struct assoc_array_t *dest,struct assoc_array_t *src) {
  * @return 0 on success, -1 on failure, -2 if name exists
  */
 int
-assoc_put(struct assoc_array_t *a, char *name, char *value) {
+assoc_put(assoc_array_t a, char *name, char *value) {
     if( a==NULL || name == NULL || value == NULL || *name== '\0' )
         return -1;
     
@@ -135,7 +161,7 @@ assoc_put(struct assoc_array_t *a, char *name, char *value) {
     if( a->num_values >= a->max_values ) {
         // We need to dynamically increase the size
         // Keep it simple and just double the size each time we hit the limit
-        struct assoc_array_t *tmp = assoc_new(a->max_values * 2);
+        assoc_array_t tmp = assoc_new(a->max_values * 2);
         if( NULL==tmp )
             return -1;
         assoc_copy(tmp, a);
@@ -165,7 +191,7 @@ assoc_put(struct assoc_array_t *a, char *name, char *value) {
  * @return 0 on success, -1 if value does not exists
  */
 int
-assoc_update(struct assoc_array_t *a, char *name, char *value) {
+assoc_update(assoc_array_t a, char *name, char *value) {
     if( NULL==assoc_get(a,name) ) {
         return -1;
     }
@@ -185,7 +211,7 @@ assoc_update(struct assoc_array_t *a, char *name, char *value) {
  * @return 0 on success, -1 on failure. -2 if name doesn't exists
  */
 int
-assoc_del(struct assoc_array_t *a, char *name) {
+assoc_del(assoc_array_t a, char *name) {
     if( a==NULL || name == NULL || *name== '\0' )
         return -1;
     
@@ -220,7 +246,7 @@ assoc_del(struct assoc_array_t *a, char *name) {
  * @return The number of values in the array
  */
 size_t 
-assoc_len(struct assoc_array_t *a) {
+assoc_len(assoc_array_t a) {
     return a->num_values;
 }
 
@@ -230,7 +256,7 @@ assoc_len(struct assoc_array_t *a) {
  * @return The current maximum size of array
  */
 size_t 
-assoc_size(struct assoc_array_t *a) {
+assoc_size(assoc_array_t a) {
     return a->max_values;
 }
 
@@ -240,7 +266,7 @@ assoc_size(struct assoc_array_t *a) {
  * @return 0 on success, -1 on failure
  */
 int 
-assoc_destroy(struct assoc_array_t *a) {
+assoc_destroy(assoc_array_t a) {
     if( a==NULL )
         return -1;
     if( a->a ) {
@@ -254,9 +280,30 @@ assoc_destroy(struct assoc_array_t *a) {
     return 0;
 }
 
+/**
+ * Clear all values and return the memory occupied by the values.
+ * This differs from assoc_destroy() in that the array itself will not
+ * be freed. Only the values in the array.
+ * @param a a Associative array as returned by assoc_new()
+ * @return 0 on success, -1 on failure
+ */
+int 
+assoc_clear(assoc_array_t a) {
+    if( a==NULL )
+        return -1;
+    if( a->a ) {
+        for(size_t i=0; i < a->num_values ; i++) {
+            if( a->a[i].name ) free(a->a[i].name);
+            if( a->a[i].value )free(a->a[i].value);
+        }
+    }
+    a->num_values = 0;
+    return 0;
+}
+
 static int
 qsort_compare(const void *e1, const void *e2) {
-    return strcmp( ((struct assoc_pair_t *)e1)->name, ((struct assoc_pair_t *)e2)->name);
+    return strcmp( ((assoc_pair_t)e1)->name, ((assoc_pair_t)e2)->name);
 }
 
 /**
@@ -265,12 +312,16 @@ qsort_compare(const void *e1, const void *e2) {
  * @return 0 on success, -1 on failure
  */
 int
-assoc_sort(struct assoc_array_t *a) {
+assoc_sort(assoc_array_t a) {
     if( a==NULL || a->num_values==0 )
         return -1;
-    qsort(a->a, a->num_values, sizeof(struct assoc_pair_t), qsort_compare);
+    qsort(a->a, a->num_values, sizeof(assoc_pair_t), qsort_compare);
     return 0;
 }
+
+#define EXPORT_ID_NAME "_id"
+#define EXPORT_ID_NAME_VAL "assoc_array"
+#define EXPORT_PAIRS_KEY "pairs"
 
 /**
  * Dump the array in a human readable format to the given string buffer
@@ -280,15 +331,200 @@ assoc_sort(struct assoc_array_t *a) {
  * @return 0 on success, -1 on error
  */
 int
-assoc_to_json(struct assoc_array_t *a, char *buff, size_t maxlen) {
+assoc_export_to_json(assoc_array_t a, char *buff, size_t maxlen) {
     if( a==NULL ) 
         return -1;
     
-    snprintf(buff, maxlen, "{\n  \"num_values\":%zu,\n\"max_values\":%zu,\n\"pairs\":[\n",a->num_values, a->max_values);
-    for(size_t i=0; i < a->num_values-1; i++) {
-        xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" },\n", a->a[i].name, a->a[i].value);
+    snprintf(buff, maxlen, "{\n  \"%s\":\"%s\",\"num_values\":%zu,\"max_values\":%zu,\n\"%s\":[\n",
+             EXPORT_ID_NAME, EXPORT_ID_NAME_VAL, a->num_values, a->max_values, EXPORT_PAIRS_KEY);
+    if( a->num_values > 0 ) {
+        for(size_t i=0; i < a->num_values-1; i++) {
+            xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" },\n", a->a[i].name, a->a[i].value);
+        }
+        xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" }\n", a->a[a->num_values-1].name, a->a[a->num_values-1].value);
     }
-    xvstrncat(buff, maxlen, "    { \"%s\" : \"%s\" }\n", a->a[a->num_values-1].name, a->a[a->num_values-1].value);
-    xvstrncat(buff, maxlen, "  ]\n}\n");    
+    xvstrncat(buff, maxlen, "  ]\n}\n");
     return 0;
+}
+
+
+
+static void
+_parse_ss(char **cptr) {
+    while( **cptr && **cptr==' ')
+        (*cptr)++;
+}
+
+static int
+_parse_str(char **cptr, char *val, size_t maxlen) {
+    _parse_ss(cptr);
+    *val = '\0';
+    if( cptr==NULL || **cptr == '\0' || **cptr != '"' )
+        return -1;
+    (*cptr)++;
+    while( maxlen > 1 && **cptr ) {
+        if( **cptr == '\\' && *((*cptr)+1) == '"') {
+            if( maxlen < 3 ) {
+                return -1;
+            }
+            *val++ = **cptr;
+            (*cptr)++;
+            *val++ = **cptr;
+            (*cptr)++;
+            maxlen -= 2;
+        } else if( **cptr == '"' ) {
+            (*cptr)++;            
+            break;
+        } else {
+            *val++ = **cptr;
+            (*cptr)++;
+            maxlen--;            
+        }
+    }
+    
+    *val = '\0';
+    return 0;
+}
+
+static int
+_parse_int(char **cptr, char *val, size_t maxlen) {
+    _parse_ss(cptr);
+    *val = '\0';
+    if( cptr == NULL || **cptr == '\0' || **cptr < '0' || **cptr > '9' )
+        return -1;
+    while( maxlen > 1 && **cptr && ( (**cptr >= '0' && **cptr <= '9') || **cptr=='.' ) ) {
+        *val++ = **cptr;
+        (*cptr)++;
+        maxlen--;
+    }
+    *val = '\0';
+    return 0;
+}
+
+
+static _Bool
+_parse_chk(char **cptr, char c) {
+    _parse_ss(cptr);
+    if( **cptr == c ) {
+        (*cptr)++;
+        return 1;
+    } else {
+        return 0;
+    }
+        
+}
+
+static int
+_parse_pair_int(char **cptr, char *name, char *val, size_t maxlen) {
+    if( 0!=_parse_str(cptr, name, maxlen)  )
+        return -1;        
+    if( ! _parse_chk(cptr, ':') ||  0 != _parse_int(cptr, val, maxlen) ) 
+        return -1;
+    return 0;    
+}
+
+static int
+_parse_pair_str(char **cptr, char *name, char *val, size_t maxlen) {
+    if( 0!=_parse_str(cptr, name, maxlen)  )
+        return -1;        
+    if( ! _parse_chk(cptr, ':') ||  0 != _parse_str(cptr, val, maxlen) ) 
+        return -1;
+    return 0;
+}
+
+static int
+_parse_vector(char **cptr, assoc_array_t a) {
+    if( ! _parse_chk(cptr, '[') )
+        return -1;
+     
+    int rc=0;
+    char buf_name[64];
+    char buf_val[64];
+    while( 1 ) {
+
+        if( !_parse_chk(cptr, '{') ) {
+            rc=-1;
+            break;
+        }
+    
+        if( -1 == _parse_pair_str(cptr, buf_name, buf_val, sizeof(buf_val)) ) {
+            rc=-1;
+            break;            
+        }
+        
+        if( !_parse_chk(cptr, '}') ) {
+            rc=-1;
+            break;
+        }
+        
+        assoc_put(a, buf_name, buf_val);
+        
+        if( !_parse_chk(cptr,',') ) {
+            break;
+        }                       
+    } 
+    
+    if( -1 == rc )
+        return rc;        
+
+    if( ! _parse_chk(cptr, ']') )
+        return -1; 
+    
+    return 0;
+}
+
+/**
+ * Import an exported array as eported by assoc_export_json()
+ * @param a Associative array as returned by assoc_new()
+ * @param buf Zero terminated import buffer
+ * @return 0 on success, -1 on error
+ */
+int
+assoc_import_from_json(assoc_array_t a, char *buf) {
+    char *cptr=buf;
+    if( _parse_chk(&cptr, '{') ) {
+
+        // Read _id
+        size_t bufsize=64;
+        char id_name[bufsize],id_value[bufsize];
+        if( _parse_pair_str(&cptr,id_name, id_value, bufsize))
+            return -1;
+        if( strcmp(id_name, EXPORT_ID_NAME) || strcmp(id_value, EXPORT_ID_NAME_VAL) )
+            return -1;
+        if( ! _parse_chk(&cptr, ',') )
+            return -1;
+        
+        // Read num_values
+        char num_values_name[bufsize],num_values[bufsize];
+        if( _parse_pair_int(&cptr,num_values_name,num_values, bufsize))
+            return -1;
+        if( ! _parse_chk(&cptr, ',') )
+            return -1;
+            
+        // Read max values
+        char num_mvalues_name[bufsize],num_mvalues[bufsize];
+        if( _parse_pair_int(&cptr,num_mvalues_name,num_mvalues, bufsize))
+            return -1;
+        if( ! _parse_chk(&cptr, ',') )
+            return -1;
+         
+        // Check that this is the "pairs" key
+        char pairs_key[64];
+        if( 0!=_parse_str(&cptr, pairs_key, sizeof(pairs_key)) || strcmp(EXPORT_PAIRS_KEY,pairs_key) )
+            return -1; 
+        if( ! _parse_chk(&cptr, ':') )
+            return -1;
+        
+        _parse_vector(&cptr,a);
+        
+        
+        if( _parse_chk(&cptr, '}') ) 
+            return 0;
+        else 
+            return -1;
+        
+    } else {
+        return -1;
+    }
+
 }

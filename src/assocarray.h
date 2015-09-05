@@ -27,55 +27,69 @@
 extern "C" {
 #endif
 
-
-struct assoc_pair_t {
+struct assoc_pair {
     char *name;
     char *value;
 };
+    
+typedef struct assoc_pair *assoc_pair_t;
 
-struct assoc_array_t {
-    struct assoc_pair_t *a;
+struct assoc_array {
+    assoc_pair_t a;
     size_t num_values;
     size_t max_values;
 };
 
-struct assoc_array_t *
+typedef struct assoc_array *assoc_array_t;
+    
+
+assoc_array_t
 assoc_new(size_t initial_size);
 
 char *
-assoc_get(struct assoc_array_t *a, char *name);
+assoc_get(assoc_array_t a, char *name);
 
 char *
-assoc_get2(struct assoc_array_t *a, char *name, char *notfound);
-
-
-int
-assoc_copy(struct assoc_array_t *dest,struct assoc_array_t *src);
+assoc_get2(assoc_array_t a, char *name, char *notfound);
 
 int
-assoc_put(struct assoc_array_t *a, char *name, char *value);
+assoc_copy(assoc_array_t dest,assoc_array_t src);
 
 int
-assoc_update(struct assoc_array_t *a, char *name, char *value);
+assoc_add(assoc_array_t dest, assoc_array_t src);
 
 int
-assoc_del(struct assoc_array_t *a, char *name);
+assoc_intersection(assoc_array_t dest, assoc_array_t a1, assoc_array_t a2);
+
+int
+assoc_put(assoc_array_t a, char *name, char *value);
+
+int
+assoc_update(assoc_array_t a, char *name, char *value);
+
+int
+assoc_del(assoc_array_t a, char *name);
 
 size_t 
-assoc_len(struct assoc_array_t *a);
+assoc_len(assoc_array_t a);
 
 size_t 
-assoc_size(struct assoc_array_t *a);
+assoc_size(assoc_array_t a);
 
 int 
-assoc_destroy(struct assoc_array_t *a);
+assoc_destroy(assoc_array_t a);
+
+int 
+assoc_clear(assoc_array_t a);
 
 int
-assoc_to_json(struct assoc_array_t *a, char *buff, size_t maxlen);
+assoc_export_to_json(assoc_array_t a, char *buff, size_t maxlen);
 
 int
-assoc_sort(struct assoc_array_t *a);
+assoc_sort(assoc_array_t a);
 
+int
+assoc_import_from_json(assoc_array_t a, char *buf);
 
 
 #ifdef	__cplusplus
