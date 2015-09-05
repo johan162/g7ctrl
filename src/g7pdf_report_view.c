@@ -644,7 +644,7 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Status:",cb_GFENCE_status,NULL,NULL},
         {0,1,1,1,"Radius:",cb_GFENCE_radius,NULL,NULL},
-        {0,2,1,3,"Zone control:",cb_GFENCE_type,NULL,NULL},
+        {0,2,1,3,"Zone control:",cb_GFENCE_zone,NULL,NULL},
         {0,5,1,2,"Action:",NULL,NULL,cb_GFENCE_action_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };

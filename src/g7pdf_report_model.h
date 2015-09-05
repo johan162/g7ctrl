@@ -191,7 +191,7 @@ cb_GFENCE_lon(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_radius(void *tag, size_t r, size_t c);
 char *
-cb_GFENCE_type(void *tag, size_t r, size_t c);
+cb_GFENCE_zone(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_action(void *tag, size_t r, size_t c);
 
