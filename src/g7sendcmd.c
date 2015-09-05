@@ -2,7 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 1042 2015-09-01 21:37:03Z ljp $
+ * SVN:         $Id: g7sendcmd.c 1050 2015-09-05 21:13:43Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -433,12 +433,13 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
  * error checking.
  * @param sockd Client socket
  * @param reply Raw reply from device to be parsed
+ * @param tagbuff The expected tag in the reply
  * @return -1 if device did not return a complete reply,0 if success
  * If return code is between [-10, -2] device this indicates device error
  * number.
  */
 int
-handle_device_reply(const int sockd, const char *reply) {
+handle_device_reply(const int sockd, const char *reply, const char *tagbuff) {
     char *rbuff = strdup(reply);
 
     if ('$' != *reply && '3' == *reply && strlen(reply) > 60) {
@@ -459,6 +460,11 @@ handle_device_reply(const int sockd, const char *reply) {
         logmsg(LOG_ERR, "Incomplete reply from device: \"%s\" ", reply);
     } else {
 
+        if( strcmp(tag,tagbuff) ) {
+            logmsg(LOG_ERR,"Expected tag=\"%s\" in reply but found \"%s\". Trying to flush serial buffer",tagbuff,tag);
+            _writef(sockd, "[ERR] Unexpected reply from device \"%s\"", reply);
+            return -1;
+        }
         if (!isok) {
             // Device responded with an error code
             int errcode = xatoi(flds.fld[0]);
@@ -688,7 +694,7 @@ send_rawcmd_reply_over_gprs(struct client_info *cli_info, const char *cmd, const
     reply[_len - 2] = '\0';
 
 
-    rc = handle_device_reply(sockd, reply);
+    rc = handle_device_reply(sockd, reply, tagbuff);
     if (0 == rc) {
         if (replybuff != NULL && maxreply > 0) {
             snprintf(replybuff, maxreply, "%s", reply);
@@ -714,7 +720,7 @@ send_rawcmd_reply_over_gprs(struct client_info *cli_info, const char *cmd, const
  * @return -1 on failure, 0 on success
  */
 int
-send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, char *replybuff, size_t maxreply) {
+send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, const char *tagbuff, char *replybuff, size_t maxreply) {
     
     const int sockd = cli_info->cli_socket;
 
@@ -781,7 +787,7 @@ send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, char *
     }
     reply[_len - 2] = '\0';
 
-    rc = handle_device_reply(sockd, reply);
+    rc = handle_device_reply(sockd, reply, tagbuff);
     if (0 == rc) {
         if (replybuff != NULL && maxreply > 0) {
             snprintf(replybuff, maxreply, "%s", reply);
@@ -824,7 +830,7 @@ send_rawcmd_reply(struct client_info *cli_info, const char *cmd, const char *tag
         return send_rawcmd_reply_over_gprs(cli_info, cmd, tagbuff, replybuff, maxreply);
     } else if( cli_info->target_usb_idx >= 0 ) {
         logmsg(LOG_DEBUG,"Calling send_rawcmd_reply_over_usb()");
-        return send_rawcmd_reply_over_usb(cli_info, cmd, replybuff, maxreply);
+        return send_rawcmd_reply_over_usb(cli_info, cmd, tagbuff, replybuff, maxreply);
     } else {
         logmsg(LOG_ERR,"Fatal internal error: The device does not exist in send_rawcmd_reply()");
         return -1;
