@@ -644,8 +644,8 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Status:",cb_GFENCE_status,NULL,NULL},
         {0,1,1,1,"Radius:",cb_GFENCE_radius,NULL,NULL},
-        {0,2,1,3,"Zone control:",cb_GFENCE_zone,NULL,NULL},
-        {0,5,1,2,"Action:",NULL,NULL,cb_GFENCE_action_draw_slide_button},
+        {0,2,1,2,"Zone control:",cb_GFENCE_zone,NULL,NULL},
+        {0,4,1,3,"Action:",NULL,NULL,cb_GFENCE_action_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -700,37 +700,42 @@ _tbl_location_tracking_mode(void) {
  * GEO FENCE EVENT TABLE AND CALLBACKS
  * ===============================================
  */
+static size_t current_geofence_eventid=0;
+
+static void 
+cb_tbl_set_geofence_event_tag(hpdf_table_t t) {
+    hpdf_table_set_tag(t,(void *)&current_geofence_eventid);
+}
 
 static int
-_tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
+_tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, size_t event_id, char *title) {
 
-    const size_t num_events = 15;
-
-    hpdf_table_data_spec_t *cells = calloc(num_events*7+1,sizeof(hpdf_table_data_spec_t));
-
-    for(size_t idx=0; idx < num_events; idx++) {
-        cells[0+idx*7] = (hpdf_table_data_spec_t){idx,0,1,1,"ID:",cb_GFENCE_EVENT_ID,NULL,NULL};
-        cells[1+idx*7] = (hpdf_table_data_spec_t){idx,1,1,1,"Status:",cb_GFENCE_EVENT_status,NULL,NULL};
-        cells[2+idx*7] = (hpdf_table_data_spec_t){idx,2,1,1,"Lat:",cb_GFENCE_EVENT_lat,NULL,NULL};
-        cells[3+idx*7] = (hpdf_table_data_spec_t){idx,3,1,1,"Lon:",cb_GFENCE_EVENT_lon,NULL,NULL};
-        cells[4+idx*7] = (hpdf_table_data_spec_t){idx,4,1,1,"Radius:",cb_GFENCE_EVENT_radius,NULL,NULL};
-        cells[5+idx*7] = (hpdf_table_data_spec_t){idx,5,1,1,"Zone control:",cb_GFENCE_EVENT_type,NULL,NULL};
-        cells[6+idx*7] = (hpdf_table_data_spec_t){idx,6,1,1,"Action:",cb_GFENCE_EVENT_action,NULL,NULL};
-    }
-    cells[num_events*7] = (hpdf_table_data_spec_t){0,0,0,0,NULL,NULL,NULL,NULL};
-
+    hpdf_table_data_spec_t cells[] = {
+        // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
+        {0,0,1,1,"ID:",cb_GFENCE_EVENT_ID,NULL,NULL},
+        {0,1,1,2,"Status:",cb_GFENCE_EVENT_status,NULL,NULL},
+        {0,3,1,1,"Lat:",cb_GFENCE_EVENT_lat,NULL,NULL},
+        {0,4,1,1,"Lon:",cb_GFENCE_EVENT_lon,NULL,NULL},
+        {1,0,1,1,"Radius:",cb_GFENCE_EVENT_radius,NULL,NULL},
+        {1,1,1,2,"Zone control:",cb_GFENCE_EVENT_type,NULL,NULL},
+        {1,3,1,2,"Action:",cb_GFENCE_EVENT_action,NULL,NULL},
+        {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
+    };
+    
     // Overall table layout
     hpdf_table_spec_t tbl = {
-        "Geo fence events", num_events, 7,      /* Title, rows, cols   */
+        title, 
+        2, 5,               /* rows, cols   */
         xpos, ypos,         /* xpos, ypos          */
         width, 0,          /* width, height       */
         cells,             /* A pointer to the specification of each row in the table */
-        cb_tbl_set_tag               /* Post processing callback */
+        cb_tbl_set_geofence_event_tag               /* Post processing callback */
     };
 
-    int ret =  stroke_g7ctrl_report_table(tbl);
-    free(cells);
-    return ret;
+    current_geofence_eventid = event_id;
+    return stroke_g7ctrl_report_table(tbl);
+    /* free(cells);
+    return ret; */
 }
 
 /* *==========================================================================
@@ -747,7 +752,7 @@ cb_header_style(void *tag, size_t r, size_t c, hpdf_text_style_t *style) {
 }
 
 static int page_num=1;
-static int total_pages=2;
+static int total_pages=0;
 
 static char *
 cb_header_date_time(void *tag, size_t r, size_t c) {
@@ -902,6 +907,9 @@ layout_g7ctrl_report(void) {
     //const HPDF_REAL report_half_width = report_full_width/2.0;
 
 
+    // The total number of pages in report. Added in the page header callback.
+    total_pages = 9;
+    
     tbl_spec_t table_spec[] = {
         // Page 1: Row 1 of tables
         {NRP_SAME,report_full_width, _tbl_device},
@@ -929,10 +937,7 @@ layout_g7ctrl_report(void) {
 
         // Page 2: Row 1 of tables
         {NRP_ROW, report_full_width, _tbl_gfence},
-        
-        // Page 2: Row 2 of tables
-        {NRP_ROW, report_full_width, _tbl_gfence_event},
-        
+                
         {0,0,NULL},
     };
 
@@ -950,15 +955,19 @@ layout_g7ctrl_report(void) {
     ypos += (aheight + vmargin*2);
 
     size_t idx=0;
-    tbl_spec_t *tbl = &table_spec[idx];
+    tbl_spec_t *tbl=&table_spec[idx];
+    
     while( tbl->tbl_func ) {
-
+        
         if( NRP_ROW == tbl->new_row_page ) {
+            
             // New row of tables
             xpos = left_margin;
             (void)hpdf_table_get_last_auto_height(&aheight);
             ypos += aheight + vmargin;
+            
         } else if( NRP_PAGE == tbl->new_row_page ) {
+            
             // New page
             page_num++;
             add_a4page();
@@ -969,11 +978,59 @@ layout_g7ctrl_report(void) {
             report_page_footer(xpos,footer_ypos);
             (void)hpdf_table_get_last_auto_height(&aheight);
             ypos += (aheight + vmargin*2);
+            
         }
 
         tbl->tbl_func(xpos,ypos,tbl->width);
         xpos += (tbl->width + hmargin);
-        tbl = &table_spec[++idx];
+        idx++;
+        tbl = &table_spec[idx];
+        
+    }
+    
+    _Bool start_geofence_event_new_page=TRUE;
+    
+    if( start_geofence_event_new_page ) {
+        // New page
+        page_num++;
+        add_a4page();
+        xpos = left_margin;
+        ypos = top_margin;
+        stroke_g7ctrl_logo(xpos, page_height-top_margin+logo_margin);
+        report_page_header(xpos, ypos, report_full_width);
+        report_page_footer(xpos,footer_ypos);
+        (void)hpdf_table_get_last_auto_height(&aheight);
+        ypos += (aheight + vmargin*2);        
+    } else {
+        xpos = left_margin;
+        (void)hpdf_table_get_last_auto_height(&aheight);
+        ypos += aheight + vmargin;                
+    }
+    
+    char title_buf[64];
+    // Add all the gfence event tables
+    for( size_t event_id=50; event_id < 100; event_id++ ) {
+        // New row of tables
+        if( ypos > 700 ) {
+            // Need a new page
+            page_num++;
+            add_a4page();
+            xpos = left_margin;
+            ypos = top_margin;
+            stroke_g7ctrl_logo(xpos, page_height-top_margin+logo_margin);
+            report_page_header(xpos, ypos, report_full_width);
+            report_page_footer(xpos,footer_ypos);
+            (void)hpdf_table_get_last_auto_height(&aheight);
+            ypos += (aheight + vmargin*2);                
+        }
+        
+        snprintf(title_buf,sizeof(title_buf),"Geo Fence Event : %zu",event_id);
+        _tbl_gfence_event(xpos,ypos,report_full_width,event_id,title_buf);
+        
+        xpos = left_margin;
+        (void)hpdf_table_get_last_auto_height(&aheight);
+        ypos += aheight + vmargin;        
+        
     }
 
     return 0;
@@ -1031,8 +1088,8 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
     logmsg(LOG_DEBUG,"Initializing the model from device");
     init_model_from_device( (void *)cli_info);
     
-    logmsg(LOG_DEBUG,"Exporting report in JSON");
-    export_model_to_json(filename); 
+    //logmsg(LOG_DEBUG,"Exporting report in JSON");
+    //export_model_to_json(filename); 
     
     logmsg(LOG_DEBUG,"Starting report layout");
     layout_g7ctrl_report();

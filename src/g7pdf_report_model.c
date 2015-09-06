@@ -288,11 +288,15 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
  */
 int
 init_model_from_device(void *tag) {
+    
     logmsg(LOG_DEBUG,"Running run_config_cmd() for PDF report");
     struct client_info *cli_info = (struct client_info *)tag;
     char reply[128];
 
     device_info = assoc_new(128);
+    assoc_import_from_json_file(device_info,"/tmp/export.json");
+    return 0;
+    
     
     size_t i=0;
     _writef(cli_info->cli_socket,"[0%%].");
@@ -1209,48 +1213,51 @@ cb_LOGGED_number(void *tag, size_t r, size_t c) {
  */
 char *
 cb_LOGGED_dates(void *tag, size_t r, size_t c) {
+    size_t *event_id = (size_t *)tag;
     return GET(FLD_LOGGED_DATES);
 }
 
 char *
 cb_GFENCE_EVENT_ID(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
-    return "GFEVT ID";
+    size_t *event_id = (size_t *)tag;
+    static char buf[16];
+    snprintf(buf,sizeof(buf),"%zu",*event_id);
+    return buf;
 }
 
 char *
 cb_GFENCE_EVENT_status(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT stat";
 }
 
 char *
 cb_GFENCE_EVENT_lat(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT lat";
 }
 
 char *
 cb_GFENCE_EVENT_lon(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT lon";
 }
 
 char *
 cb_GFENCE_EVENT_radius(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT rad";
 }
 
 char *
 cb_GFENCE_EVENT_type(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT type";
 }
 
 char *
 cb_GFENCE_EVENT_action(void *tag, size_t r, size_t c) {
-    struct client_info *cli_info = (struct client_info *)tag;
+    size_t *event_id = (size_t *)tag;
     return "GFEVT act";
 }
 
