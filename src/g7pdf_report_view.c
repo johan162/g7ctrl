@@ -639,7 +639,7 @@ cb_GFENCE_action_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size
     if( dev_stat <= 3 && vip_idx <= 5 ) {
         cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
     } else {
-        logmsg(LOG_ERR,"Vales for gfen out of range (%c, %c)",stat[0],stat[2]);
+        logmsg(LOG_ERR,"Values for gfen out of range (%c, %c)",stat[0],stat[2]);
     }
 }
 
@@ -728,7 +728,7 @@ cb_GFENCE_EVENT_action_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag
     if( dev_stat <= 3 && vip_idx <= 5 ) {
         cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
     } else {
-        logmsg(LOG_ERR,"Vales for gfen event out of range (%c, %c)",stat[0],stat[2]);
+        logmsg(LOG_ERR,"Values for gfen event %zu out of range (%c, %c)",*((size_t *)tag), stat[0],stat[2]);
     }
 }
 
@@ -1023,8 +1023,8 @@ layout_g7ctrl_report(void) {
      * "ignore_unset_events" will not print tables with undefined events. 
      * AN underfined event is a Geo-Fence Event with no lat,lon set
      */
-    _Bool start_geofence_event_new_page=TRUE;
-    _Bool ignore_unset_events=FALSE;
+    _Bool start_geofence_event_new_page=FALSE;
+    _Bool ignore_unset_events=TRUE;
     
     if( start_geofence_event_new_page ) {
         // New page
@@ -1104,7 +1104,13 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
         HPDF_Free (pdf_doc);
         return -1;
     }
-
+    
+    logmsg(LOG_DEBUG,"Initializing the model from device");
+    init_model_from_device( (void *)cli_info);
+    
+    logmsg(LOG_DEBUG,"Exporting report in JSON");
+    export_model_to_json(filename); 
+    
     // Setup the PDF document
     pdf_doc = HPDF_New(error_handler, NULL);
     HPDF_SetCompressionMode(pdf_doc, HPDF_COMP_ALL);
@@ -1128,11 +1134,6 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
     hpdf_table_set_origin_top_left(TRUE);
     add_a4page();
 
-    logmsg(LOG_DEBUG,"Initializing the model from device");
-    init_model_from_device( (void *)cli_info);
-    
-    //logmsg(LOG_DEBUG,"Exporting report in JSON");
-    //export_model_to_json(filename); 
     
     logmsg(LOG_DEBUG,"Starting report layout");
     layout_g7ctrl_report();

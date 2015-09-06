@@ -316,7 +316,7 @@ int
 assoc_sort(assoc_array_t a) {
     if (a == NULL || a->num_values == 0)
         return -1;
-    qsort(a->a, a->num_values, sizeof (assoc_pair_t), qsort_compare);
+    qsort(a->a, a->num_values, sizeof (struct assoc_pair), qsort_compare);
     return 0;
 }
 

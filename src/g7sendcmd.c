@@ -2,7 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 1050 2015-09-05 21:13:43Z ljp $
+ * SVN:         $Id: g7sendcmd.c 1056 2015-09-06 22:24:36Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -872,7 +872,6 @@ send_cmdquery_reply(struct client_info *cli_info, const char *cmd, char *reply, 
             -1 == get_device_tag(tagbuff, sizeof (tagbuff))) {
         return -1;
     }
-    *reply = '\0';
     char rawcmd[16];
     if (-1 == get_devcmd_from_srvcmd(cmd, sizeof (rawcmd), rawcmd)) {
         logmsg(LOG_ERR, "_dev_cmd_help(): Cannot find user command %s", cmd);
@@ -880,12 +879,20 @@ send_cmdquery_reply(struct client_info *cli_info, const char *cmd, char *reply, 
     }
     char devcmd[128];
 
-    snprintf(devcmd, sizeof (devcmd), "$WP+%s+%s=%s,?", rawcmd, tagbuff, pinbuff);
+    // For the special case of the SETEVT command we also need to specify a event id in the GET command
+    // so we use the "reply" argument as input in this special case. This is kludge!!
+    if(0==strcmp("SETEVT",rawcmd) ) {
+        snprintf(devcmd, sizeof (devcmd), "$WP+%s+%s=%s,%s,?", rawcmd, tagbuff, pinbuff, reply);
+        logmsg(LOG_DEBUG,"Handle GFEVT in send_cmdquery_reply() %s",devcmd);
+    } else {
+        snprintf(devcmd, sizeof (devcmd), "$WP+%s+%s=%s,?", rawcmd, tagbuff, pinbuff);
+    }
     
     // We don't want any output to the user at this level so set sockd to -1 temporarily
     const int old_sockd = cli_info->cli_socket;
     cli_info->cli_socket = -1;
     logmsg(LOG_DEBUG,"Prepared raw command \"%s\" for USB idx=%zd",devcmd,cli_info->target_usb_idx);
+    *reply = '\0';
     int rc = send_rawcmd_reply(cli_info, devcmd, tagbuff, reply, maxreply);
     cli_info->cli_socket = old_sockd;
     

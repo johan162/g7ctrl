@@ -155,7 +155,7 @@ struct get_dev_info_command_t dev_report_cmd_list[] = {
 
     /* CMD, num returned args, {named assoc pair to store values}, callback to extract values  */
     {"config", 3, {FLD_DEVICE_ID, FLD_DEVICE_PWD, FLD_SIM_PIN}, NULL},
-    {"dlrec", 2, {NULL, NULL}, extract_logged_num_and_dates},
+    {"dlrec", 2, {FLD_LOGGED_NUM, FLD_LOGGED_DATES}, extract_logged_num_and_dates},
     {"comm", 10, {FLD_COMM_SELECT, FLD_SMS_BASE, FLD_CSD_BASE, FLD_GPRS_APN, FLD_GPRS_USER, FLD_GPRS_PWD, FLD_GPRS_SERVER_IP, FLD_GPRS_SERVER_PORT, FLD_GPRS_KEEP_ALIVE, FLD_GPRS_DNS}, NULL},
     {"roam",1,{FLD_ROAM}, NULL},
     {"track",7,{FLD_TRACK_MODE, FLD_TRACK_TIMER, FLD_TRACK_DIST, FLD_TRACK_NUMBER, FLD_TRACK_GPS_FIX, FLD_TRACK_COMMSELECT, FLD_TRACK_HEADING}, NULL},
@@ -201,12 +201,16 @@ char report_header_title[128] = {0};
  * @param cli_info Client context
  * @param dev_srvcmd The command to send to the device
  * @param flds The returned reply splitted in the different fields
+ * @param event_id Only used when the command is GFEVT and in that case hold the event id
  * @return 0 on success, -1 on faiure
  */
 int
-send_command_get_replies(struct client_info *cli_info, char *dev_srvcmd, struct splitfields *flds) {
+send_command_get_replies(struct client_info *cli_info, char *dev_srvcmd, struct splitfields *flds, size_t event_id) {
     logmsg(LOG_DEBUG,"Running send_command_get_replies(%s) for PDF report",dev_srvcmd);
     char reply[1024];
+    if( event_id ) {
+        snprintf(reply,sizeof(reply),"%zu",event_id);
+    }
     if( -1 == send_cmdquery_reply(cli_info, dev_srvcmd, reply, sizeof(reply)) ) {
         logmsg(LOG_DEBUG,"Failed send_cmdquery_reply()");
         return 0;
@@ -289,7 +293,7 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     }        
 }
 
-#define USE_FAKE_DEVICE_DATA_FOR_REPORT 1
+//#define USE_FAKE_DEVICE_DATA_FOR_REPORT 0
 
 /**
  * Initialize the model by reading all necessary values from the connected device
@@ -305,10 +309,10 @@ init_model_from_device(void *tag) {
 
     device_info = assoc_new(128);
     
-    if( USE_FAKE_DEVICE_DATA_FOR_REPORT ) {
-        assoc_import_from_json_file(device_info,"/tmp/export.json");
-        return 0;
-    }
+//    if( USE_FAKE_DEVICE_DATA_FOR_REPORT ) {
+//        assoc_import_from_json_file(device_info,"/tmp/export.json");
+//        return 0;
+//    }
     
     size_t i=0;
     struct splitfields flds;
@@ -318,7 +322,7 @@ init_model_from_device(void *tag) {
         
         logmsg(LOG_DEBUG,"Running \"%s\"", dev_report_cmd_list[i].cmd_name);
 
-        int rc = send_command_get_replies(cli_info, dev_report_cmd_list[i].cmd_name, &flds);
+        int rc = send_command_get_replies(cli_info, dev_report_cmd_list[i].cmd_name, &flds,0);
 
         if( 0 == rc ) {
             // Device normal response            
@@ -333,6 +337,7 @@ init_model_from_device(void *tag) {
                 if( flds.nf ==  dev_report_cmd_list[i].num_reply_fields ) {
                     // Extract all responses and store them i the assoc array
                     for( size_t j=0; j < flds.nf; j++) {
+                        logmsg(LOG_DEBUG,"Storing ( %s : %s )",dev_report_cmd_list[i].fld_names[j],flds.fld[j]);
                         assoc_put(device_info,dev_report_cmd_list[i].fld_names[j],flds.fld[j]);
                     }                
                 }else {
@@ -360,9 +365,9 @@ init_model_from_device(void *tag) {
     // -----------------------
     char cmdbuf[32];
     char namebuf[64];
-    for(size_t event_id=50; event_id <= 99; event_id++) {
-        snprintf(cmdbuf,sizeof(cmdbuf),"gfevt %zu",event_id);
-        int rc = send_command_get_replies(cli_info, cmdbuf, &flds);
+    for(size_t event_id=50; event_id < 100; event_id++) {
+        snprintf(cmdbuf,sizeof(cmdbuf),"gfevt");
+        int rc = send_command_get_replies(cli_info, cmdbuf, &flds, event_id);
 
         if( 0 == rc ) {
             
@@ -424,7 +429,7 @@ init_model_from_device(void *tag) {
 int
 export_model_to_json(char *fname) {
     char filename[256];
-    const size_t maxlen=10*1024;
+    const size_t maxlen=100*1024;
     char *buf=calloc(maxlen,sizeof(char));
     if( NULL==buf )
         return -1;
@@ -439,7 +444,7 @@ export_model_to_json(char *fname) {
     }
     fprintf(fp,"%s\n",buf);
     fclose(fp);
-    logmsg(LOG_DEBUG,"Saved JSON device info to \"%s\"",filename);    
+    logmsg(LOG_DEBUG,"Saved device info to \"%s\"",filename);    
     free(buf);
     return 0;
 
@@ -1291,40 +1296,59 @@ cb_GFENCE_EVENT_ID(void *tag, size_t r, size_t c) {
 _Bool
 cb_GFENCE_EVENT_status(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    
-    return atoi("0");
+    static char buf[32];
+    snprintf(buf,sizeof(buf),"%s%zu",FLD_GFEN_EVENT_STATUS,*event_id);    
+    return atoi(GET(buf));
 }
 
 char *
 cb_GFENCE_EVENT_lat(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "54.123456";
+    static char buf[32];
+    snprintf(buf,sizeof(buf),"%s%zu",FLD_GFEN_EVENT_LAT,*event_id);    
+    return GET(buf);
 }
 
 char *
 cb_GFENCE_EVENT_lon(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "17.896745";
+    static char buf[32];
+    snprintf(buf,sizeof(buf),"%s%zu",FLD_GFEN_EVENT_LON,*event_id);    
+    return GET(buf);
+
 }
 
 char *
 cb_GFENCE_EVENT_radius(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "100";
+    static char buf[32];
+    snprintf(buf,sizeof(buf),"%s%zu",FLD_GFEN_EVENT_RADIUS,*event_id);    
+    return GET(buf);
+
 }
 
 char *
 cb_GFENCE_EVENT_zone(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "Trigger on entering";
+    static char buf[32];
+    snprintf(buf,sizeof(buf),"%s%zu",FLD_GFEN_EVENT_ZONE,*event_id);    
+    
+    static char buf2[128];
+    translate_cmd_argval_to_string("gfen", 2, GET(buf), buf2, sizeof(buf2));
+    assoc_update(device_info,buf,buf2);    
+    return buf2;
 }
 
 char *
 cb_GFENCE_EVENT_action(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    static char buf[16];
-    snprintf(buf,sizeof(buf),"%s,%s","2","2");
-    return buf;        
+    static char buf1[32];
+    snprintf(buf1,sizeof(buf1),"%s%zu",FLD_GFEN_EVENT_ACTION,*event_id);    
+    static char buf2[32];
+    snprintf(buf2,sizeof(buf2),"%s%zu",FLD_GFEN_EVENT_VIP,*event_id);           
+    static char res[16];
+    snprintf(res,sizeof(res),"%s,%s",GET(buf1),GET(buf2));
+    return res;        
 }
 
 
