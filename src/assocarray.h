@@ -91,6 +91,9 @@ assoc_sort(assoc_array_t a);
 int
 assoc_import_from_json(assoc_array_t a, char *buf);
 
+int
+assoc_import_from_json_file(assoc_array_t a, char *filename);
+
 
 #ifdef	__cplusplus
 }
