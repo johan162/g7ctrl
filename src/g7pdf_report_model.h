@@ -182,7 +182,7 @@ cb_LTRACK_waitGPS(void *tag, size_t r, size_t c);
 /***/
 
 
-char *
+_Bool
 cb_GFENCE_status(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_lat(void *tag, size_t r, size_t c);
@@ -207,7 +207,7 @@ cb_LOGGED_dates(void *tag, size_t r, size_t c);
 
 char *
 cb_GFENCE_EVENT_ID(void *tag, size_t r, size_t c);
-char *
+_Bool
 cb_GFENCE_EVENT_status(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_EVENT_lat(void *tag, size_t r, size_t c);
@@ -216,7 +216,7 @@ cb_GFENCE_EVENT_lon(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_EVENT_radius(void *tag, size_t r, size_t c);
 char *
-cb_GFENCE_EVENT_type(void *tag, size_t r, size_t c);
+cb_GFENCE_EVENT_zone(void *tag, size_t r, size_t c);
 char *
 cb_GFENCE_EVENT_action(void *tag, size_t r, size_t c);
 

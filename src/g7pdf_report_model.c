@@ -102,9 +102,18 @@
 #define FLD_GSENS "gsens"
 #define FLD_GFEN_STATUS "gfen_status"
 #define FLD_GFEN_RADIUS "gfen_radius"
-#define FLD_GFEN_INOUT "gfen_inout"
+#define FLD_GFEN_ZONE "gfen_zone"
 #define FLD_GFEN_ACTION "gfen_action"
 #define FLD_GFEN_VIP "gfen_vip"
+
+#define FLD_GFEN_EVENT_STATUS "gfen_event_status_"
+#define FLD_GFEN_EVENT_LON "gfen_event_lon_"
+#define FLD_GFEN_EVENT_LAT "gfen_event_lat_"
+#define FLD_GFEN_EVENT_RADIUS "gfen_event_radius_"
+#define FLD_GFEN_EVENT_ZONE "gfen_event_zone_"
+#define FLD_GFEN_EVENT_ACTION "gfen_event_action_"
+#define FLD_GFEN_EVENT_VIP "gfen_event_vip_"
+#define FLD_GFEN_EVENT_ID "gfen_event_ID_"
 
 #define FLD_ERR_STR "??"
 
@@ -164,7 +173,7 @@ struct get_dev_info_command_t dev_report_cmd_list[] = {
     {"sleep", 1, {FLD_SLEEP_ACTION}, NULL},
     {"rec", 6, {FLD_REC_MODE, FLD_REC_TIMER, FLD_REC_DIST, FLD_REC_NUMBER, FLD_REC_GPS_FIX, FLD_REC_HEADING}, NULL},        
     {"sens", 1, {FLD_GSENS}, NULL},
-    {"gfen", 5, {FLD_GFEN_STATUS,FLD_GFEN_RADIUS,FLD_GFEN_INOUT,FLD_GFEN_ACTION,FLD_GFEN_VIP}, NULL},
+    {"gfen", 5, {FLD_GFEN_STATUS,FLD_GFEN_RADIUS,FLD_GFEN_ZONE,FLD_GFEN_ACTION,FLD_GFEN_VIP}, NULL},
     {"test", 2, {FLD_TEST_RESULT, FLD_TEST_BATT}, NULL},
     {NULL, 0, {NULL}, NULL}
     
@@ -280,6 +289,7 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     }        
 }
 
+#define USE_FAKE_DEVICE_DATA_FOR_REPORT 1
 
 /**
  * Initialize the model by reading all necessary values from the connected device
@@ -294,17 +304,20 @@ init_model_from_device(void *tag) {
     char reply[128];
 
     device_info = assoc_new(128);
-    assoc_import_from_json_file(device_info,"/tmp/export.json");
-    return 0;
     
+    if( USE_FAKE_DEVICE_DATA_FOR_REPORT ) {
+        assoc_import_from_json_file(device_info,"/tmp/export.json");
+        return 0;
+    }
     
     size_t i=0;
+    struct splitfields flds;
     _writef(cli_info->cli_socket,"[0%%].");
+    
     while( dev_report_cmd_list[i].cmd_name ) {
         
         logmsg(LOG_DEBUG,"Running \"%s\"", dev_report_cmd_list[i].cmd_name);
 
-        struct splitfields flds;
         int rc = send_command_get_replies(cli_info, dev_report_cmd_list[i].cmd_name, &flds);
 
         if( 0 == rc ) {
@@ -318,7 +331,7 @@ init_model_from_device(void *tag) {
             } else {
                 
                 if( flds.nf ==  dev_report_cmd_list[i].num_reply_fields ) {
-                    // Extract all responses and store them i the assocarray
+                    // Extract all responses and store them i the assoc array
                     for( size_t j=0; j < flds.nf; j++) {
                         assoc_put(device_info,dev_report_cmd_list[i].fld_names[j],flds.fld[j]);
                     }                
@@ -340,6 +353,56 @@ init_model_from_device(void *tag) {
             _writef(cli_info->cli_socket,"[%zu%%].",i*5);
         }
 
+    }
+    
+    // -----------------------
+    // Extract all GFEVT.
+    // -----------------------
+    char cmdbuf[32];
+    char namebuf[64];
+    for(size_t event_id=50; event_id <= 99; event_id++) {
+        snprintf(cmdbuf,sizeof(cmdbuf),"gfevt %zu",event_id);
+        int rc = send_command_get_replies(cli_info, cmdbuf, &flds);
+
+        if( 0 == rc ) {
+            
+            if( 8 == flds.nf ) {
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_ID, event_id);
+                assoc_put(device_info,namebuf,flds.fld[0]);
+                
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_STATUS, event_id);
+                assoc_put(device_info,namebuf,flds.fld[1]);
+                
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_LON, event_id);
+                assoc_put(device_info,namebuf,flds.fld[2]);
+
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_LAT, event_id);
+                assoc_put(device_info,namebuf,flds.fld[3]);
+
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_RADIUS, event_id);
+                assoc_put(device_info,namebuf,flds.fld[4]);
+
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_ZONE, event_id);
+                assoc_put(device_info,namebuf,flds.fld[5]);
+
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_ACTION, event_id);
+                assoc_put(device_info,namebuf,flds.fld[6]);
+
+                snprintf(namebuf,sizeof(namebuf),"%s%zu",FLD_GFEN_EVENT_VIP, event_id);
+                assoc_put(device_info,namebuf,flds.fld[7]);
+
+            } else {
+                
+                logmsg(LOG_ERR,"Expected %d fields in reply from %s but found %zu",8,cmdbuf,flds.nf);
+                
+            }
+            
+        } else {
+            
+            logmsg(LOG_ERR,"Failed command %s in report generation",cmdbuf);
+            
+        }
+        
     }
     
     static char date_buf[64];
@@ -1113,13 +1176,13 @@ cb_LTRACK_waitGPS(void *tag, size_t r, size_t c) {
  * @param c Column where value will be place
  * @return value as a boolean value
  */
-char *
+_Bool
 cb_GFENCE_status(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("gfen", 0, GET(FLD_GFEN_STATUS), buf, sizeof(buf));
     assoc_update(device_info,FLD_GFEN_STATUS,buf);    
-    return buf;
+    return atoi(GET(FLD_GFEN_STATUS));
 }
 
 char *
@@ -1158,8 +1221,8 @@ char *
 cb_GFENCE_zone(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
-    translate_cmd_argval_to_string("gfen", 2, GET(FLD_GFEN_INOUT), buf, sizeof(buf));
-    assoc_update(device_info,FLD_GFEN_INOUT,buf);    
+    translate_cmd_argval_to_string("gfen", 2, GET(FLD_GFEN_ZONE), buf, sizeof(buf));
+    assoc_update(device_info,FLD_GFEN_ZONE,buf);    
     return buf;    
 }
 
@@ -1225,40 +1288,43 @@ cb_GFENCE_EVENT_ID(void *tag, size_t r, size_t c) {
     return buf;
 }
 
-char *
+_Bool
 cb_GFENCE_EVENT_status(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT stat";
+    
+    return atoi("0");
 }
 
 char *
 cb_GFENCE_EVENT_lat(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT lat";
+    return "54.123456";
 }
 
 char *
 cb_GFENCE_EVENT_lon(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT lon";
+    return "17.896745";
 }
 
 char *
 cb_GFENCE_EVENT_radius(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT rad";
+    return "100";
 }
 
 char *
-cb_GFENCE_EVENT_type(void *tag, size_t r, size_t c) {
+cb_GFENCE_EVENT_zone(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT type";
+    return "Trigger on entering";
 }
 
 char *
 cb_GFENCE_EVENT_action(void *tag, size_t r, size_t c) {
     size_t *event_id = (size_t *)tag;
-    return "GFEVT act";
+    static char buf[16];
+    snprintf(buf,sizeof(buf),"%s,%s","2","2");
+    return buf;        
 }
 
 

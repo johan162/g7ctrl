@@ -625,6 +625,12 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
  * ===============================================
  */
 void
+cb_GEOFENCE_status_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
+                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
+    hpdf_table_widget_slide_button(doc, page, xpos+10, ypos+4, slide_width, slide_height, cb_GFENCE_status(tag,r,c));
+}
+
+void
 cb_GFENCE_action_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
                      HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
     const char *stat=cb_GFENCE_action(tag,r,c);
@@ -642,7 +648,7 @@ _tbl_gfence(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
     // Specified the layout of each row
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
-        {0,0,1,1,"Status:",cb_GFENCE_status,NULL,NULL},
+        {0,0,1,1,"Status:",NULL,NULL,cb_GEOFENCE_status_draw_slide_button},
         {0,1,1,1,"Radius:",cb_GFENCE_radius,NULL,NULL},
         {0,2,1,2,"Zone control:",cb_GFENCE_zone,NULL,NULL},
         {0,4,1,3,"Action:",NULL,NULL,cb_GFENCE_action_draw_slide_button},
@@ -707,18 +713,38 @@ cb_tbl_set_geofence_event_tag(hpdf_table_t t) {
     hpdf_table_set_tag(t,(void *)&current_geofence_eventid);
 }
 
+void
+cb_GEOFENCE_EVENT_status_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
+                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
+    hpdf_table_widget_slide_button(doc, page, xpos+10, ypos+4, slide_width, slide_height, cb_GFENCE_EVENT_status(tag,r,c));
+}
+
+void
+cb_GFENCE_EVENT_action_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
+                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
+    const char *stat=cb_GFENCE_EVENT_action(tag,r,c);
+    const size_t dev_stat = (stat[0]-'0');
+    const size_t vip_idx = (stat[2]-'0');
+    if( dev_stat <= 3 && vip_idx <= 5 ) {
+        cb_widget_draw_LS_VIP_state(doc, page, xpos+10, ypos, dev_stat, vip_idx);
+    } else {
+        logmsg(LOG_ERR,"Vales for gfen event out of range (%c, %c)",stat[0],stat[2]);
+    }
+}
+
+
 static int
 _tbl_gfence_event(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, size_t event_id, char *title) {
 
     hpdf_table_data_spec_t cells[] = {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"ID:",cb_GFENCE_EVENT_ID,NULL,NULL},
-        {0,1,1,2,"Status:",cb_GFENCE_EVENT_status,NULL,NULL},
-        {0,3,1,1,"Lat:",cb_GFENCE_EVENT_lat,NULL,NULL},
-        {0,4,1,1,"Lon:",cb_GFENCE_EVENT_lon,NULL,NULL},
-        {1,0,1,1,"Radius:",cb_GFENCE_EVENT_radius,NULL,NULL},
-        {1,1,1,2,"Zone control:",cb_GFENCE_EVENT_type,NULL,NULL},
-        {1,3,1,2,"Action:",cb_GFENCE_EVENT_action,NULL,NULL},
+        {0,1,1,1,"Status:",NULL,NULL,cb_GEOFENCE_EVENT_status_draw_slide_button},
+        {0,2,1,1,"Lat:",cb_GFENCE_EVENT_lat,NULL,NULL},
+        {0,3,1,1,"Lon:",cb_GFENCE_EVENT_lon,NULL,NULL},
+        {0,4,1,1,"Radius:",cb_GFENCE_EVENT_radius,NULL,NULL},
+        {1,0,1,3,"Zone control:",cb_GFENCE_EVENT_zone,NULL,NULL},
+        {1,3,1,2,"Action:",NULL,NULL,cb_GFENCE_EVENT_action_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
     
@@ -908,7 +934,7 @@ layout_g7ctrl_report(void) {
 
 
     // The total number of pages in report. Added in the page header callback.
-    total_pages = 9;
+    total_pages = 10;
     
     tbl_spec_t table_spec[] = {
         // Page 1: Row 1 of tables
@@ -988,7 +1014,17 @@ layout_g7ctrl_report(void) {
         
     }
     
+    
+    /*
+     * Draw the Geo-Fence Event tables. There are two major options that
+     * controls the layout of the event tables.
+     * "start_geofence_event_new_page" is set to true to start the tables
+     * at a new page
+     * "ignore_unset_events" will not print tables with undefined events. 
+     * AN underfined event is a Geo-Fence Event with no lat,lon set
+     */
     _Bool start_geofence_event_new_page=TRUE;
+    _Bool ignore_unset_events=FALSE;
     
     if( start_geofence_event_new_page ) {
         // New page
@@ -1010,6 +1046,13 @@ layout_g7ctrl_report(void) {
     char title_buf[64];
     // Add all the gfence event tables
     for( size_t event_id=50; event_id < 100; event_id++ ) {
+        
+        if( ignore_unset_events && 
+            0==strcmp(cb_GFENCE_EVENT_lat((void *)&event_id,0,0),"0.000000") ) {
+            // Ignore empty events
+            continue;
+        }
+                        
         // New row of tables
         if( ypos > 700 ) {
             // Need a new page
