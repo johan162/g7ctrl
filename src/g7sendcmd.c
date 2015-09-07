@@ -2,7 +2,7 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 1056 2015-09-06 22:24:36Z ljp $
+ * SVN:         $Id: g7sendcmd.c 1058 2015-09-07 17:45:45Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -463,6 +463,7 @@ handle_device_reply(const int sockd, const char *reply, const char *tagbuff) {
         if( strcmp(tag,tagbuff) ) {
             logmsg(LOG_ERR,"Expected tag=\"%s\" in reply but found \"%s\". Trying to flush serial buffer",tagbuff,tag);
             _writef(sockd, "[ERR] Unexpected reply from device \"%s\"", reply);
+            free(rbuff);
             return -1;
         }
         if (!isok) {

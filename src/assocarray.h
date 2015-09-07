@@ -73,9 +73,6 @@ assoc_del(assoc_array_t a, char *name);
 size_t 
 assoc_len(assoc_array_t a);
 
-size_t 
-assoc_size(assoc_array_t a);
-
 int 
 assoc_destroy(assoc_array_t a);
 

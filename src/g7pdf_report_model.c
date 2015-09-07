@@ -453,6 +453,7 @@ export_model_to_json(char *fname) {
     FILE *fp=fopen(filename,"w");
     if( fp==NULL ) {
         logmsg(LOG_ERR,"Cannot open file for JSON export \"%s\" (%d : %s)",fname,errno,strerror(errno));
+        free(buf);
         return -1;
     }
     fprintf(fp,"%s\n",buf);

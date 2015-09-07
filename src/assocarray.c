@@ -34,14 +34,17 @@
 #include "xstr.h"
 
 /**
- * Create and return a new associative array
+ * @brief Create and return a new associative array
  * @param initial_size Initial size of array
  * @return A pointer to a new associative array, NULL on error
  */
 assoc_array_t
 assoc_new(size_t initial_size) {
+    if( initial_size<4 ) {
+        return NULL;
+    }
     assoc_array_t pa = calloc(1, sizeof (struct assoc_array));
-    if (pa == NULL || initial_size < 8) {
+    if (pa == NULL ) {
         return NULL;
     }
     pa->a = calloc(initial_size, sizeof (struct assoc_pair));
@@ -54,7 +57,7 @@ assoc_new(size_t initial_size) {
 }
 
 /**
- * Get the value corresponding to the given name
+ * @brief Get the value corresponding to the given name
  * @param a Associative array as returned by assoc_new()
  * @param name The name of the value
  * @return A pointer to the value, NULL of not found
@@ -75,7 +78,7 @@ assoc_get(assoc_array_t a, char *name) {
 }
 
 /**
- * Return a value given a name and fallback to the value in "notfound"
+ * @brief Return a value given a name and fallback to the value in "notfound"
  * if the named pair does not exists rather tha returning NULL
  * @param a Associative array as returned by assoc_new()
  * @param name The name of the value
@@ -92,7 +95,7 @@ assoc_get2(assoc_array_t a, char *name, char *notfound) {
 }
 
 /**
- * Deep copy of source to destination array. Existing elements in dest will be removed
+ * @brief Deep copy of source to destination array. Existing elements in dest will be removed
  * @param dest Destination
  * @param src Source
  * @return 0 on success, -1 if the destination array does not have enough space
@@ -104,7 +107,7 @@ assoc_copy(assoc_array_t dest, assoc_array_t src) {
 }
 
 /**
- * Add the values in source to existing values in destination. All existing
+ * @brief Add the values in source to existing values in destination. All existing
  * values in destination will be preserved
  * @param dest Destination array
  * @param src Source array
@@ -120,7 +123,7 @@ assoc_add(assoc_array_t dest, assoc_array_t src) {
 }
 
 /**
- * Create the intersection of two array and store in destinateion. The
+ * @brief Create the intersection of two array and store in destination. The
  * intersection consists of all values existing in both arrays
  * @param dest Destination
  * @param a1 First input array
@@ -143,10 +146,10 @@ assoc_intersection(assoc_array_t dest, assoc_array_t a1, assoc_array_t a2) {
 }
 
 /**
- * Add a new name/value pair to the array
+ * @brief Add a new name/value pair to the array
  * @param a Associative array as returned by assoc_new()
- * @param name Name
- * @param value String
+ * @param name Name of value
+ * @param value String value
  * @return 0 on success, -1 on failure, -2 if name exists
  */
 int
@@ -185,7 +188,7 @@ assoc_put(assoc_array_t a, char *name, char *value) {
 }
 
 /**
- * Update an existing name with new value
+ * @brief Update an existing name with new value
  * @param a Associative array as returned by assoc_new()
  * @param name Existing name
  * @param value New value
@@ -193,12 +196,12 @@ assoc_put(assoc_array_t a, char *name, char *value) {
  */
 int
 assoc_update(assoc_array_t a, char *name, char *value) {
-    if (NULL == assoc_get(a, name)) {
-        return -1;
-    }
     size_t i = 0;
     while (i < a->num_values && strcmp(a->a[i].name, name)) {
         i++;
+    }
+    if( i >= a->num_values ) {
+        return -1;
     }
     free(a->a[i].value);
     a->a[i].value = strdup(value);
@@ -206,7 +209,7 @@ assoc_update(assoc_array_t a, char *name, char *value) {
 }
 
 /**
- * Delete the named value
+ * @brief Delete the named value
  * @param a Associative array as returned by assoc_new()
  * @param name Name
  * @return 0 on success, -1 on failure. -2 if name doesn't exists
@@ -217,7 +220,7 @@ assoc_del(assoc_array_t a, char *name) {
         return -1;
 
     // Check that the name exists before
-    if (a->num_values == 0 || NULL == assoc_get(a, name)) {
+    if (a->num_values == 0 ) {
         return -2;
     }
 
@@ -226,7 +229,7 @@ assoc_del(assoc_array_t a, char *name) {
         i++;
     }
     if (i >= a->num_values) {
-        return -1;
+        return -2;
     }
     free(a->a[i].name);
     free(a->a[i].value);
@@ -242,7 +245,7 @@ assoc_del(assoc_array_t a, char *name) {
 }
 
 /**
- * Return the current length of the associative array
+ * @brief Return the current length of the associative array
  * @param a Associative array as returned by assoc_new()
  * @return The number of values in the array
  */
@@ -251,18 +254,9 @@ assoc_len(assoc_array_t a) {
     return a->num_values;
 }
 
-/**
- * Return the maximum size of the array
- * @param a Associative array as returned by assoc_new()
- * @return The current maximum size of array
- */
-size_t
-assoc_size(assoc_array_t a) {
-    return a->max_values;
-}
 
 /**
- * Destroy the array (all memory is freed)
+ * @brief Destroy the array (all memory is freed)
  * @param a
  * @return 0 on success, -1 on failure
  */
@@ -282,7 +276,7 @@ assoc_destroy(assoc_array_t a) {
 }
 
 /**
- * Clear all values and return the memory occupied by the values.
+ * @brief Clear all values and return the memory occupied by the values.
  * This differs from assoc_destroy() in that the array itself will not
  * be freed. Only the values in the array.
  * @param a a Associative array as returned by assoc_new()
@@ -308,7 +302,7 @@ qsort_compare(const void *e1, const void *e2) {
 }
 
 /**
- * Sort the array by name
+ * @brief Sort the array by name
  * @param a Associative array as returned by assoc_new()
  * @return 0 on success, -1 on failure
  */
@@ -325,7 +319,7 @@ assoc_sort(assoc_array_t a) {
 #define EXPORT_PAIRS_KEY "pairs"
 
 /**
- * Dump the array in a human readable format to the given string buffer
+ * @brief Dump the array in a human readable format to the given string buffer
  * @param a Associative array as returned by assoc_new()
  * @param buff Output buffer
  * @param maxlen Maximum length
@@ -349,7 +343,7 @@ assoc_export_to_json(assoc_array_t a, char *buff, size_t maxlen) {
 }
 
 /**
- * Skip white space in parse buffer
+ * @brief Skip white space in parse buffer
  * @param cptr Parse buffer pointer
  */
 static void
@@ -359,18 +353,21 @@ _parse_ss(char **cptr) {
 }
 
 /**
- * Read the next string from the parse buffer. A string is enclosed in '"'
- * @param cptr
- * @param val
- * @param maxlen
+ * @brief Read the next string from the parse buffer. A string is enclosed in '"'
+ * @param cptr Parse buffer pointer
+ * @param val Value read
+ * @param maxlen Maxle of value buffer
  * @return 0 on success, -1 on failure
  */
 static int
 _parse_str(char **cptr, char *val, size_t maxlen) {
-    _parse_ss(cptr);
-    *val = '\0';
-    if (cptr == NULL || **cptr == '\0' || **cptr != '"')
+    if( cptr == NULL || *cptr == NULL ) {
         return -1;
+    }
+    _parse_ss(cptr);
+    if ( **cptr == '\0' || **cptr != '"' )
+        return -1;
+    *val = '\0';    
     (*cptr)++;
     while (maxlen > 1 && **cptr) {
         if (**cptr == '\\' && *((*cptr) + 1) == '"') {
@@ -397,7 +394,7 @@ _parse_str(char **cptr, char *val, size_t maxlen) {
 }
 
 /**
- * Parse the next number
+ * @brief Parse the next number
  * @param cptr Parse buffer pointer
  * @param val The number read
  * @param maxlen Maximum length of buffer
@@ -405,9 +402,12 @@ _parse_str(char **cptr, char *val, size_t maxlen) {
  */
 static int
 _parse_number(char **cptr, char *val, size_t maxlen) {
+    if( cptr == NULL || *cptr == NULL ) {
+        return -1;
+    }    
     _parse_ss(cptr);
     *val = '\0';
-    if (cptr == NULL || **cptr == '\0' || **cptr < '0' || **cptr > '9')
+    if ( **cptr == '\0' || **cptr < '0' || **cptr > '9')
         return -1;
     while (maxlen > 1 && **cptr && ((**cptr >= '0' && **cptr <= '9') || **cptr == '.')) {
         *val++ = **cptr;
@@ -419,7 +419,7 @@ _parse_number(char **cptr, char *val, size_t maxlen) {
 }
 
 /**
- * Check and advance pointer if chracter is the expected
+ * @brief Check and advance pointer if chracter is the expected
  * @param cptr Parse buffer pointer
  * @param c
  * @return TRUE on match, false otherwise
@@ -436,7 +436,7 @@ _parse_chk(char **cptr, char c) {
 }
 
 /**
- * Return the net non-white space character and advance the
+ * @brief Return the net non-white space character and advance the
  * parse buffer pointer to that character
  * @param cptr Parse buffer pointer
  * @param c
@@ -449,7 +449,7 @@ _parse_peek(char **cptr) {
 }
 
 /**
- * Parse a JSON (name:number) pair
+ * @brief Parse a JSON (name:number) pair
  * @param cptr Parse buffer pointer
  * @param name
  * @param val
@@ -466,7 +466,7 @@ _parse_pair_number(char **cptr, char *name, char *val, size_t maxlen) {
 }
 
 /**
- * Parse a JSON (name:string) pair
+ * @brief Parse a JSON (name:string) pair
  * @param cptr Parse buffer pointer
  * @param name
  * @param val
@@ -483,11 +483,11 @@ _parse_pair_str(char **cptr, char *name, char *val, size_t maxlen) {
 }
 
 /**
- * Parse a JSON (name:object) pair where object is either a number or string
+ * @brief Parse a JSON (name:object) pair where object is either a number or string
  * @param cptr Parse buffer pointer
- * @param name
- * @param val
- * @param maxlen
+ * @param name Object name
+ * @param val Value found
+ * @param maxlen maximum length of value buffer
  * @return 0 on success, -1 on failure
  */
 static int
@@ -506,7 +506,7 @@ _parse_pair(char **cptr, char *name, char *val, size_t maxlen) {
 }
 
 /**
- * Parse a vector of JSON string or number objects
+ * @brief Parse a vector of JSON string or number objects
  * @param cptr Parse buffer pointer
  * @param a Associative array as returned by assoc_new()
  * @return 0 on success, -1 on failure
@@ -550,7 +550,7 @@ _parse_vector(char **cptr, assoc_array_t a) {
 }
 
 /**
- * Import an exported array as eported by assoc_export_json()
+ * @brief Import an exported array as exported by assoc_export_json()
  * @param a Associative array as returned by assoc_new()
  * @param buf Zero terminated import buffer
  * @return 0 on success, -1 on error
@@ -605,7 +605,7 @@ assoc_import_from_json(assoc_array_t a, char *buf) {
 }
 
 /**
- * Import the associative array from the named file
+ * @brief Import the associative array from the named file
  * @param a Associative array as returned by assoc_new()
  * @param filename File to import from in JSON export format
  * @return 0 on success, -1 on failure

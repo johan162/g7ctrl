@@ -92,12 +92,12 @@ cb_widget_draw_VIP_state(HPDF_Doc doc, HPDF_Page page, HPDF_REAL xpos, HPDF_REAL
         const HPDF_REAL VIP_width=12;
         const HPDF_REAL VIP_height=12;
         const HPDF_REAL fsize=9;
-        _Bool state=VIP_idx > 0;
+        _Bool state[]={VIP_idx > 0};
         hpdf_table_widget_letter_buttons(doc, page, xpos, ypos, VIP_width, VIP_height,
                 on_color, off_color,
                 VIP_on_background, VIP_off_background,
                 fsize,
-                VIP_buf, &state);
+                VIP_buf, state);
 
 }
 
@@ -969,6 +969,11 @@ layout_g7ctrl_report(void) {
     const HPDF_REAL footer_ypos = 35;
     const HPDF_REAL logo_margin = 5;
     
+    /*
+     * These two settings should be moved as configuration parameters to the 
+     * config/ini file.
+     * 
+     */
     const _Bool start_geofence_event_new_page=FALSE;
     const _Bool ignore_unset_events=TRUE;
     
