@@ -932,10 +932,7 @@ layout_g7ctrl_report(void) {
     const HPDF_REAL report_full_width = round(page_width - left_margin - right_margin);
     //const HPDF_REAL report_half_width = report_full_width/2.0;
 
-
-    // The total number of pages in report. Added in the page header callback.
-    total_pages = 10;
-    
+   
     tbl_spec_t table_spec[] = {
         // Page 1: Row 1 of tables
         {NRP_SAME,report_full_width, _tbl_device},
@@ -971,6 +968,36 @@ layout_g7ctrl_report(void) {
     HPDF_REAL ypos = top_margin;
     const HPDF_REAL footer_ypos = 35;
     const HPDF_REAL logo_margin = 5;
+    
+    const _Bool start_geofence_event_new_page=FALSE;
+    const _Bool ignore_unset_events=TRUE;
+    
+    // The total number of pages will depend on the number of geo fence event we
+    // will display and also if they start on a new page or continue directly
+    // after the last table
+    
+    // How many events are there that are defined
+    total_pages = 2;
+    size_t num_defined_events=0;
+    for( size_t event_id=50; event_id < 100; event_id++ ) {
+
+      if( ignore_unset_events &&
+          0==strcmp(cb_GFENCE_EVENT_lat((void *)&event_id,0,0),"0.000000") ) {
+          // Ignore empty events
+          continue;
+      } 
+      
+      num_defined_events++;
+      
+    }
+    
+    if( start_geofence_event_new_page ) {        
+        total_pages += ceil((double)num_defined_events/7.0);
+    } else {
+        if( num_defined_events > 6 ) {
+            total_pages += ceil((double)(num_defined_events-6)/7.0);
+        } 
+    }
 
     stroke_g7ctrl_logo(xpos,page_height-top_margin+logo_margin);
     report_page_header(xpos, ypos, report_full_width);
@@ -1023,8 +1050,7 @@ layout_g7ctrl_report(void) {
      * "ignore_unset_events" will not print tables with undefined events. 
      * AN underfined event is a Geo-Fence Event with no lat,lon set
      */
-    _Bool start_geofence_event_new_page=FALSE;
-    _Bool ignore_unset_events=TRUE;
+
     
     if( start_geofence_event_new_page ) {
         // New page
@@ -1106,7 +1132,10 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
     }
     
     logmsg(LOG_DEBUG,"Initializing the model from device");
-    init_model_from_device( (void *)cli_info);
+    if( -1 == init_model_from_device( (void *)cli_info) ) {
+        logmsg(LOG_ERR,"Failed to extract information from the device. Cannot generate report");
+        return -1;
+    }
     
     logmsg(LOG_DEBUG,"Exporting report in JSON");
     export_model_to_json(filename); 
@@ -1133,7 +1162,6 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
 
     hpdf_table_set_origin_top_left(TRUE);
     add_a4page();
-
     
     logmsg(LOG_DEBUG,"Starting report layout");
     layout_g7ctrl_report();

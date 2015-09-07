@@ -316,7 +316,8 @@ init_model_from_device(void *tag) {
     
     size_t i=0;
     struct splitfields flds;
-    _writef(cli_info->cli_socket,"[0%%].");
+    size_t percent=0; // Percent finished
+    _writef(cli_info->cli_socket,"[%zu%%].",percent);
     
     while( dev_report_cmd_list[i].cmd_name ) {
         
@@ -348,14 +349,21 @@ init_model_from_device(void *tag) {
             
         } else {
             logmsg(LOG_ERR,"Failed command %s in report generation",dev_report_cmd_list[i].cmd_name);
+            _writef(cli_info->cli_socket,"\nFaile to extract information from device. Please try again!");
+            assoc_destroy(device_info);
+            return -1;
+        }
+                
+        if( 0==strcmp("test",dev_report_cmd_list[i].cmd_name) ) {
+            usleep(5000);
+        } else {
+            usleep(2000);
         }
         
         i++;
-        
-        usleep(4000);
-        
-        if( 0==i%4 && i < 20 ) {
-            _writef(cli_info->cli_socket,"[%zu%%].",i*5);
+        if( 0 == i%7  && percent < 90 ) {
+            percent += 10;
+            _writef(cli_info->cli_socket,"[%zu%%].",percent);
         }
 
     }
@@ -408,6 +416,11 @@ init_model_from_device(void *tag) {
             
         }
         
+        if( 0 == (event_id-49)%7  && percent < 90 ) {
+            percent += 10;
+            _writef(cli_info->cli_socket,"[%zu%%].",percent);
+        }
+      
     }
     
     static char date_buf[64];

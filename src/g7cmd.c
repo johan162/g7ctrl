@@ -2,7 +2,7 @@
  * File:        G7CMD.C
  * Description: Command handling for native G7 command
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7cmd.c 1045 2015-09-03 21:19:30Z ljp $
+ * SVN:         $Id: g7cmd.c 1057 2015-09-07 06:15:36Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -397,8 +397,9 @@ static struct cmdargs cmdargs_list[] = {
                 {
                     {0, 0}
                 }},
-            {"Zone trigger", "Trigger when leaving or entering zone", ARGT_SELECT, 2,
+            {"Zone trigger", "Trigger when leaving or entering zone", ARGT_SELECT, 3,
                 {
+                    {"0", "Undefined" },
                     {"1", "Trigger on enter"},
                     {"2", "Trigger on leave"}
                 }},
