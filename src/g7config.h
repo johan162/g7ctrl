@@ -4,6 +4,7 @@
  *              The header files defines the available variables as read
  *              from the inifile.
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7config.h 1060 2015-09-07 21:59:08Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -420,6 +421,12 @@ extern _Bool script_on_tracker_conn ;
 extern _Bool mail_on_tracker_conn ;
 
 extern _Bool use_short_devid ;
+
+#define DEFAULT_PDFREPORT_GEOEVENT_NEWPAGE 0
+#define DEFAULT_PDFREPORT_GEOEVENT_HIDE_EMPTY 1
+
+extern _Bool pdfreport_geoevent_newpage ;
+extern _Bool pdfreport_hide_empty_geoevent ;
 
 
 /**

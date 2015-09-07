@@ -40,7 +40,6 @@
 #include <linux/utsname.h>
 #endif
 
-// These two includes should always be used
 #include "libhpdftbl/hpdf_table.h"
 #include "libhpdftbl/hpdf_errstr.h"
 #include "libhpdftbl/hpdf_table_widget.h"
@@ -968,15 +967,7 @@ layout_g7ctrl_report(void) {
     HPDF_REAL ypos = top_margin;
     const HPDF_REAL footer_ypos = 35;
     const HPDF_REAL logo_margin = 5;
-    
-    /*
-     * These two settings should be moved as configuration parameters to the 
-     * config/ini file.
-     * 
-     */
-    const _Bool start_geofence_event_new_page=FALSE;
-    const _Bool ignore_unset_events=TRUE;
-    
+        
     // The total number of pages will depend on the number of geo fence event we
     // will display and also if they start on a new page or continue directly
     // after the last table
@@ -986,7 +977,7 @@ layout_g7ctrl_report(void) {
     size_t num_defined_events=0;
     for( size_t event_id=50; event_id < 100; event_id++ ) {
 
-      if( ignore_unset_events &&
+      if( pdfreport_hide_empty_geoevent &&
           0==strcmp(cb_GFENCE_EVENT_lat((void *)&event_id,0,0),"0.000000") ) {
           // Ignore empty events
           continue;
@@ -996,7 +987,7 @@ layout_g7ctrl_report(void) {
       
     }
     
-    if( start_geofence_event_new_page ) {        
+    if( pdfreport_geoevent_newpage ) {        
         total_pages += ceil((double)num_defined_events/7.0);
     } else {
         if( num_defined_events > 6 ) {
@@ -1057,7 +1048,7 @@ layout_g7ctrl_report(void) {
      */
 
     
-    if( start_geofence_event_new_page ) {
+    if( pdfreport_geoevent_newpage ) {
         // New page
         page_num++;
         add_a4page();
@@ -1078,7 +1069,7 @@ layout_g7ctrl_report(void) {
     // Add all the gfence event tables
     for( size_t event_id=50; event_id < 100; event_id++ ) {
         
-        if( ignore_unset_events && 
+        if( pdfreport_hide_empty_geoevent && 
             0==strcmp(cb_GFENCE_EVENT_lat((void *)&event_id,0,0),"0.000000") ) {
             // Ignore empty events
             continue;

@@ -249,6 +249,25 @@ client_pwd=@GENERATED_CLIENT_PWD@
 #google_api_key=
 
 ############################################################################
+# report - Settings for PDF report generation
+############################################################################
+[report]
+
+#----------------------------------------------------------------------------
+# GEOEVENT_NEWPAGE
+# Determine if the section with all the geo-fence events should start on
+# a new page in the report or continue right after the previous table
+#----------------------------------------------------------------------------
+#geoevent_newpage=no
+
+#----------------------------------------------------------------------------
+# GEOEVENT_HIDE_EMPTY
+# Should the report hide all geo-fence events that are empty
+#----------------------------------------------------------------------------
+#geoevent_hide_empty=yes
+
+
+############################################################################
 # mail - Settings for daemon email sending
 ############################################################################
 [mail]

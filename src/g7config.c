@@ -2,6 +2,7 @@
  * File:        G7CONFIG.C
  * Description: Read and handle config settings from the ini file
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: g7config.c 1060 2015-09-07 21:59:08Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -198,6 +199,10 @@ int minimap_height;
 
 _Bool use_short_devid ;
 
+_Bool pdfreport_geoevent_newpage ;
+_Bool pdfreport_hide_empty_geoevent ;
+
+
 /*
  * Utility macros to read from init-file
  */
@@ -333,6 +338,13 @@ read_inisettings(void) {
     INIT_INIINT("config:address_lookup_proximity",address_lookup_proximity,DEFAULT_ADDRESS_LOOKUP_PROXIMITY,0,200);
     
     INIT_INISTR("config:google_api_key", google_api_key, DEFAULT_GOOGLE_API_KEY);
+    
+    /*--------------------------------------------------------------------------
+     * Report section
+     *-------------------------------------------------------------------------- 
+     */
+    INIT_INIBOOL("report:geoevent_newpage", pdfreport_geoevent_newpage, DEFAULT_PDFREPORT_GEOEVENT_NEWPAGE);
+    INIT_INIBOOL("report:geoevent_hide_empty", pdfreport_hide_empty_geoevent, DEFAULT_PDFREPORT_GEOEVENT_HIDE_EMPTY);
     
     /*--------------------------------------------------------------------------
      * MAIL Section
