@@ -299,43 +299,6 @@ _tbl_device(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
 
 
 /* ===============================================
- * SIM TABLE AND CALLBACKS
- * ===============================================
- */
-//void
-//cb_SIM_ROAMING_draw_slide_button(HPDF_Doc doc, HPDF_Page page, void *tag, size_t r, size_t c,
-//                     HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width, HPDF_REAL height) {
-//    hpdf_table_widget_slide_button(doc, page, xpos+10, ypos+4, slide_width, slide_height, cb_SIM_ROAMING(tag,r,c));
-//}
-
-
-
-//static int
-//_tbl_SIM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
-//    // Specified the layout of each row
-//    hpdf_table_data_spec_t cells[] = {
-//        // row,col,rowspan,colspan,lable-string,content-callback
-//        {0,0,1,1,"ID:",cb_SIM_ID,NULL,NULL},
-//        {0,1,1,1,"PIN:",cb_SIM_PIN,NULL,NULL},
-//        {0,2,1,1,"Roaming:",NULL,NULL,cb_SIM_ROAMING_draw_slide_button},
-//        {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
-//    };
-//
-//    // Overall table layout
-//    hpdf_table_spec_t tbl = {
-//        "SIM", 1, 3,      /* Title, rows, cols   */
-//        xpos, ypos,         /* xpos, ypos          */
-//        width, 0,          /* width, height       */
-//        cells,             /* A pointer to the specification of each row in the table */
-//        NULL               /* Post processing callback */
-//    };
-//
-//    return stroke_g7ctrl_report_table(tbl);
-//
-//}
-
-
-/* ===============================================
  * POWER SAVING TABLE AND CALLBACKS
  * ===============================================
  */
@@ -393,36 +356,6 @@ _tbl_POWER(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
 
 
 /* ===============================================
- * POWER REPORT TABLE AND CALLBACKS
- * ===============================================
- */
-
-
-//static int
-//_tbl_BATT(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
-//    // Specified the layout of each row
-//    hpdf_table_data_spec_t cells[] = {
-//        // row,col,rowspan,colspan,lable-string,content-callback
-//        {0,0,1,1,"Voltage:",cb_BATTERY_VOLTAGE,NULL,cb_BATTERY_draw_segment},
-//        {0,1,1,1,"Battery Low Alert:",NULL,NULL,cb_BATTERY_draw_low_warning},
-//        /* {1,1,1,1,"VIP:",cb_BATTERY_VIP,NULL}, */
-//        {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
-//    };
-//
-//    // Overall table layout
-//    hpdf_table_spec_t tbl = {
-//        "Battery", 1, 2,      /* Title, rows, cols   */
-//        xpos, ypos,         /* xpos, ypos          */
-//        width, 0,          /* width, height       */
-//        cells,             /* A pointer to the specification of each row in the table */
-//        NULL               /* Post processing callback */
-//    };
-//
-//    return stroke_g7ctrl_report_table(tbl);
-//}
-
-
-/* ===============================================
  * GSM TABLE AND CALLBACKS
  * ===============================================
  */
@@ -451,9 +384,9 @@ _tbl_GSM(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         // row,col,rowspan,colspan,lable-string,content-callback,content-style-callback, cell-callback
         {0,0,1,1,"Comm select:",cb_GSM_MODE,NULL,NULL},
         {0,1,1,1,"SMS PDU/Text:",cb_GSM_SMS,NULL,NULL},
-        {0,2,1,1,"SMS No:",cb_GSM_SMS_NBR,NULL,NULL},
-        {0,3,1,1,"CSD No:",cb_GSM_CSD_NBR,NULL,NULL},
-        {1,0,1,2,"Return Location By Call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
+        {0,2,1,1,"SMS Base No:",cb_GSM_SMS_NBR,NULL,NULL},
+        {0,3,1,1,"CSD Base No:",cb_GSM_CSD_NBR,NULL,NULL},
+        {1,0,1,2,"Location By Call:",NULL,NULL,cb_GSM_LOCATION_draw_slide_vip},
         {1,2,1,1,"Roaming:",NULL,NULL,cb_GSM_ROAMING_draw_slide_button},
         {1,3,1,1,"SIM Pin:",cb_SIM_PIN,NULL,NULL},
         {2,0,1,2,"IMEI:",cb_GSM_IMEI,NULL,NULL},
@@ -496,7 +429,7 @@ _tbl_GPRS(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         /* {0,2,1,1,"Port:",cb_GPRS_port,NULL,NULL},*/
         {1,0,1,3,"User:",cb_GPRS_user,NULL,NULL},
         {1,3,1,3,"Password:",cb_GPRS_pwd,NULL,NULL},
-        {1,6,1,2,"Keep alive interval (s):",cb_GPRS_keep_alive,NULL,NULL},
+        {1,6,1,2,"Keep alive interval:",cb_GPRS_keep_alive,NULL,NULL},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -563,7 +496,7 @@ _tbl_llog(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {1,1,1,1,"Dist:",cb_LLOG_dist,NULL,NULL},
         {1,2,1,1,"Limit:",cb_LLOG_number,NULL,NULL},
         {1,3,1,1,"Heading:",cb_LLOG_heading,NULL,NULL},
-        {1,4,1,1,"waitGPS:",NULL,NULL,cb_LLOG_waitGPS_draw_slide_button},
+        {1,4,1,1,"Wait GPS:",NULL,NULL,cb_LLOG_waitGPS_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 
@@ -602,7 +535,7 @@ _tbl_ltrack(HPDF_REAL xpos, HPDF_REAL ypos, HPDF_REAL width) {
         {1,1,1,1,"Dist:",cb_LTRACK_dist,NULL,NULL},
         {1,2,1,1,"Limit:",cb_LTRACK_number,NULL,NULL},
         {1,3,1,1,"Heading:",cb_LTRACK_heading,NULL,NULL},
-        {1,4,1,1,"waitGPS:",NULL,NULL,cb_LTRACK_waitGPS_draw_slide_button},
+        {1,4,1,1,"Wait GPS:",NULL,NULL,cb_LTRACK_waitGPS_draw_slide_button},
         {0,0,0,0,NULL,NULL,NULL,NULL}  /* Sentinel to mark end of data */
     };
 

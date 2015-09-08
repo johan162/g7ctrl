@@ -4,7 +4,7 @@
  *              The header files defines the available variables as read
  *              from the inifile.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.h 1060 2015-09-07 21:59:08Z ljp $
+ * SVN:         $Id: g7config.h 1061 2015-09-08 05:16:38Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -422,12 +422,26 @@ extern _Bool mail_on_tracker_conn ;
 
 extern _Bool use_short_devid ;
 
+/**
+ * DEFAULT_PDFREPORT_GEOEVENT_NEWPAGE bool
+ * Default option for starting the geo-fence event tables on a new page in the PDF report
+ */
 #define DEFAULT_PDFREPORT_GEOEVENT_NEWPAGE 0
+
+/**
+ * DEFAULT_PDFREPORT_GEOEVENT_HIDE_EMPTY bool
+ * Default option for hiding empty geo-fence event tables in the PDF report
+ */
 #define DEFAULT_PDFREPORT_GEOEVENT_HIDE_EMPTY 1
 
 extern _Bool pdfreport_geoevent_newpage ;
 extern _Bool pdfreport_hide_empty_geoevent ;
 
+/**
+ * DEFAULT_PDFREPORT_DIR string
+ */
+#define DEFAULT_PDFREPORT_DIR "/tmp"
+extern char pdfreport_dir[256] ;
 
 /**
  * Handle to dictionary which holds all variables read from the inifile

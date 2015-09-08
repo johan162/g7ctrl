@@ -2,7 +2,7 @@
  * File:        G7CONFIG.C
  * Description: Read and handle config settings from the ini file
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.c 1060 2015-09-07 21:59:08Z ljp $
+ * SVN:         $Id: g7config.c 1061 2015-09-08 05:16:38Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -201,6 +201,7 @@ _Bool use_short_devid ;
 
 _Bool pdfreport_geoevent_newpage ;
 _Bool pdfreport_hide_empty_geoevent ;
+char pdfreport_dir[256] ;
 
 
 /*
@@ -345,6 +346,8 @@ read_inisettings(void) {
      */
     INIT_INIBOOL("report:geoevent_newpage", pdfreport_geoevent_newpage, DEFAULT_PDFREPORT_GEOEVENT_NEWPAGE);
     INIT_INIBOOL("report:geoevent_hide_empty", pdfreport_hide_empty_geoevent, DEFAULT_PDFREPORT_GEOEVENT_HIDE_EMPTY);
+    INIT_INISTR("report:pdfreport_dir", pdfreport_dir, DEFAULT_PDFREPORT_DIR);
+    
     
     /*--------------------------------------------------------------------------
      * MAIL Section

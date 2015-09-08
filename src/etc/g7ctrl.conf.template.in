@@ -266,6 +266,13 @@ client_pwd=@GENERATED_CLIENT_PWD@
 #----------------------------------------------------------------------------
 #geoevent_hide_empty=yes
 
+#----------------------------------------------------------------------------
+# DIR
+# Directory used for storing report. (Directory name specified without
+# trailing '/')
+#----------------------------------------------------------------------------
+#dir="/tmp"
+
 
 ############################################################################
 # mail - Settings for daemon email sending

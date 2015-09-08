@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1044 2015-09-02 19:46:01Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1061 2015-09-08 05:16:38Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -408,20 +408,31 @@ _srv_cmd_debug_info(struct client_info *cli_info) {
     list_usb_stat(cli_info);
 }
 
+/**
+ * Generate the reports in JSON and PDF. The directory to store the reports are speciied
+ * in the INI file
+ * @param cli_info Client context
+ * @param filename The base filename for the report
+ * @param report_title The title as whosn in the header of the PDF report
+ */
 void
 _srv_device_report(struct client_info *cli_info, char *filename, char *report_title) {
-    char buf[1024];
+    char full_path[1024];
     int sockd = cli_info->cli_socket;
-    snprintf(buf,sizeof(buf),"%s/%s","/tmp",filename);
-    _writef(sockd,"Generating device report to \"%s\" (please wait) ... \n",buf);
-    int stat=export_g7ctrl_report(cli_info, buf, sizeof(buf), report_title);
+    snprintf(full_path,sizeof(full_path),"%s/%s",pdfreport_dir,filename);
+    _writef(sockd,"Generating device report in PDF and JSON format ... \n");
+    int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), report_title);
     if( 0==stat ) {
-        _writef(sockd,"Wrote device report to \"%s\" with title \"%s\"",buf,report_title);
+        _writef(sockd,"Wrote device report with title \"%s\" to \"%s\"",report_title,full_path);
     } else {
-        _writef(sockd,"FAILED to create device report. Check USB connection.");
+        _writef(sockd,"FAILED to create device report. Communication problem?");
     }           
 }
 
+/**
+ * Return the full date and time in localized format
+ * @param sockd Socket to write back to client
+ */
 void
 _srv_date(int sockd) {
     time_t now = time(NULL);
@@ -431,6 +442,10 @@ _srv_date(int sockd) {
     _writef(sockd,"%s",buff);
 }
 
+/**
+ * Display the geocache hit statistics to the user
+ * @param cli_info Client context
+ */
 void
 _srv_cache_stat(struct client_info *cli_info) {
     
