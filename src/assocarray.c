@@ -330,7 +330,7 @@ assoc_export_to_json(assoc_array_t a, char *buff, size_t maxlen) {
     if (a == NULL)
         return -1;
 
-    snprintf(buff, maxlen, "{\n  \"%s\":\"%s\",\"num_values\":%zu,\"max_values\":%zu,\n\"%s\":[\n",
+    snprintf(buff, maxlen, "{\n  \"%s\":\"%s\",\"num_values\":%zu,\"max_values\":%zu,\n   \"%s\":[\n",
             EXPORT_ID_NAME, EXPORT_ID_NAME_VAL, a->num_values, a->max_values, EXPORT_PAIRS_KEY);
     if (a->num_values > 0) {
         for (size_t i = 0; i < a->num_values - 1; i++) {

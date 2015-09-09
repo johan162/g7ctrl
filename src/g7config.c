@@ -2,7 +2,7 @@
  * File:        G7CONFIG.C
  * Description: Read and handle config settings from the ini file
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.c 1061 2015-09-08 05:16:38Z ljp $
+ * SVN:         $Id: g7config.c 1068 2015-09-09 20:00:48Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -201,7 +201,7 @@ _Bool use_short_devid ;
 
 _Bool pdfreport_geoevent_newpage ;
 _Bool pdfreport_hide_empty_geoevent ;
-char pdfreport_dir[256] ;
+char pdfreport_dir[1024] ;
 
 
 /*

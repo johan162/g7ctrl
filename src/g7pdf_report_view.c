@@ -1066,18 +1066,16 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
         return -1;
     }
     
-    logmsg(LOG_DEBUG,"Exporting report in JSON");
-    export_model_to_json(filename); 
+    char buf[1024];
     
     // Setup the PDF document
     pdf_doc = HPDF_New(error_handler, NULL);
     HPDF_SetCompressionMode(pdf_doc, HPDF_COMP_ALL);
 
-    char buf[1024];
     snprintf(buf,sizeof(buf),"%s",PACKAGE_STRING);
     HPDF_SetInfoAttr (pdf_doc,HPDF_INFO_CREATOR, buf);
     
-    // Remember the client info structure for the table callcacks
+    // Remember the client info structure for the table callbacks
     cli_info_for_callback = cli_info;
 
     snprintf(buf,sizeof(buf),"GM7 Device Report : %u",cli_info->target_deviceid);
@@ -1095,10 +1093,12 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
     logmsg(LOG_DEBUG,"Starting report layout");
     layout_g7ctrl_report();
 
-    logmsg(LOG_DEBUG,"Exporting report as PDF to file: \"%s\"",filename);
-    snprintf(buf,sizeof(buf),"%s.pdf",filename);
-    xstrlcpy(filename,buf,maxfilename);
+    snprintf(buf,sizeof(buf),"%s/%s_%s",pdfreport_dir,filename,get_model_deviceid());    
     
+    export_model_to_json(buf); 
+    
+    snprintf(filename,maxfilename,"%s.pdf",buf);
+    logmsg(LOG_DEBUG,"Exporting report as PDF to file: \"%s\"",filename);        
     HPDF_SaveToFile (pdf_doc, filename);
     HPDF_Free (pdf_doc);
     

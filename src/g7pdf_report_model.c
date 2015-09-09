@@ -31,6 +31,7 @@
 
 #include "config.h"
 #include "g7ctrl.h"
+#include "g7config.h"
 #include "logger.h"
 #include "xstr.h"
 #include "g7sendcmd.h"
@@ -293,7 +294,7 @@ extract_logged_num_and_dates(struct splitfields *flds, size_t idx) {
     }        
 }
 
-//#define USE_FAKE_DEVICE_DATA_FOR_REPORT 0
+//#define USE_FAKE_DEVICE_DATA_FOR_REPORT_DEBUG
 
 /**
  * Initialize the model by reading all necessary values from the connected device
@@ -309,10 +310,15 @@ init_model_from_device(void *tag) {
 
     device_info = assoc_new(128);
     
-//    if( USE_FAKE_DEVICE_DATA_FOR_REPORT ) {
-//        assoc_import_from_json_file(device_info,"/tmp/export.json");
-//        return 0;
-//    }
+#ifdef  USE_FAKE_DEVICE_DATA_FOR_REPORT_DEBUG   
+
+        char path[1024];
+        snprintf(path,sizeof(path),"%s/export.json",pdfreport_dir);
+        logmsg(LOG_DEBUG,"Trying to read device info from \"%s\"",path);
+        assoc_import_from_json_file(device_info,path);
+        return 0;
+        
+#endif
     
     size_t i=0;
     struct splitfields flds;
@@ -449,7 +455,9 @@ export_model_to_json(char *fname) {
     assoc_sort(device_info);
     assoc_export_to_json(device_info,buf,maxlen);    
     
-    snprintf(filename,sizeof(filename),"%s_%s.json",fname,assoc_get(device_info,FLD_DEVICE_ID));
+    snprintf(filename,sizeof(filename),"%s.json",fname);
+    logmsg(LOG_DEBUG,"Exporting device info to JSON file: \"%s\"",filename);            
+    
     FILE *fp=fopen(filename,"w");
     if( fp==NULL ) {
         logmsg(LOG_ERR,"Cannot open file for JSON export \"%s\" (%d : %s)",fname,errno,strerror(errno));
@@ -462,6 +470,14 @@ export_model_to_json(char *fname) {
     free(buf);
     return 0;
 
+}
+
+/**
+ * Return the device ID of the model loaded from the connected device
+ * @return Device ID 
+ */
+char * get_model_deviceid(void) {
+    return assoc_get(device_info, FLD_DEVICE_ID);
 }
 
 /**
@@ -620,7 +636,7 @@ cb_DEVICE_TEST(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[32];
     if( 0==cmd_test_reply_to_text(GET(FLD_TEST_RESULT), buf, sizeof(buf)) ) {
-        assoc_update(device_info,FLD_TEST_RESULT,buf);
+        //assoc_update(device_info,FLD_TEST_RESULT,buf);
         return buf;
     } else {
         return FLD_ERR_STR;

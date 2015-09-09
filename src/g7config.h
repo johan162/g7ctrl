@@ -4,7 +4,7 @@
  *              The header files defines the available variables as read
  *              from the inifile.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.h 1061 2015-09-08 05:16:38Z ljp $
+ * SVN:         $Id: g7config.h 1068 2015-09-09 20:00:48Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
@@ -441,7 +441,7 @@ extern _Bool pdfreport_hide_empty_geoevent ;
  * DEFAULT_PDFREPORT_DIR string
  */
 #define DEFAULT_PDFREPORT_DIR "/tmp"
-extern char pdfreport_dir[256] ;
+extern char pdfreport_dir[1024] ;
 
 /**
  * Handle to dictionary which holds all variables read from the inifile

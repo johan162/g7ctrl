@@ -3,6 +3,7 @@
  * Description: Functions to calculate the geodesic distance between two
  *              latitude/longitude points.
  * Author:      Johan Persson (johan162@gmail.com)
+ * SVN:         $Id: gpsdist.c 1062 2015-09-09 16:05:41Z ljp $
  *
  * Copyright (C) 2014 Johan Persson
  *
@@ -143,7 +144,7 @@ gpsdist_m(const double lat1, const double lon1, const double lat2, const double 
         lambdaP = lambda;
         lambda = L + (1 - C) * f * sinAlpha *
                 (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
-    } while (abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+    } while (fabs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
 
     if (iterLimit == 0) {
         return nan(""); // formula failed to converge

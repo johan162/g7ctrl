@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1061 2015-09-08 05:16:38Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1066 2015-09-09 18:58:51Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -52,8 +52,8 @@
 #include "wreply.h"
 #include "unicode_tbl.h"
 #include "geoloc.h"
-#include "g7pdf_report_view.h"
 #include "mailutil.h"
+#include "g7pdf_report_view.h"
 
 
 /**
@@ -419,11 +419,11 @@ void
 _srv_device_report(struct client_info *cli_info, char *filename, char *report_title) {
     char full_path[1024];
     int sockd = cli_info->cli_socket;
-    snprintf(full_path,sizeof(full_path),"%s/%s",pdfreport_dir,filename);
-    _writef(sockd,"Generating device report in PDF and JSON format ... \n");
+    _writef(sockd,"Gathering information from device, please wait ... \n");
+    strcpy(full_path,filename);
     int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), report_title);
     if( 0==stat ) {
-        _writef(sockd,"Wrote device report with title \"%s\" to \"%s\"",report_title,full_path);
+        _writef(sockd,"Wrote device report to \"%s\"",full_path);
     } else {
         _writef(sockd,"FAILED to create device report. Communication problem?");
     }           

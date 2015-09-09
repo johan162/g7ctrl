@@ -43,6 +43,8 @@ cleanup_and_free_model(void);
 int
 export_model_to_json(char *fname);
 
+char * 
+get_model_deviceid(void);
 
 char *
 cb_header_title(void *tag, size_t r, size_t c);
