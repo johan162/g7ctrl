@@ -309,8 +309,44 @@
         </variablelist>
     </para>
     </section>
+        <section>
+            <title>The <literal>[report]</literal> section</title>
+            <variablelist>
+                <varlistentry>
+                    <term><literal>geoevent_newpage</literal></term>
+                    <listitem>
+                        <para>Type: <literal>boolean</literal> (Default:
+                            <literal>"no"</literal>)</para>
+                        <para>Start the Geo-fence event tables on a new page at the end of the
+                            report. If this is "no" then the Geo-fence event tables will start
+                            directly after the last table in the report.</para>
+                    </listitem>
+                </varlistentry>
+                
+                <varlistentry>
+                    <term><literal>geoevent_hide_empty</literal></term>
+                    <listitem>
+                        <para>Type: <literal>boolean</literal> (Default:
+                            <literal>"yes"</literal>)</para>
+                        <para>If set to "yes" then Geo-fence events which are empty will not be
+                            included in the report. </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><literal>dir</literal></term>
+                    <listitem>
+                        <para>Type: <literal>string</literal> (Default:
+                            <literal>"/tmp"</literal>)</para>
+                        <para>The directory where the report will be written</para>
+                    </listitem>
+                </varlistentry>
+                
+
+            </variablelist>
+        </section>
     <section>
-        <title>The <literal>[mail] </literal>section</title>
+        <title>The <literal>[mail]</literal> section</title>
         <para>
             <variablelist>
                 <varlistentry>

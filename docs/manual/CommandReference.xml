@@ -1902,6 +1902,7 @@ UPD.DATE: 20140117 13:36</screen>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para><command>.dn nick-name</command></para>
         </section>
+        
         <section  xml:id="cmd.srv-nick" xreflabel=".nick">
             <title><command>.nick</command></title>
             <para>Register the device connected over USB. This will read back the
@@ -1927,6 +1928,45 @@ UPD.DATE: 20140117 13:36</screen>
                 </note>
             </para>
         </section>
+
+
+        <section  xml:id="cmd.srv-report" xreflabel=".report">
+            <title><command>.report</command></title>
+            <para>Generate a report containing all settings of the currently connected device.
+            The report is generated in both PDF format suitable for human reading and in JSON 
+            format more suitable for machine processing.</para>
+            <para>Both reports are written to a directory specified in the config file 
+                (<literal>report:dir</literal>)</para>
+            <para>The name of the files are constructed by taking the base file name specified as
+                the first argument to the command and then adding the device ID to the base name
+                separated with a "_" character. The PDf file will have the expected ".pdf" suffix
+                and the JSON file ".json".</para>
+            <para>It is possible to control some aspect of the layout of the PDF
+            report by adjusting the parameters in the "<literal>[report]</literal>"
+            section of the configuration file.</para>
+            <para><emphasis role="bold">Synopsis:</emphasis></para>
+            <para><command>.report base-filename [report-title]</command></para>
+            <para>
+                <note>
+                    <para>The reading of all values from the device when connected over USB takes
+                        around 1min.</para>
+                </note>
+            </para>
+            <para>
+                <note>
+                    <para>A previous report with the same name will be overwritten!</para>
+                </note>
+            </para>   
+            <para><emphasis role="bold">Examples:</emphasis></para>
+            <para>
+                <screen>g7ctrl> .report report Default device config
+Gathering information from the device, please wait ... 
+[0%].[10%].[20%].[30%].[40%].[50%].[60%].[70%].[80%].[90%].[100%]
+Wrote device report with title "Default device config" to "/tmp/report_3000000001.pdf"</screen>
+            </para>            
+        </section>
+        
+
         <section xml:id="cmd.srv-table" xreflabel=".table">
             <title><command>.table</command></title>
             <para> Toggle the output to pretty-print output tables using Unicode table drawing
