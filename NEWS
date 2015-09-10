@@ -1,5 +1,5 @@
 NEWS - Major releases
-===========
+=====================
 ***Highlights major changes for each release in reverse chronological order.***
 
 v3.3.0 (okt 2015)
@@ -7,18 +7,23 @@ v3.3.0 (okt 2015)
 
 General notes for this release
 ------------------------------
+
 This release focus on providing the option to generate a device report. This is
-a PDF document that summarizes all settings for a connected device in a nice
-overview layout.
+a document that summarizes all settings for a connected device. The report is
+generated in both PDF and JSON format. The PDF format is the primary format and
+has some novel formatting and graphics to make it easier to get a quick overview 
+of all the setting specified in the device. See the manual for examples.
 
 
 Detailed user visible changes
 -----------------------------
 
- - Added command ".report [dev] [file]" to generate a report file in PDF format
-   for one of the connected devices. If only one device is connected the specification
-   of device is is optional. The filename given must be specified in a location 
-   writable by the daemon.
+ - Added command ".report [file]" to generate a report
+
+ - Added a new report section in the configuration file to control aspects
+   of the report layout
+
+-  Updated documentation with details about 
 
 
 Bugs fixed
@@ -33,6 +38,9 @@ Bugs fixed
 
  - The "gfevt" had the wrong number of arguments defined
 
+ - abs() was used in gpsdist when it should have been fabs()
+
+
 
 Internal changes (visible for developers and packagers)
 -------------------------------------------------------
@@ -43,6 +51,8 @@ Internal changes (visible for developers and packagers)
  - Several new files that deals with the creation of the PDF device report
    They are divided between the view and model together with a supporting
    report utility library to make it easier to produce a table based report.
+
+ - Added a module to manipulate associative arrays
 
 
 

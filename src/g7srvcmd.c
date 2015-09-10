@@ -3,7 +3,7 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1066 2015-09-09 18:58:51Z ljp $
+ * SVN:         $Id: g7srvcmd.c 1075 2015-09-10 21:46:29Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -420,7 +420,7 @@ _srv_device_report(struct client_info *cli_info, char *filename, char *report_ti
     char full_path[1024];
     int sockd = cli_info->cli_socket;
     _writef(sockd,"Gathering information from device, please wait ... \n");
-    strcpy(full_path,filename);
+    strncpy(full_path,filename,sizeof(full_path));
     int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), report_title);
     if( 0==stat ) {
         _writef(sockd,"Wrote device report to \"%s\"",full_path);
