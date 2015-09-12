@@ -41,7 +41,17 @@
         <para>Only rmajor new functionality is listed here.For a complete list see the NEWS file 
             (<xref xlink:href="#appendix.news" />)</para>
     <variablelist>
-        <varlistentry>
+        <varlistentry>            
+            <term>v3.3.0 (Oct 2015)</term>
+            <listitem>
+                <para>Adds server command <literal>.report</literal> (<xref linkend="cmd.srv-report"
+                        />) to generate a device report in <acronym>PDF</acronym> and
+                            <acronym>JSON</acronym> format. See <xref
+                            linkend="section.gen-device-report"/> for more information.</para>
+            </listitem>
+        </varlistentry>        
+        
+        <varlistentry>            
             <term>v3.2.0 (May 2015)</term>
             <listitem>
                 <para>Adds option to include miniature maps in the various event mails that shows

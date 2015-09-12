@@ -14,6 +14,9 @@ generated in both PDF and JSON format. The PDF format is the primary format and
 has some novel formatting and graphics to make it easier to get a quick overview 
 of all the setting specified in the device. See the manual for examples.
 
+Note: Since the configuration file have a new section the configuration file
+should be installed from the distribution.
+
 
 Detailed user visible changes
 -----------------------------
@@ -23,7 +26,7 @@ Detailed user visible changes
  - Added a new report section in the configuration file to control aspects
    of the report layout
 
--  Updated documentation with details about 
+-  Updated documentation with details about report and example PDF file
 
 
 Bugs fixed

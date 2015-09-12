@@ -1,3 +1,4 @@
+$Id: TODO 1086 2015-09-12 08:42:28Z ljp $
 This is a list of features planned as backlog activities in reverse chronological order.
 
 
@@ -56,34 +57,42 @@ Backlog:
   -- Add micro-web server
   -- Theme handling based on CSS
   -- Should use responsive design and asynchronous Javscript
-  
+  -- Add option to return all command replies in structured JSON format
+
+Done:
+- <empty>
+
+Planned for v3.3.1 [NOT STARTED]
+--------------------------------
+Backlog:
+-- Add minimap to last location mail template
+-- Make buildnumber into a timestamp instead
 
 Done:
 - <empty>
 
 
-Planned for v3.3.0 [NOT STARTED]
+Planned for v3.3.0 [**COMPLETED]
 --------------------------------
 Backlog:
-- Add option to return all command replies in structured JSON format
-
-Done:
 - <empty>
 
+Done:
+- Add PDF device report
 
 
-Planned for v3.2.1 [NOT STARTED]
+
+Planned for v3.2.1 [**COMPLETED]
 --------------------------------
 Backlog:
-- Add minimap to last location mail template
+- <empty>
+
+Done:
 - Add option to scale minimap images for higher resolution
 - Add note in manual about logrotate
-- Make buildnumber into a timestamp instead
 - Make it possible for Google 24h API ban end time to survive server restart
 
 
-Done:
-- <empty>
 
 
 

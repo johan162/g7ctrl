@@ -496,7 +496,7 @@ track(1,<emphasis role="bold">[TRACKTIME_SEC]</emphasis>,0,0,1,4,15)</programlis
         </section>
         
     </section>
-    <section>
+    <section xml:id="section.gen-device-report">
         <title>Generating a device report</title>
         <para>The number of possible settings of the device is quite large and can be difficult to
             overview. In order to get a good overview of the current settings of the device it is
