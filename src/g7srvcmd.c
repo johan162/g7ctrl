@@ -412,7 +412,7 @@ _srv_device_report(struct client_info *cli_info, char *filename, char *report_ti
     char full_path[1024];
     int sockd = cli_info->cli_socket;
     _writef(sockd,"Gathering information from device, please wait ... \n");
-    strncpy(full_path,filename,sizeof(full_path));
+    xstrlcpy(full_path,filename,sizeof(full_path));
     int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), report_title);
     if( 0==stat ) {
         _writef(sockd,"Wrote device report to \"%s\"",full_path);
