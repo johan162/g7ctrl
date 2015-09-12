@@ -2,7 +2,6 @@
  * File:        XSTR.C
  * Description: Some extra string utility functions
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: xstr.c 1042 2015-09-01 21:37:03Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

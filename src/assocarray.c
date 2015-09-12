@@ -388,6 +388,11 @@ _parse_str(char **cptr, char *val, size_t maxlen) {
             maxlen--;
         }
     }
+    
+    if( 0 == maxlen ) {
+        // Buffer too small
+        return -1;
+    }
 
     *val = '\0';
     return 0;
@@ -517,8 +522,12 @@ _parse_vector(char **cptr, assoc_array_t a) {
         return -1;
 
     int rc = 0;
-    char buf_name[64];
-    char buf_val[64];
+    char buf_name[1024];
+    const size_t bufsize=10*1024;
+    char *buf_val=calloc(bufsize,sizeof(char));
+    if( NULL==buf_val ) {
+        return -1;
+    }
     while (**cptr) {
 
         if (!_parse_chk(cptr, '{')) {
@@ -526,7 +535,7 @@ _parse_vector(char **cptr, assoc_array_t a) {
             break;
         }
 
-        if (-1 == _parse_pair(cptr, buf_name, buf_val, sizeof (buf_val))) {
+        if (-1 == _parse_pair(cptr, buf_name, buf_val, bufsize)) {
             rc = -1;
             break;
         }
@@ -543,6 +552,8 @@ _parse_vector(char **cptr, assoc_array_t a) {
         }
     }
 
+    free(buf_val);
+    
     if (-1 == rc || !_parse_chk(cptr, ']'))
         return -1;
 
@@ -558,49 +569,70 @@ _parse_vector(char **cptr, assoc_array_t a) {
 int
 assoc_import_from_json(assoc_array_t a, char *buf) {
     char *cptr = buf;
+
+    // Read _id
+    size_t bufsize = 10*1024;
+    char *id_name=calloc(bufsize,sizeof(char));
+    if( id_name==NULL ) {
+        return -1;
+    }
+    char *id_value=calloc(bufsize,sizeof(char));
+    if( id_value==NULL ) {
+        free(id_name);
+        return -1;
+    }
+
     if (_parse_chk(&cptr, '{')) {
 
-        // Read _id
-        size_t bufsize = 64;
-        char id_name[bufsize], id_value[bufsize];
         if (_parse_pair_str(&cptr, id_name, id_value, bufsize))
-            return -1;
+            goto assoc_import_from_json_cleanup;
+
         if (strcmp(id_name, EXPORT_ID_NAME) || strcmp(id_value, EXPORT_ID_NAME_VAL))
-            return -1;
+            goto assoc_import_from_json_cleanup;
+
         if (!_parse_chk(&cptr, ','))
-            return -1;
+            goto assoc_import_from_json_cleanup;
 
         // Read num_values
         char num_values_name[bufsize], num_values[bufsize];
         if (_parse_pair_number(&cptr, num_values_name, num_values, bufsize))
-            return -1;
+            goto assoc_import_from_json_cleanup;
+
         if (!_parse_chk(&cptr, ','))
-            return -1;
+            goto assoc_import_from_json_cleanup;
 
         // Read max values
         char num_mvalues_name[bufsize], num_mvalues[bufsize];
         if (_parse_pair_number(&cptr, num_mvalues_name, num_mvalues, bufsize))
-            return -1;
+            goto assoc_import_from_json_cleanup;
+
         if (!_parse_chk(&cptr, ','))
-            return -1;
+            goto assoc_import_from_json_cleanup;
 
         // Check that this is the "pairs" key
         char pairs_key[64];
         if (0 != _parse_str(&cptr, pairs_key, sizeof (pairs_key)) || strcmp(EXPORT_PAIRS_KEY, pairs_key))
-            return -1;
+            goto assoc_import_from_json_cleanup;
+
         if (!_parse_chk(&cptr, ':'))
-            return -1;
+            goto assoc_import_from_json_cleanup;
 
         _parse_vector(&cptr, a);
 
-        if (_parse_chk(&cptr, '}'))
+        free(id_name);
+        free(id_value);            
+        
+        if (_parse_chk(&cptr, '}')) {
             return 0;
+        }
         else
             return -1;
-
-    } else {
-        return -1;
-    }
+    } 
+    
+assoc_import_from_json_cleanup:
+    free(id_name);
+    free(id_value);
+    return -1;
 
 }
 
@@ -639,7 +671,6 @@ assoc_import_from_json_file(assoc_array_t a, char *filename) {
     *(buffer + stat.st_size) = '\0';
 
     int rc = assoc_import_from_json(a, buffer);
-
     free(buffer);
 
     return rc;

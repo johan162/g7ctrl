@@ -2,7 +2,6 @@
  * File:        g7sendcmd.c
  * Description: Low/mid level routines to send command to device
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7sendcmd.c 1058 2015-09-07 17:45:45Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *

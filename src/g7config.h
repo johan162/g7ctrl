@@ -4,7 +4,6 @@
  *              The header files defines the available variables as read
  *              from the inifile.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.h 1068 2015-09-09 20:00:48Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

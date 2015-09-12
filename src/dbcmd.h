@@ -76,7 +76,7 @@ db_set_sortorder(enum sort_order_t order);
 const char *
 db_get_sortorder_string(void);
 
-    
+
 int
 db_setup(sqlite3 **sqlDB);
 

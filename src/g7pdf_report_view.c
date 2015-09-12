@@ -1060,6 +1060,9 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
         return -1;
     }
     
+    // Initialize the page number shown in the header
+    page_num = 1;
+    
     logmsg(LOG_DEBUG,"Initializing the model from device");
     if( -1 == init_model_from_device( (void *)cli_info) ) {
         logmsg(LOG_ERR,"Failed to extract information from the device. Cannot generate report");

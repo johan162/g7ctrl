@@ -3,7 +3,6 @@
  * Description: Handle all commands relating to the server itself. The
  *              client give these commands with an initial '.'
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7srvcmd.c 1075 2015-09-10 21:46:29Z ljp $
  *
  * Copyright (C) 2013-2015 Johan Persson
  *
@@ -161,10 +160,10 @@ struct srvcmd_help srvcmd_help_list [] = {
        ".ratereset"
     },
     {"report",
-       "Generate a PDF report for the current attached device",
+       "Generate a PDF and JSON report for the current attached device",
        "filename [title]",
        "filename - Filename of the generated report (without the .pdf suffix)\n"
-       "[title] - The title as printed on the report",
+       "[title] - The title as printed in the report header",
        ".report dev01 Motorcycle"
     },    
     {"date",
@@ -178,14 +177,7 @@ struct srvcmd_help srvcmd_help_list [] = {
        "",
        "",
        ".table"
-    },
-    {"report",
-       "Generate device report to specified file for the current device set as target",
-       "file - Filename of report. If omitted the filename will default to device-id+current time. The report is stored in the data directory.",
-       "",
-       ".report" 
-    }
-    
+    }    
 };
 
 /**
@@ -425,7 +417,7 @@ _srv_device_report(struct client_info *cli_info, char *filename, char *report_ti
     if( 0==stat ) {
         _writef(sockd,"Wrote device report to \"%s\"",full_path);
     } else {
-        _writef(sockd,"FAILED to create device report. Communication problem?");
+        _writef(sockd,"FAILED to create device report. Communication problem?\n");
     }           
 }
 

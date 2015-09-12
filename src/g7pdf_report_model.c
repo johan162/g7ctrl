@@ -315,8 +315,13 @@ init_model_from_device(void *tag) {
         char path[1024];
         snprintf(path,sizeof(path),"%s/export.json",pdfreport_dir);
         logmsg(LOG_DEBUG,"Trying to read device info from \"%s\"",path);
-        assoc_import_from_json_file(device_info,path);
-        return 0;
+        if( 0 == assoc_import_from_json_file(device_info,path) ) {
+            logmsg(LOG_INFO,"Read simulated device data from \"%s/export.json\"" ,pdfreport_dir);
+            return -0;
+        } else {
+            logmsg(LOG_ERR,"Failed to read simulated device data from \"%s/export.json\" (%d : \"%s\")",pdfreport_dir,errno,strerror(errno));
+            return -1;            
+        }
         
 #endif
     
@@ -724,7 +729,7 @@ cb_POWER_MODE(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("ps", 0, GET(FLD_PS_MODE), buf, sizeof(buf));
-    assoc_update(device_info,FLD_PS_MODE,buf);
+    //assoc_update(device_info,FLD_PS_MODE,buf);
     return buf;
 }
 
@@ -860,7 +865,7 @@ cb_GSM_MODE(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("comm", 0, GET(FLD_COMM_SELECT), buf, sizeof(buf));
-    assoc_update(device_info,FLD_COMM_SELECT,buf);
+    //assoc_update(device_info,FLD_COMM_SELECT,buf);
     return buf;
 }
 
@@ -876,7 +881,7 @@ cb_GSM_SMS(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[64];
     translate_cmd_argval_to_string("sms", 0, GET(FLD_SMS_MODE), buf, sizeof(buf));
-    assoc_update(device_info,FLD_SMS_MODE,buf);
+    //assoc_update(device_info,FLD_SMS_MODE,buf);
     return buf;        
 }
 
@@ -1037,7 +1042,7 @@ cb_LLOG_mode(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("rec", 0, GET(FLD_REC_MODE), buf, sizeof(buf));
-    assoc_update(device_info,FLD_REC_MODE,buf);
+    //assoc_update(device_info,FLD_REC_MODE,buf);
     return buf;
 }
 
@@ -1119,7 +1124,7 @@ cb_LTRACK_mode(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("track", 0, GET(FLD_TRACK_MODE), buf, sizeof(buf));
-    assoc_update(device_info,FLD_TRACK_MODE,buf);
+    //assoc_update(device_info,FLD_TRACK_MODE,buf);
     return buf;
 }
 
@@ -1135,7 +1140,7 @@ cb_LTRACK_commselect(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("track", 5, GET(FLD_TRACK_COMMSELECT), buf, sizeof(buf));
-    assoc_update(device_info,FLD_TRACK_COMMSELECT,buf);
+    //assoc_update(device_info,FLD_TRACK_COMMSELECT,buf);
     return buf;
 }
 
@@ -1216,7 +1221,7 @@ cb_GFENCE_status(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("gfen", 0, GET(FLD_GFEN_STATUS), buf, sizeof(buf));
-    assoc_update(device_info,FLD_GFEN_STATUS,buf);    
+    //assoc_update(device_info,FLD_GFEN_STATUS,buf);    
     return atoi(GET(FLD_GFEN_STATUS));
 }
 
@@ -1257,7 +1262,7 @@ cb_GFENCE_zone(void *tag, size_t r, size_t c) {
     struct client_info *cli_info = (struct client_info *)tag;
     static char buf[128];
     translate_cmd_argval_to_string("gfen", 2, GET(FLD_GFEN_ZONE), buf, sizeof(buf));
-    assoc_update(device_info,FLD_GFEN_ZONE,buf);    
+    //assoc_update(device_info,FLD_GFEN_ZONE,buf);    
     return buf;    
 }
 
@@ -1365,7 +1370,7 @@ cb_GFENCE_EVENT_zone(void *tag, size_t r, size_t c) {
     
     static char buf2[128];
     translate_cmd_argval_to_string("gfen", 2, GET(buf), buf2, sizeof(buf2));
-    assoc_update(device_info,buf,buf2);    
+    //assoc_update(device_info,buf,buf2);    
     return buf2;
 }
 

@@ -3,7 +3,6 @@
  * Description: A collection of small utility functions used by the rest
  *              of the server.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: utils.h 945 2015-04-08 21:35:18Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *

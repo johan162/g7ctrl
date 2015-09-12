@@ -3,7 +3,6 @@
  * Description: Functions to calculate the geodesic distance between two
  *              latitude/longitude points.
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: gpsdist.c 1062 2015-09-09 16:05:41Z ljp $
  *
  * Copyright (C) 2014 Johan Persson
  *

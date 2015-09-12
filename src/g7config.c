@@ -2,7 +2,6 @@
  * File:        G7CONFIG.C
  * Description: Read and handle config settings from the ini file
  * Author:      Johan Persson (johan162@gmail.com)
- * SVN:         $Id: g7config.c 1068 2015-09-09 20:00:48Z ljp $
  *
  * Copyright (C) 2013-2015  Johan Persson
  *
