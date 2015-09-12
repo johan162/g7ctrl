@@ -1932,26 +1932,26 @@ UPD.DATE: 20140117 13:36</screen>
 
         <section  xml:id="cmd.srv-report" xreflabel=".report">
             <title><command>.report</command></title>
-            <para>Generate a report containing all settings of the currently connected device.
-            The report is generated in both PDF format suitable for human reading and in JSON 
-            format more suitable for machine processing.</para>
-            <para>Both reports are written to a directory specified in the config file 
-                (<literal>report:dir</literal>)</para>
+            <para>Generate a report containing all settings of the currently connected device. The
+                report is generated in both PDF format suitable for human reading and in JSON format
+                more suitable for machine processing. Please note that the reading of all values
+                from the device when connected over USB takes around 1min.</para>
+            <para>The PDF report will have all values translated to the human readable string while
+                the JSON file will perserve the raw data read from the device.</para>
+            <para>Both reports are written to a directory specified in the config file
+                    (<literal>report:dir</literal>). The default value for the directory in the
+                distribution is "<filename>/tmp</filename>".</para>
             <para>The name of the files are constructed by taking the base file name specified as
                 the first argument to the command and then adding the device ID to the base name
                 separated with a "_" character. The PDf file will have the expected ".pdf" suffix
                 and the JSON file ".json".</para>
-            <para>It is possible to control some aspect of the layout of the PDF
-            report by adjusting the parameters in the "<literal>[report]</literal>"
-            section of the configuration file.</para>
+            <para>It is possible to control some aspect of the layout of the PDF report by adjusting
+                the parameters in the "<literal>[report]</literal>" section of the configuration
+                file, see <xref linkend="config-section.report"/>
+            </para>
             <para><emphasis role="bold">Synopsis:</emphasis></para>
             <para><command>.report base-filename [report-title]</command></para>
-            <para>
-                <note>
-                    <para>The reading of all values from the device when connected over USB takes
-                        around 1min.</para>
-                </note>
-            </para>
+      
             <para>
                 <note>
                     <para>A previous report with the same name will be overwritten!</para>
