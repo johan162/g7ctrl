@@ -32,166 +32,166 @@
                 <literal>[mail]</literal> section. The first section controls all general settings
             and the latter the mail settings such as what <acronym>SMTP</acronym> server to
             use.</para>
-    <section>
-        <title>The <literal>[startup]</literal> section</title>
-        <para>This section will only be read at startup. Any config file re-reads while the daemon
-                is running (by sending the SIGHUP signal to the daemon) will ignore settings in this
-                section</para>
-        <variablelist>
-            <varlistentry>
-                <term><literal>run_as_user</literal></term>
-                <listitem>
-                    <para>Type: <parameter>string</parameter> (Default:
-                        <literal>"g7ctrl"</literal>)</para>
-                    <para>Specifies the user who runs the daemon. This has only affect if the daemon
-                            is started as root. As soon as the daemon do not need root privileges it
-                            will drop down to this user. <emphasis role="bold">Please note that this
-                                user must exist on your server</emphasis>. The user should also have
-                            access to the serial ports which usually requires the user to belong to
-                            the group "<literal>dialout</literal>" since in ancient traditional
-                            times serial ports was used for modem connections.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term><literal>device_port</literal></term>
-                <listitem>
-                    <para>Type: <parameter>integer[1025:60000]</parameter> (Default:
-                        <literal>3400</literal>)</para>
-                    <para>The port the daemon is listening on for incoming events from the
-                        tracker</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term><literal>cmd_port</literal></term>
-                <listitem>
-                    <para>Type: <parameter>integer[1025:60000]</parameter> (Default:
-                        <literal>3100</literal>)</para>
-                    <para>The port the daemon is listening on for commands on. This is the port
-                        that the command shell "g7sh" will connect on. It is also perfectly
-                        possible to connect directly to this port if one wants to (for some
-                        reason) avoid to use the command shelll. </para>
-                </listitem>
-            </varlistentry>
-            
-        </variablelist>
-    </section>
-    <section>
-        <title>The <literal>[config]</literal> section</title>
-        <para>Please note that many of these settings can be overridden by supplying command line
-            arguments when starting the daemon.</para>
-    <para>
-        <variablelist>
-            <varlistentry>
-                <term><literal>stty_device</literal></term>
-                <listitem>
-                    <para>Type: <parameter>integer[0.7]</parameter> (Default: 0)</para>
-                        <para>Which virtual serial port to use for connection with tracker over USB.
-                                Normally the tracker will appear as an "<emphasis>Abstract Control
-                                    Model</emphasis>" tty port numbered from 0
+    <section xml:id="config-section.startup">
+            <title><literal>[startup]</literal> section</title>
+            <para>This section will only be read at startup. Any config file re-reads while the
+                daemon is running (by sending the SIGHUP signal to the daemon) will ignore settings
+                in this section</para>
+            <variablelist>
+                <varlistentry>
+                    <term><literal>run_as_user</literal></term>
+                    <listitem>
+                        <para>Type: <parameter>string</parameter> (Default:
+                                <literal>"g7ctrl"</literal>)</para>
+                        <para>Specifies the user who runs the daemon. This has only affect if the
+                            daemon is started as root. As soon as the daemon do not need root
+                            privileges it will drop down to this user. <emphasis role="bold">Please
+                                note that this user must exist on your server</emphasis>. The user
+                            should also have access to the serial ports which usually requires the
+                            user to belong to the group "<literal>dialout</literal>" since in
+                            ancient traditional times serial ports was used for modem
+                            connections.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><literal>device_port</literal></term>
+                    <listitem>
+                        <para>Type: <parameter>integer[1025:60000]</parameter> (Default:
+                                <literal>3400</literal>)</para>
+                        <para>The port the daemon is listening on for incoming events from the
+                            tracker</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><literal>cmd_port</literal></term>
+                    <listitem>
+                        <para>Type: <parameter>integer[1025:60000]</parameter> (Default:
+                                <literal>3100</literal>)</para>
+                        <para>The port the daemon is listening on for commands on. This is the port
+                            that the command shell "g7sh" will connect on. It is also perfectly
+                            possible to connect directly to this port if one wants to (for some
+                            reason) avoid to use the command shelll. </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </section>
+    <section xml:id="config-section.config">
+            <title><literal>[config]</literal> section</title>
+            <para>Please note that many of these settings can be overridden by supplying command
+                line arguments when starting the daemon.</para>
+            <para>
+                <variablelist>
+                    <varlistentry>
+                        <term><literal>stty_device</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[0.7]</parameter> (Default: 0)</para>
+                            <para>Which virtual serial port to use for connection with tracker over
+                                USB. Normally the tracker will appear as an "<emphasis>Abstract
+                                    Control Model</emphasis>" tty port numbered from 0
                                     (<literal>ttyACM0</literal> = 0, <literal>ttyACM1</literal> = 1,
                                     <literal>ttyACM2</literal> = 2 ... and so on) . Default is to
                                 accept command connection on <literal>ttyACMO0</literal> (i.e.
                                     <literal>stty_device= 0</literal>) </para>
-                        <para>If you are unsure of which serial port to use please list the
+                            <para>If you are unsure of which serial port to use please list the
                                     "<filename>/dev</filename>" directory before and after you
                                 connect a tracker device. If your system is reasonable configured
                                 your device should show up as "<literal>ttyACM&lt;n></literal>"
                                 where "<literal>&lt;n></literal>" is single digit number. </para>
-                        <para><emphasis>If your device shows up as something completely different
-                                then unfortunately this version of the daemon does not support your
-                                system, Please report this to have it addressed in a future
-                                version.</emphasis></para>
-                </listitem>
-            </varlistentry>
-                <varlistentry>
-                    <term><literal>max_clients</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>integer[10:500]</parameter> (Default:
+                            <para><emphasis>If your device shows up as something completely
+                                    different then unfortunately this version of the daemon does not
+                                    support your system, Please report this to have it addressed in
+                                    a future version.</emphasis></para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>max_clients</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[10:500]</parameter> (Default:
                                     <literal>50</literal>)</para>
-                        <para>The maximum number of clients allowed to connect to the server. All
-                            connections will be counted, both command and trackers. As a rule of
-                            thumb this should be a minimum of (number of command clients expected) +
-                            3*(number of expected trackers). This can safely be set to a fairly huge
-                            number since it means very little system drain to have this as a high
-                            number. </para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>enable_raw_device_commands </literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>false</literal>)</para>
-                        <para>Set this to true if you want to allow clients to write raw device
-                            commands directly to a connected device. All raw commands follow the
-                            normal device command sequence and starts with a
-                                "<literal>$WP+</literal>" prefix. See the GM7 protocol specification
-                            for detailed information on each command.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>verbose_log</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>integer[1.3]</parameter> (Default:
+                            <para>The maximum number of clients allowed to connect to the server.
+                                All connections will be counted, both command and trackers. As a
+                                rule of thumb this should be a minimum of (number of command clients
+                                expected) + 3*(number of expected trackers). This can safely be set
+                                to a fairly huge number since it means very little system drain to
+                                have this as a high number. </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>enable_raw_device_commands </literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>false</literal>)</para>
+                            <para>Set this to true if you want to allow clients to write raw device
+                                commands directly to a connected device. All raw commands follow the
+                                normal device command sequence and starts with a
+                                    "<literal>$WP+</literal>" prefix. See the GM7 protocol
+                                specification for detailed information on each command.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>verbose_log</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[1.3]</parameter> (Default:
                                     <literal>2</literal>)</para>
-                        <para>verbosity of logging, 1=only show warning messages, 2=show
-                            warnings+information, 3=same as 2 but also show debugging
-                            messages.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>client_idle_time</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>integer[10:500]</parameter> (Default:
+                            <para>verbosity of logging, 1=only show warning messages, 2=show
+                                warnings+information, 3=same as 2 but also show debugging
+                                messages.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>client_idle_time</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[10:500]</parameter> (Default:
                                     <literal>1200</literal>)</para>
-                        <para>How long time in seconds a command client can be inactive before the
-                            connection is closed.</para>
-                    </listitem>
-                </varlistentry>
-            <varlistentry>
-                <term><literal>device_idle_time</literal></term>
-                <listitem>
-                    <para>Type: <parameter>integer[10:500]</parameter> (Default:
+                            <para>How long time in seconds a command client can be inactive before
+                                the connection is closed.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>device_idle_time</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[10:500]</parameter> (Default:
                                     <literal>180</literal>)</para>
-                        <para>How long time in seconds the device can be silent before the daemon
-                            disconnects. </para>
-                </listitem>
-            </varlistentry>
-            
-                <varlistentry>
-                    <term><literal>require_client_pwd</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>true</literal>)</para>
-                        <para>Should the daemon request a password before accepting a command
-                            connection</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>client_pwd</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string</parameter> (Default:
-                                &lt;<emphasis>generated-at-config-time</emphasis>>)</para>
-                        <para>If passwords are enabled this specifies the password to use. A random
-                            default value is automatically generated when you configure the source
-                            in preparation for compilation (i.e. ./configure)</para>
-                    </listitem>
-                </varlistentry>
+                            <para>How long time in seconds the device can be silent before the
+                                daemon disconnects. </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>require_client_pwd</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>true</literal>)</para>
+                            <para>Should the daemon request a password before accepting a command
+                                connection</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>client_pwd</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string</parameter> (Default:
+                                    &lt;<emphasis>generated-at-config-time</emphasis>>)</para>
+                            <para>If passwords are enabled this specifies the password to use. A
+                                random default value is automatically generated when you configure
+                                the source in preparation for compilation (i.e. ./configure)</para>
+                        </listitem>
+                    </varlistentry>
                     <varlistentry>
                         <term><literal>track_split_time</literal></term>
                         <listitem>
-                            <para>Type: <literal>integer[10, 24*60]</literal>  (Default:
+                            <para>Type: <literal>integer[10, 24*60]</literal> (Default:
                                     <literal>240</literal>)</para>
                             <para>For <acronym>GPX</acronym> export the locations can be split into
                                 different tracks, and track segment if there is a specified time
                                 difference between two consecutive location updates. This parameter
                                 specifies the minimum time between two locations (in minutes) to
-                                consider them to be part of different tracks. Set to -1 to disable. </para>
+                                consider them to be part of different tracks. Set to -1 to disable.
+                            </para>
                         </listitem>
                     </varlistentry>
                     <varlistentry>
                         <term><literal>trackseg_split_time</literal></term>
                         <listitem>
-                            <para>Type: <literal>integer[10, 24*60]</literal>  (Default:
+                            <para>Type: <literal>integer[10, 24*60]</literal> (Default:
                                     <literal>-1</literal>)</para>
                             <para>Within each track the locations can further be divided in track
                                 segments for <acronym>GPX</acronym> export. This parameter defines
@@ -251,7 +251,7 @@
                     <varlistentry>
                         <term><literal>mail_on_tracker_conn</literal></term>
                         <listitem>
-                            <para>Type:  <literal>bool</literal> (Default:
+                            <para>Type: <literal>bool</literal> (Default:
                                 <literal>no</literal>)</para>
                             <para>Determines if a mail should be sent when a new tracker connection
                                 is established. The mail template used is
@@ -263,7 +263,7 @@
                     <varlistentry>
                         <term><literal>script_on_tracker_conn</literal></term>
                         <listitem>
-                            <para>Type:  <literal>bool</literal> (Default:
+                            <para>Type: <literal>bool</literal> (Default:
                                 <literal>no</literal>)</para>
                             <para>Determines if a script should be run when a new tracker connection
                                 is established. The script template used is
@@ -306,11 +306,11 @@
                                 /></para>
                         </listitem>
                     </varlistentry>
-        </variablelist>
-    </para>
-    </section>
-        <section>
-            <title>The <literal>[report]</literal> section</title>
+                </variablelist>
+            </para>
+        </section>
+    <section xml:id="config-section.report">
+            <title><literal>[report]</literal> section</title>
             <variablelist>
                 <varlistentry>
                     <term><literal>geoevent_newpage</literal></term>
@@ -345,18 +345,18 @@
 
             </variablelist>
         </section>
-    <section>
-        <title>The <literal>[mail]</literal> section</title>
-        <para>
-            <variablelist>
-                <varlistentry>
-                    <term><literal>enable_mail</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>false</literal>)</para>
-                        <para>Master switch to enable/disable mail functionlity.</para>
-                    </listitem>
-                </varlistentry>
+    <section xml:id="config-section.mail">
+            <title><literal>[mail]</literal> section</title>
+            <para>
+                <variablelist>
+                    <varlistentry>
+                        <term><literal>enable_mail</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>false</literal>)</para>
+                            <para>Master switch to enable/disable mail functionlity.</para>
+                        </listitem>
+                    </varlistentry>
                     <varlistentry>
                         <term><literal>subject_prefix</literal></term>
                         <listitem>
@@ -368,98 +368,103 @@
                                 wanted.</para>
                         </listitem>
                     </varlistentry>
-                <varlistentry>
-                    <term><literal>sendmail_on_event</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>false</literal>)</para>
-                        <para>Should mails be sent on alarm events. Enabling this will make the
-                            daemon send mail on all received events <emphasis role="bold"
-                                >except</emphasis> from normal position updates either requested by
-                            the user or when tracking is enabled.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>sendmail_address</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string[mail-address]</parameter> (Default:
-                                <literal>root@localhost</literal>)</para>
-                        <para>Default address where the  mails will be sent to.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>daemon_email_from</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string[mail-address]</parameter> (Default:
-                                <literal>&lt;empty></literal>)</para>
-                        <para>The from address used i the mail. Please note that this must be a real
-                            verifiable mail address. It is not enough to name this (for example)
-                                <literal>root@localhost</literal>. Most mail relays will rejected
-                            such mails. The only exception would be if the sendmail_address is a
-                            local server bound address on the same server running the <acronym>SMTP</acronym> server.
-                            In that case the mail will never be routed to an outside mail server.
-                            However, if you are not an expert on how the <acronym>SMTP</acronym> server is setup you
-                            should probably give a real mail address here to avoid problems!</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>smtp_use</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>false</literal>)</para>
-                        <para>Mail can be sent either through a proper <acronym>SMTP</acronym>
+                    <varlistentry>
+                        <term><literal>sendmail_on_event</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>false</literal>)</para>
+                            <para>Should mails be sent on alarm events. Enabling this will make the
+                                daemon send mail on all received events <emphasis role="bold"
+                                    >except</emphasis> from normal position updates either requested
+                                by the user or when tracking is enabled.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>sendmail_address</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string[mail-address]</parameter> (Default:
+                                    <literal>root@localhost</literal>)</para>
+                            <para>Default address where the mails will be sent to.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>daemon_email_from</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string[mail-address]</parameter> (Default:
+                                    <literal>&lt;empty></literal>)</para>
+                            <para>The from address used i the mail. Please note that this must be a
+                                real verifiable mail address. It is not enough to name this (for
+                                example) <literal>root@localhost</literal>. Most mail relays will
+                                rejected such mails. The only exception would be if the
+                                sendmail_address is a local server bound address on the same server
+                                running the <acronym>SMTP</acronym> server. In that case the mail
+                                will never be routed to an outside mail server. However, if you are
+                                not an expert on how the <acronym>SMTP</acronym> server is setup you
+                                should probably give a real mail address here to avoid
+                                problems!</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>smtp_use</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>false</literal>)</para>
+                            <para>Mail can be sent either through a proper <acronym>SMTP</acronym>
                                 server or using the local "mail" command. In the latter case only
                                 text-mails can be sent (no <acronym>HTML</acronym> mails). To use an
                                     <acronym>SMTP</acronym> server (the recommended way) this master
                                 switch must be true.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>smtp_server</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string[IP-address]</parameter> (Default:
-                                <literal>localhost</literal>)</para>
-                        <para>The IP address of the <acronym>SMTP</acronym> server.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>smtp_port</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>integer[1:1024]</parameter> (Default:
-                                <literal>-1</literal>)</para>
-                        <para>The <acronym>SMTP</acronym> port the server is listening on for incoming connection. By
-                            default this is on most server port=25 but more and more this is changed
-                            to another port to make it harder for various bot-nets. Please consult
-                            your <acronym>SMTP</acronym> provider to find out what port to use. Using a value of "-1"
-                            will make the daemon use the system default value for the port.</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>smtp_user</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string</parameter> (Default:
-                                <literal>&lt;empty></literal>)</para>
-                        <para>The user to authenticate on the <acronym>SMTP</acronym> server</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>smtp_pwd</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>string</parameter> (Default:
-                                <literal>&lt;empty></literal>)</para>
-                        <para>The password to authenticate on the <acronym>SMTP</acronym> server</para>
-                    </listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term><literal>use_html</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>bool</parameter> (Default:
-                            <literal>true</literal>)</para>
-                        <para>Mail can be sent in plain format or in <acronym>HTML</acronym>. This
-                                switch must be true to send mail as <acronym>HTML</acronym>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>smtp_server</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string[IP-address]</parameter> (Default:
+                                    <literal>localhost</literal>)</para>
+                            <para>The IP address of the <acronym>SMTP</acronym> server.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>smtp_port</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>integer[1:1024]</parameter> (Default:
+                                    <literal>-1</literal>)</para>
+                            <para>The <acronym>SMTP</acronym> port the server is listening on for
+                                incoming connection. By default this is on most server port=25 but
+                                more and more this is changed to another port to make it harder for
+                                various bot-nets. Please consult your <acronym>SMTP</acronym>
+                                provider to find out what port to use. Using a value of "-1" will
+                                make the daemon use the system default value for the port.</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>smtp_user</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string</parameter> (Default:
+                                    <literal>&lt;empty></literal>)</para>
+                            <para>The user to authenticate on the <acronym>SMTP</acronym>
+                                server</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>smtp_pwd</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>string</parameter> (Default:
+                                    <literal>&lt;empty></literal>)</para>
+                            <para>The password to authenticate on the <acronym>SMTP</acronym>
+                                server</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>use_html</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>bool</parameter> (Default:
+                                    <literal>true</literal>)</para>
+                            <para>Mail can be sent in plain format or in <acronym>HTML</acronym>.
+                                This switch must be true to send mail as <acronym>HTML</acronym>
                                 (recommended).</para>
-                    </listitem>
-                </varlistentry>
+                        </listitem>
+                    </varlistentry>
                     <varlistentry>
                         <term><literal>force_mail_on_all_events</literal></term>
                         <listitem>
@@ -477,47 +482,46 @@
                         <listitem>
                             <para>Type: <parameter>bool</parameter> (Default:
                                 <literal>no</literal>)</para>
-                            <para>Determine if  the event mail should include two static miniaps
+                            <para>Determine if the event mail should include two static miniaps
                                 displaying the current coordinates with an overview and detailed
                                 map.</para>
                         </listitem>
                     </varlistentry>
-                <varlistentry>
-                    <term><literal>minimap_overview_zoom</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>int</parameter> (Default:
-                            <literal>9</literal>)</para>
-                        <para>The zoom factor to be used for the overview map</para>
-                    </listitem>
-                </varlistentry>                
-                <varlistentry>
-                    <term><literal>minimap_detailed_zoom</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>int</parameter> (Default:
-                            <literal>15</literal>)</para>
-                        <para>The zoom factor to be used for the detailed map</para>
-                    </listitem>
-                </varlistentry>                
-                <varlistentry>
-                    <term><literal>minimap_width</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>int</parameter> (Default:
-                            <literal>200</literal>)</para>
-                        <para>The width of the minimap</para>
-                    </listitem>
-                </varlistentry>                
-                <varlistentry>
-                    <term><literal>minimap_height</literal></term>
-                    <listitem>
-                        <para>Type: <parameter>int</parameter> (Default:
-                            <literal>200</literal>)</para>
-                        <para>The height of the minimap</para>
-                    </listitem>
-                </varlistentry>                
-                
-            </variablelist>            
-        </para>
-    </section>
+                    <varlistentry>
+                        <term><literal>minimap_overview_zoom</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>int</parameter> (Default:
+                                <literal>9</literal>)</para>
+                            <para>The zoom factor to be used for the overview map</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>minimap_detailed_zoom</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>int</parameter> (Default:
+                                <literal>15</literal>)</para>
+                            <para>The zoom factor to be used for the detailed map</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>minimap_width</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>int</parameter> (Default:
+                                <literal>200</literal>)</para>
+                            <para>The width of the minimap</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>minimap_height</literal></term>
+                        <listitem>
+                            <para>Type: <parameter>int</parameter> (Default:
+                                <literal>200</literal>)</para>
+                            <para>The height of the minimap</para>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>
+            </para>
+        </section>
     <section>
         <title>The distributed configuration template file </title>
         <para>The values in the configuration file shipped corresponds to default values used if a

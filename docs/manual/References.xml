@@ -4,7 +4,7 @@
 <appendix  xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="appendix.references" >
     <title>References</title>
-    <section>
+    <section xml:id="appendix.references.tools">
         <title>Major SW technologies and tools used</title>
         <para>
             <itemizedlist>

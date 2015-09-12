@@ -15,7 +15,7 @@
         which then sends commands to the device. The normal way to interact with the daemon is
         through the command shell , "<literal>g7sh</literal>", see  <xref
             linkend="section.command-shell"/>.</para>
-    <section>
+    <section  xml:id="section.controlling-using-server-commands">
         <title>Controlling the device using server commands</title>
         <para>The device has its own set of "raw" commands that can be used to communicate with the
             device. These commands are described in the protocol description fro the
@@ -154,6 +154,7 @@ help       - Print help for all commands
 .nd        - Delete specified nick
 .nick      - Register a nick-name for connected device
 .nl        - List all registered nicks
+.report    - Generate a device report
 .table     - Toggle pretty printing of tables
 .ratereset - Allow calls to the Google location API after usage limit excess
 
@@ -265,7 +266,7 @@ g7ctrl>  </screen>
                 memorized.</para>
         </section>
     </section>
-    <section>
+    <section  xml:id="section.using-raw-commands">
         <title>Controlling the device using "raw" device commands</title>
         <para>In order to accommodate expert users that really wants to use the raw commands
             directly the server also makes this possible. Raw device commands can be seen as an even
@@ -493,6 +494,96 @@ track(1,<emphasis role="bold">[TRACKTIME_SEC]</emphasis>,0,0,1,4,15)</programlis
                 explanation of the meaning of all other parameters please see the command reference
                     <xref linkend="appendix.command-reference"/>.</para>
         </section>
+        
+    </section>
+    <section>
+        <title>Generating a device report</title>
+        <para>The number of possible settings of the device is quite large and can be difficult to
+            overview. In order to get a good overview of the current settings of the device it is
+            possible to generate a device reports which is a PDF file listing all the current
+            settings of the device. The report is generated with the server command
+                "<command>.report</command>" (see <xref linkend="cmd.srv-report"/>). An example of
+            the report with two pages are shown in <xref linkend="fig.pdf_report_pg1"/> and <xref linkend="fig.pdf_report_pg2"/></para>
+        <para>In order to make the report easy to read a few graphical icons are used to illustrated
+            the different settings and most should be self evident. A few comments might be in place
+            though:</para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>The battery voltage graph shows the battery voltage as percentage of the
+                        maximum voltage. This is an indicator of how the battery is doing. An older
+                        battery will seldom reach above ~80-90%</para>
+                </listitem>
+                <listitem>
+                    <para>For a number of alerts the indicator has three parts (see "Battery Low
+                        Alert" in  <xref linkend="fig.pdf_report_pg1"/>  as an example) </para>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>A slider which shows if the alert is on/off</para>
+                            </listitem>
+                            <listitem>
+                                <para>Action consisting of two letters "<literal>L</literal>" and
+                                        "<literal>S</literal>" with either green or gray background,
+                                        "<literal>L</literal>"=<emphasis>Log to device</emphasis>,
+                                        "<literal>S</literal>"=<emphasis>Send to server</emphasis>.
+                                    If the background is green the action is enabled.</para>
+                            </listitem>
+                            <listitem>
+                                <para>A number with an orange background, this number indicates
+                                    which of the VIP-phone numbers will receive an alert SMS. This
+                                    number is the binary OR of the enabled VIP numbers as
+                                    interpreted as binary numbers. So
+                                        <literal>7</literal>=<emphasis>VIP nr 1</emphasis> +
+                                        <emphasis>VIP nr 2</emphasis> + <emphasis>VIP nr
+                                        3</emphasis></para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Some aspect of the report, primarily the geo-fence event listing at the end of the
+            report can be controlled by settings in the config file (see <xref
+                linkend="config-section.report"/>) This is used to control whether the geo-fence
+            events should start on a new page and whether unused (empty) geo-fence events should be
+            inlcuded in the listing or not.</para>
+        <para>In addition to the device <acronym>PDF</acronym> report a raw device report is also
+            generated in <acronym>JSON</acronym> (text) format that is suitable for machine
+            processing (see <xref linkend="appendix.references.tools"/>).  The text report also
+            differs in the way that the values stored are the raw device values and not the
+            translated human readable strings.</para>
+        <para>Both reports are saved in a directory specified in the config file ( by default
+                "<filename>/tmp</filename>")</para>
+        <para>
+            <figure xml:id="fig.pdf_report_pg1">
+                <title>Example of Device Report page 1</title>
+                <mediaobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="pdf_report_pg1.png" scalefit="1"
+                            width="120%" contentwidth="120%"/>
+                    </imageobject>
+                    <imageobject role="html">
+                        <imagedata fileref="pdf_report_pg1.png" scalefit="1"
+                            contentwidth="400px"/> 
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <figure xml:id="fig.pdf_report_pg2">
+                <title>Example of Device Report page 2</title>
+                <mediaobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="pdf_report_pg2.png" scalefit="1"
+                            width="120%" contentwidth="120%"/>
+                    </imageobject>
+                    <imageobject role="html">
+                        <imagedata fileref="pdf_report_pg2.png" scalefit="1"
+                            contentwidth="400px"/> 
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            
+        </para>    
         
     </section>
 </section>
