@@ -1,3 +1,4 @@
+
 #!/bin/sh
 # ------------------------------------------------------------------------------------------------------------
 # Boostrap script for Ubuntu/Debian/Linux Mint. Only needs to run once after
@@ -19,6 +20,7 @@ sudo apt-get -y -qq install libusb-1.0
 sudo apt-get -y -qq install libpcre3-dev
 sudo apt-get -y -qq install libsqlite3-dev
 sudo apt-get -y -qq install libcurl4-openssl-dev
+sudo apt-get -y -qq install libhpdf-dev
 
 # ------------------------------------------------------------------------------------------------------------
 # These packages are needed to be able to rebuild the documentation
@@ -29,21 +31,23 @@ sudo apt-get -y -qq install libxml2-utils
 sudo apt-get -y -qq install libxml2-dev
 sudo apt-get -y -qq install fop
 sudo apt-get -y -qq install xsltproc
+sudo apt-get -y -qq install cloc
+
 
 # Setup latest Docbook5 stylesheets manually the package are too old 
 # (we use the namespace version)
-sudo mkdir -p /usr/share/xml/docbook/stylesheet/nwalsh5
-cd /usr/share/xml/docbook/stylesheet/nwalsh5
-if [ ! -d docbook-xsl-ns-1.78.1 ]; then
-  sudo wget -q https://sourceforge.net/projects/docbook/files/docbook-xsl-ns/1.78.1/docbook-xsl-ns-1.78.1.tar.bz2
-  sudo tar xjf docbook-xsl-ns-1.78.1.tar.bz2
-  sudo rm docbook-xsl-ns-1.78.1.tar.bz2
-fi
-sudo ln -sf docbook-xsl-ns-1.78.1 current
-cd $WORKING_DIR 
+#sudo mkdir -p /usr/share/xml/docbook/stylesheet/nwalsh5
+#cd /usr/share/xml/docbook/stylesheet/nwalsh5
+#if [ ! -d docbook-xsl-ns-1.78.1 ]; then
+#  sudo wget -q https://sourceforge.net/projects/docbook/files/docbook-xsl-ns/1.78.1/docbook-xsl-ns-1.78.1.tar.bz2
+#  sudo tar xjf docbook-xsl-ns-1.78.1.tar.bz2
+#  sudo rm docbook-xsl-ns-1.78.1.tar.bz2
+#fi
+#sudo ln -sf docbook-xsl-ns-1.78.1 current
+#cd $WORKING_DIR 
 
 # Make dbtoepub command executable to be able to run it
-sudo chmod +x /usr/share/xml/docbook/stylesheet/nwalsh5/current/epub/bin/dbtoepub
+#sudo chmod +x /usr/share/xml/docbook/stylesheet/nwalsh5/current/epub/bin/dbtoepub
 
 # ------------------------------------------------------------------------------------------------------------
 # These packages are needed for the core build

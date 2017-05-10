@@ -42,7 +42,7 @@
 #include "g7ctrl.h"
 #include "connwatcher.h"
 #include "g7cmd.h"
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "g7sendcmd.h"
 #include "dbcmd.h"
 #include "logger.h"
@@ -51,6 +51,7 @@
 #include "wreply.h"
 #include "unicode_tbl.h"
 #include "geoloc.h"
+#include "geoloc_cache.h"
 #include "mailutil.h"
 #include "g7pdf_report_view.h"
 
@@ -166,6 +167,24 @@ struct srvcmd_help srvcmd_help_list [] = {
        "[title] - The title as printed in the report header",
        ".report dev01 Motorcycle"
     },    
+    {"breport",
+       "Generate a PDF and JSON basic report for the current attached device.\n"
+       "A basic report differs from the full report by excluding the geo-fence events\n"
+       "thus making the report much faster and requiring less data traffic.",
+       "filename [title]",
+       "filename - Filename of the generated report (without the .pdf suffix)\n"
+       "[title] - The title as printed in the report header",
+       ".report dev01 Motorcycle"
+    },     
+    {"freport",
+       "Generate a report from the data in a file.\n"
+       "Same as the normal report but instead of reading the data from a device directly\n"
+       "the data is fetched from a JSON file. The file is read from <PDFREPORT_DIR>/export.json\n"
+       "where the report directory is specified in the configuration file.",
+       "title",       
+       "[title] - The title as printed in the report header",
+       ".report dev01 Motorcycle"
+    },
     {"date",
        "Print server date and time",
        "",
@@ -253,6 +272,9 @@ _srvcmd_nick(struct client_info *cli_info, const char *nick,const char *phone) {
 #define FILTER_DEV_CONNECTIONS 2
 #define FILTER_GPRS_CONNECTIONS 3
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"
+
 /**
  * Print list of connections
  * @param[in] cli_info Client info structure that holds information about the current
@@ -335,7 +357,7 @@ _srv_cmd_lc(struct client_info *cli_info, const int filter) {
     return 0;
 }
 
-
+#pragma GCC diagnostic pop
 
 /**
  * Print help for the server commands to the client socket
@@ -406,18 +428,35 @@ _srv_cmd_debug_info(struct client_info *cli_info) {
  * @param cli_info Client context
  * @param filename The base filename for the report
  * @param report_title The title as whosn in the header of the PDF report
+ * @param read_from_file TRUE if device data should be read from a previous stored JSON file 
+ * insteaf of from the device. Mainly use for special documentation purposes an debugging.
+ *  This is normally triggered by the command ".freport"
+ * @param include_geofevt TRUE if the geofence event tables should be included in the report
  */
 void
-_srv_device_report(struct client_info *cli_info, char *filename, char *report_title) {
+_srv_device_report(struct client_info *cli_info, char *filename, char *report_title, 
+                    _Bool read_from_file, _Bool include_geofevt) {
     char full_path[1024];
     int sockd = cli_info->cli_socket;
+    
+    // Check if either a USB device or a GPRS connected device is available
+    // If we are reading the report from file we can ignore this test and hence
+    // we check that as the first condition.
+    if ( !read_from_file && sockd >= 0 && !is_usb_connected(cli_info->target_usb_idx) && cli_info->target_socket < 0 ) {
+        logmsg(LOG_DEBUG, "Device not connected reply from is_usb_connected()");
+        _writef(sockd, "[ERR] Command not possible. Device not connected on USB.");
+        return;
+    }    
+    
     _writef(sockd,"Gathering information from device, please wait ... \n");
     xstrlcpy(full_path,filename,sizeof(full_path));
-    int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), report_title);
+    int stat=export_g7ctrl_report(cli_info, full_path, sizeof(full_path), 
+                                  report_title, read_from_file, include_geofevt);
+    
     if( 0==stat ) {
         _writef(sockd,"Wrote device report to \"%s\"",full_path);
     } else {
-        _writef(sockd,"FAILED to create device report. Communication problem?\n");
+        _writef(sockd,"[ERR] Failed to create device report.");
     }           
 }
 
@@ -447,54 +486,84 @@ _srv_cache_stat(struct client_info *cli_info) {
     double addr_hitrate, minimap_hitrate;
     double addr_cache_fill, minimap_cache_fill;
     size_t addr_musage,minimap_musage;
+    size_t addr_cache_max, addr_cache_num;
+    size_t minimap_cache_max, minimap_cache_num;
+
+    get_cache_stat(GEOCACHE_ADDR, &addr_tot_calls, &addr_hitrate, &addr_cache_fill, &addr_musage);    
+    get_cache_stat(GEOCACHE_MINIMAP, &minimap_tot_calls, &minimap_hitrate, &minimap_cache_fill, &minimap_musage);
+
+    get_cache_num(GEOCACHE_ADDR, &addr_cache_num, &addr_cache_max);
+    get_cache_num(GEOCACHE_MINIMAP, &minimap_cache_num, &minimap_cache_max);
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-folding-constant"
     
-    get_cache_stat(CACHE_ADDR, &addr_tot_calls, &addr_hitrate, &addr_cache_fill, &addr_musage);    
-    get_cache_stat(CACHE_MINIMAP, &minimap_tot_calls, &minimap_hitrate, &minimap_cache_fill, &minimap_musage);
+    const size_t nCols = 7;
+    const size_t nRows = 3;
+    char *tdata[nRows * nCols];
     
-    const size_t nCols = 5;
-    char *tdata[3 * 5];
+#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
+    
     memset(tdata, 0, sizeof (tdata));
     char valbuff[32];
     int row=0;
     
     /* Header */
     tdata[row * nCols + 0] = strdup("  Cache ");
-    tdata[row * nCols + 1] = strdup("  Tot ");
-    tdata[row * nCols + 2] = strdup("  Fill ");
-    tdata[row * nCols + 3] = strdup("  Hits ");
-    tdata[row * nCols + 4] = strdup("  Mem ");
+    tdata[row * nCols + 1] = strdup("  Size ");
+    tdata[row * nCols + 2] = strdup("  Lookups ");
+    tdata[row * nCols + 3] = strdup("  Fill ");
+    tdata[row * nCols + 4] = strdup("  Fill (%) ");
+    tdata[row * nCols + 5] = strdup("  Hits (%)");
+    tdata[row * nCols + 6] = strdup("  Mem (kB)");
     
     row++;
     /* Address */
     tdata[row * nCols + 0] = strdup(" Address ");
     
+    snprintf(valbuff,sizeof(valbuff),"%zu ",addr_cache_max);
+    tdata[row * nCols + 1] = strdup(valbuff);    
+
     snprintf(valbuff,sizeof(valbuff),"%u ",addr_tot_calls);
-    tdata[row * nCols + 1] = strdup(valbuff);
+    tdata[row * nCols + 2] = strdup(valbuff);
+
+    snprintf(valbuff,sizeof(valbuff),"%zu ",addr_cache_num);
+    tdata[row * nCols + 3] = strdup(valbuff);    
     
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",addr_cache_fill*100);
-    tdata[row * nCols + 2] = strdup(valbuff);
-    
-    snprintf(valbuff,sizeof(valbuff),"%.0f %% ",addr_hitrate*100);
-    tdata[row * nCols + 3] = strdup(valbuff);
-
-    snprintf(valbuff,sizeof(valbuff)," %zu kB ",addr_musage/1024);
     tdata[row * nCols + 4] = strdup(valbuff);
     
+    snprintf(valbuff,sizeof(valbuff),"%.0f %% ",addr_hitrate*100);
+    tdata[row * nCols + 5] = strdup(valbuff);
+
+    snprintf(valbuff,sizeof(valbuff)," %zu kB ",addr_musage/1024);
+    tdata[row * nCols + 6] = strdup(valbuff);
+    
     row++;
+
     /* Minimap */
     tdata[row * nCols + 0] = strdup(" Minimap ");
     
+    snprintf(valbuff,sizeof(valbuff),"%zu ",minimap_cache_max);
+    tdata[row * nCols + 1] = strdup(valbuff);    
+
     snprintf(valbuff,sizeof(valbuff),"%u ",minimap_tot_calls);
-    tdata[row * nCols + 1] = strdup(valbuff);
-    
-    snprintf(valbuff,sizeof(valbuff),"%.0f %% ",minimap_cache_fill*100);
     tdata[row * nCols + 2] = strdup(valbuff);
     
+    snprintf(valbuff,sizeof(valbuff),"%zu ",minimap_cache_num);
+    tdata[row * nCols + 3] = strdup(valbuff);    
+
+    snprintf(valbuff,sizeof(valbuff),"%.0f %% ",minimap_cache_fill*100);
+    tdata[row * nCols + 4] = strdup(valbuff);
+    
     snprintf(valbuff,sizeof(valbuff),"%.0f %% ",minimap_hitrate*100);
-    tdata[row * nCols + 3] = strdup(valbuff);
+    tdata[row * nCols + 5] = strdup(valbuff);
 
     snprintf(valbuff,sizeof(valbuff)," %zu kB ",minimap_musage/1024);
-    tdata[row * nCols + 4] = strdup(valbuff);
+    tdata[row * nCols + 6] = strdup(valbuff);
     
     row++;
     
@@ -543,9 +612,17 @@ exec_srv_command(struct client_info *cli_info, char *rcmdstr) {
     } else if (0 < matchcmd("^cachestat" _PR_E, cmdstr, &field)) {
         _srv_cache_stat(cli_info);                
     } else if (0 < matchcmd("^report" _PR_S _PR_FILEPATH _PR_E, cmdstr, &field)) {
-        _srv_device_report(cli_info,field[1],NULL);        
+        _srv_device_report(cli_info,field[1],NULL, FALSE, TRUE);        
     } else if (0 < matchcmd("^report" _PR_S _PR_FILEPATH _PR_S _PR_ANPS _PR_E, cmdstr, &field)) {
-        _srv_device_report(cli_info,field[1],field[2]);                
+        _srv_device_report(cli_info,field[1],field[2], FALSE, TRUE);  
+    } else if (0 < matchcmd("^breport" _PR_S _PR_FILEPATH _PR_E, cmdstr, &field)) {
+        _srv_device_report(cli_info,field[1],NULL, FALSE, FALSE);        
+    } else if (0 < matchcmd("^breport" _PR_S _PR_FILEPATH _PR_S _PR_ANPS _PR_E, cmdstr, &field)) {
+        _srv_device_report(cli_info,field[1],field[2], FALSE, FALSE);          
+    } else if (0 < matchcmd("^freport" _PR_S _PR_FILEPATH _PR_E, cmdstr, &field)) {
+        _srv_device_report(cli_info,field[1],NULL, TRUE, TRUE);        
+    } else if (0 < matchcmd("^freport" _PR_S _PR_FILEPATH _PR_S _PR_ANPS _PR_E, cmdstr, &field)) {
+        _srv_device_report(cli_info,field[1],field[2], TRUE, TRUE);                        
     } else if (0 < matchcmd("^usb" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {
         set_usb_device_target_by_index(cli_info,xatoi(field[1]));
     } else if (0 < matchcmd("^target" _PR_S _PR_N1 _PR_E, cmdstr, &field)) {

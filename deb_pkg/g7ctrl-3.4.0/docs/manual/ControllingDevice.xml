@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"   xml:id="section.controlling-device">
+    <title>Controlling the device using commands</title>
+    <para>A tracking device such as the <productname>GM7</productname> must be setup to operate in a
+        specific mode to be useful. The tracker can be setup so that it only sends an update when it
+        detects a movement or for example when the speed exceeds a certain limit. There are three
+        major way in which the device can be configured as discussed in <xref
+            linkend="section.connecting-device"/>. </para>
+    <para>The daemon supports both communication over <acronym>USB</acronym> which is the preferred
+        way to do the initial setup </para>
+    <para>Please keep in mind though that when you are giving commands you are talking to the daemon
+        which then sends commands to the device. The normal way to interact with the daemon is
+        through the command shell , "<literal>g7sh</literal>", see  <xref
+            linkend="section.command-shell"/>.</para>
+    <section  xml:id="section.controlling-using-server-commands">
+        <title>Controlling the device using server commands</title>
+        <para>The device has its own set of "raw" commands that can be used to communicate with the
+            device. These commands are described in the protocol description fro the
+                <productname>GM7 Tracker</productname>. These are for example the commands you would
+            use when sending text messages to the device. The problem with this is that the syntax
+            is a bit tedious and it requires the user to look up or remember the exact meaning of a
+            number of arguments given to each command.</para>
+        <para>
+            <note>
+                <para>Using the commands below assumes that a device is connected via the
+                        <acronym>USB</acronym> port. If this is not so the daemon will give a
+                    information message that device commands are not available at this time.</para>
+            </note>
+        </para>
+        <para>To alleviate this burden a bit the daemon has its own command set that is easier for
+            an end user to remember and use. As an example consider the following "raw"
+            command</para>
+        <para>
+            <screen>$WP+ROAM=0000,1</screen>
+        </para>
+        <para>which is used to enable <acronym>GSM</acronym>/<acronym>GPRS</acronym> roaming (i.e.
+            the device can send text and data when the <acronym>SIM</acronym> card is in roaming
+            mode). </para>
+        <para>The same command using the simplified daemon command set would be</para>
+        <para>
+            <screen>g7ctrl> set roam on</screen>
+        </para>
+        <para>Perhaps not a gigantic difference but definitely easier to remember especially since
+            the command structure is the same for a large number of commands. The greatest
+            difference is however in using commands with many parameters. For example to setup the
+            device to use <acronym>GPRS</acronym> communication for a Telenor <acronym>SIM</acronym>
+            card assuming the daemon is running on a server with <acronym>IP</acronym> address
+                <literal>158.94.13.298</literal> on port <literal>3100</literal> with 45s in between
+            the so called <literal>KEEP_ALIVE </literal>packets the raw command to send the device
+            would be</para>
+        <para>
+            <screen>$WP+COMMTYPE=0000,4,,,services.telenor.se,,,158.94.13.298,3100,45,</screen>
+        </para>
+        <para>The chances of getting this command right every time from memory is very small indeed.
+            Using the daemons command version instead the following conversation between the user
+            and the daemon would take place:</para>
+        <para>
+            <screen>g7ctrl> set comm
+CommSelect - Select primary type of communication
+  0 - Use USB
+  1 - Use SMS over GSM
+  2 - CSD &lt;reserved>
+  3 - UDP over GPRS
+  4 - TCP/IP over GPRS
+Select (0/1/2/3/4)?
+>> </screen>
+        </para>
+        <para>At this point user enters his selection after the "<literal>(arg)> </literal>" mark
+            and hits enter. The next question will be</para>
+        <para>
+            <screen>SMS Base Phone - SMS base number to call
+(arg)> </screen>
+        </para>
+        <para>and the user can enter the corresponding phone number. This will be followed by the a
+            clear question for each of the following command arguments. After the user have answered
+            all the questions and the daemon has made some sanity checks of the answers the complete
+            command will be sent to the device. </para>
+        <para>
+            <note>
+                <para>When giving arguments for a device command the prompt changes from "> " to ">>
+                    "</para>
+            </note>
+        </para>
+        <para>To further simplify device handling it is possible to "record" command and command
+            sequences so that instead of having to answer ten questions (as is the case for the
+            "comm" command) a single command is given and earlier recorded parameters are used See
+                <xref linkend="section.using-presets"/>.</para>
+        <para>
+            <tip>
+                <para>To abort a command in the middle of specifying parameters just enter a
+                    punctuation character "<command>.</command>" to abort the current
+                    command.</para>
+            </tip>
+        </para>
+        <para>A complete list of server command with all argument s given in <xref
+                linkend="appendix.command-reference"/>. Below is a one line summary of all
+            available server commands as printed by the daemon "<literal>help</literal>"
+            command.</para>
+        <para>
+            <tip>
+                <para>It is also possible to enter commands bypassing the argument questions. For
+                    details see <xref linkend="sec.direct-device-commands"/></para>
+            </tip>
+        </para>
+        <para>
+            <screen>Device Command list:
+--------------------
+address   - Return the current location as the closest street address
+batt      - Read the battery voltage from device
+clrec     - Erase all stored locations from the device memory
+comm      - Set/Read device communication type and its parameters
+config    - Set/Read device ID, Password, and PIN Code of the SIM card
+dlrec     - Download all stored locations in device memory to DB
+gfen      - Enable/Disabling virtual fence
+gfevt     - Enable/Disable/Set/Read GEO-Fencing event
+imei      - Query the IMEI number of the internal GSM module
+led       - Enable/Disable the LED indicator on/off
+loc       - Get latest location
+locg      - Get latest location as a Google map string
+lowbatt   - Set/Read the internal battery low level alert
+mswitch   - Set handling of detach event
+nrec      - Get number of locations in device memory
+phone     - Enable the function "Get the current location by making a phone call"
+ps        - Enable/Disable power saving mode
+reboot    - Restart-up the device
+rec       - Enable/Disable/read logging function to the device
+reset     - Reset all parameters to the manufactory default settings
+roam      - Enable/Disable GPRS roaming function
+sim       - Query the identification of the SIM card
+sleep     - Enable/Disable "Sleeping Report"
+sms       - Switch the SMS format (Text of PDU mode)
+test      - Device diagnostic function
+track     - Control if device should be sending back automatic tracking information.
+tz        - Set the time zone information for the device
+ver       - Get current firmware version
+vip       - Preset up to 5 SMS phone numbers for receiving different alerts
+
+Use "help &lt;command>" for detailed help on each command.
+
+Server Command list:
+--------------------
+help       - Print help for all commands
+.lookup    - Toggle geolocation lookup
+.cachestat - Print statistics of cache usage
+.date      - Print date and time of server
+.target    - List or set the GPRS target device to be active
+.usb       - List or set USB connected device to be active
+.ver       - Give version information of server
+.lc        - List active connections
+.ld        - List all connected devices (both on USB and GPRS)
+.nd        - Delete specified nick
+.nick      - Register a nick-name for connected device
+.nl        - List all registered nicks
+.report    - Generate a device report
+.table     - Toggle pretty printing of tables
+.ratereset - Allow calls to the Google location API after usage limit excess
+
+DB Command list:
+----------------
+db dist            - Calculate the approximate distance from a set of chosen locations
+db deletelocations - Clear all stored locations
+db export          - Export selected locations in chosen format to file
+db head            - Display locations in DB from the top
+db lastloc         - Retrieve the last stored location in the DB
+db mailpos         - Mail the last stored location in the DB
+db mailgpx         - Export the database in GPX format and mail as compressed attachment
+db mailcsv         - Export the database in CSV format and mail as compressed attachment
+db size            - Report number of location events in DB
+db tail            - Display locations in DB from the head
+
+Preset command list:
+----------------
+preset list            - List all read preset files with short description
+preset refresh         - Re-read all preset files from disk
+preset use &lt;preset>    - Use (execute) the specified preset ("@&lt;preset>" as shortform)
+preset help &lt;preset>   - Give more detailed help on the specified preset</screen>
+        </para>
+        <section xml:id="sec.direct-device-commands">
+            <title>Non-Interactive device commands - the @@CMD(arg1, ...) format</title>
+            <para>By default all device commands are interactive in the sense that giving a command
+                will interactively ask for all arguments interactively one by one explaining the
+                purpose of the command and the choice of input. For example for the <command>set
+                    comm</command> command the interaction would be somewhat along the lines of (all
+                text <emphasis role="bold">in bold</emphasis> are user input):</para>
+            <para>
+                <screen>g7ctrl> <emphasis role="bold">set comm</emphasis>
+CommSelect - Select primary type of communication
+  0 - Use USB
+  1 - Use SMS over GSM
+  2 - CSD &lt;reserved>
+  3 - UDP over GPRS
+  4 - TCP/IP over GPRS
+Select (0/1/2/3/4)?
+(arg)> <emphasis role="bold">4</emphasis>
+SMS Base Phone - SMS base number to call?
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
+CSD Base Phone - CSD base number &lt;reserved and not used>?
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
+GPRS APN - The operators APN?
+(arg)> <emphasis role="bold">internet.telenor.se</emphasis>
+GPRS User - User name if required?
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
+GPRS Passwd - Password if required?
+(arg)> <emphasis role="bold">[RETURN]</emphasis>
+GPRS Server - Server IP address where the device reports back to?
+(arg)> <emphasis role="bold">mytracker.mydomain.com</emphasis>
+GPRS Server Port - TCP/IP Port to use on server?
+(arg)> <emphasis role="bold">3400</emphasis>
+GPRS Keep Alive - Interval (in sec) between Keep Alive Packets?
+(arg)> <emphasis role="bold">120</emphasis>
+GPRS DNS - Optional DNS server for device to use.?
+(arg)> <emphasis role="bold">208.67.222.222</emphasis>
+[GM7] 4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222
+      CommSelect: TCP/IP over GPRS
+  SMS Base Phone: 
+  CSD Base Phone: 
+        GPRS APN: internet.telenor.se
+       GPRS User: 
+     GPRS Passwd: 
+     GPRS Server: aditus.asuscomm.com
+GPRS Server Port: 3400
+ GPRS Keep Alive: 120
+        GPRS DNS: 208.67.222.222
+
+g7ctrl> 
+</screen>
+            </para>
+            <para>Entering an empty line leaves the original value intact. To clear an old value (to
+                leave it empty) enter an empty string (<emphasis role="bold">""</emphasis>).</para>
+            <para>The above sequence makes sense for most users since it can not be expected to
+                memorize the arguments for the many possible commands. However , for experienced
+                users (or to use the command shell non-interactively) it is also possible to enter
+                the commands non-interactively and not have the question for each argument posed.
+                The format for this is</para>
+            <para>
+                <screen>@@COMMAND(arg1,arg2,...)</screen>
+            </para>
+            <para>So to enter the above command as a non-interactive command a user would
+                enter</para>
+            <para>
+                <screen>g7ctrl> @@COMM(4,,,internet.telenor.se,,,mytracker.mydomain.com,3400,120,208.67.222.222)
+OK.
+g7ctrl> </screen>
+            </para>
+            <para>As explained above it is necessary to use the empty string ("") to clear a value
+                instead of just leaving it empty which will keep the old value.</para>
+            <para>
+                <screen>g7ctrl> @@COMM(4,"","",internet.telenor.se,"","",mytracker.mydomain.com,3400,120,208.67.222.222)
+OK.
+g7ctrl>  </screen>
+            </para>
+            <para>
+                <note>
+                    <para>Please note that (by design) spaces are now allowed in the function
+                        call.</para>
+                </note>
+            </para>
+            <para>The main purpose of this possibility is to be able to script command sequences
+                using the command shell ( g <command>g7sh</command>) with the "<emphasis
+                    role="italic">-e</emphasis>" option that can send commands to the daemon
+                non-interactively. Of course, experienced user might find this faster than to have
+                to answer a sequence of questions once the arguments have been understood and
+                memorized.</para>
+        </section>
+    </section>
+    <section  xml:id="section.using-raw-commands">
+        <title>Controlling the device using "raw" device commands</title>
+        <para>In order to accommodate expert users that really wants to use the raw commands
+            directly the server also makes this possible. Raw device commands can be seen as an even
+            more complex alternative to the  "<literal>@@</literal>" non-interactive functions. This
+            makes it possible to interact with the device on the lowest level by giving commands
+            directly according to their exact syntax as described in the <emphasis role="italic">GM7
+                Protocol description</emphasis>.</para>
+        <para>For example. to find the <acronym>IMEI</acronym> number of the device give the
+            command</para>
+        <para>
+            <screen>$WP+IMEI=0000,?</screen>
+        </para>
+        <para>To enable this the config file setting "<literal>enable_raw_commands</literal>" must
+            be set to true. <emphasis role="bold">Please note that by default this option is
+                disabled</emphasis>. This should be considered an expert options and we refer to the
+                <emphasis role="italic">GM7 Protocol description</emphasis> for details on the exact
+            format for the command string and we will not discuss this further here.</para>
+    </section>
+    <section xml:id="section.using-presets">
+        <title>Using presets</title>
+        <para>Presets is way to record often used commands or command sequences. Technically this is
+            a file of one or more commands that can be replayed. Any number of commands can be
+            given.</para>
+        <para>By default the device comes with a few defined presets that will handle common tasks
+            such as setting up <acronym>GPRS</acronym> communication and enable tracking.</para>
+        <para>All preset files are stored in "<filename>/usr/share/g7ctrl/presets/</filename>" and
+            have file suffix "<literal>.preset</literal>". The following commands are available to
+            manage presets.</para>
+        <para>
+            <variablelist>
+                <varlistentry>
+                    <term><emphasis role="bold">preset list</emphasis></term>
+                    <listitem>
+                        <para>List all currently defined presets</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">preset refresh</emphasis></term>
+                    <listitem>
+                        <para>Refresh all presets from the disk. This command makes it possible to
+                            add or remove presets without having to restart the daemon.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">preset use
+                            </emphasis><parameter>&lt;preset-name></parameter></term>
+                    <listitem>
+                        <para>Run the commands in the specified preset file</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><emphasis role="bold">preset help</emphasis>
+                        <parameter>&lt;preset-name></parameter></term>
+                    <listitem>
+                        <para>Each preset file has its own built-in help to remember the user of
+                            what exactly each preset file is doing. This command will give the
+                            detailed help for the specified preset command.</para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>To further simplify running command presets a short form of "<literal>preset use
+                &lt;command-name></literal>" exists. </para>
+        <para>
+            <screen>@&lt;preset-name></screen>
+        </para>
+        <para>As of version 2.1.3 the following predefined preset template are shipped</para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para><literal>gprs_on</literal> - This will enable GPRS as the main
+                        communication method for the device to report back. It will assume a Telenor
+                            <acronym>SIM</acronym> card to set up the APN.</para>
+                </listitem>
+                <listitem>
+                    <para><literal>gprs_off</literal> - Turn the GPRS off. This is opertor
+                        independent.</para>
+                </listitem>
+                <listitem>
+                    <para><literal>gtrack_on</literal> - Enable GPRS and tracking. The device will
+                        report back its position every 2min</para>
+                </listitem>
+                <listitem>
+                    <para><literal>gtrack_off</literal> - Disable tracking and GPRS
+                        communication</para>
+                </listitem>
+                <listitem>
+                    <para><literal>alarm_on</literal> - Enable communication over GPRS, Use power
+                        save mode 3, Enable GFEN alarm with 100m radius</para>
+                </listitem>
+                <listitem>
+                    <para><literal>alarm_off </literal>- Disable GFEN alarm</para>
+                </listitem>
+                <listitem>
+                    <para><literal>rec_on</literal> - Record positions to device memory</para>
+                </listitem>
+                <listitem>
+                    <para><literal>rec_off</literal> - Stop recording positions to device
+                        memory</para>
+                </listitem>
+                <listitem>
+                    <para><literal>sleep_wm</literal> - Put device in sleep mode 3, wake up on
+                        movements and all radios off</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            <note>
+                <para>The shipped files are only templates and must be completed and renamed before
+                    they can be run. See <xref linkend="section.preset-templates"/> for
+                    details.</para>
+            </note>
+        </para>
+        <para>So if you have a Telenor <acronym>SIM</acronym> card all you have to do to enable the
+            device to start sending back location updates every 2min is to connect the device to
+            your computer running the daemon using a <acronym>USB</acronym> cable, wait for the
+            device to setup communication, start the command shell and give the command</para>
+        <para>
+            <screen>@gtrack_on</screen>
+        </para>
+        <para>Assuming you have a Telenor <acronym>SIM</acronym> card the device should now start
+            sending back location updates to your server (assuming it is accessible from the
+            internet as described in <xref linkend="section.receiving-data"/>). You can verify
+            this by requesting the last received location update stored in the database with the
+            command</para>
+        <para>
+            <screen>g7ctrl> db lastloc</screen>
+        </para>
+        <para>which would return something like</para>
+        <para>
+            <screen>20131010 22:31:19, devid=3000000001, lat=59.4512 lon=17.1853, \
+http://maps.google.com/maps?q=59.4512,17.1853</screen>
+        </para>
+        <para>Verify that the device id and time is what you expect. You should also wait another
+            2min and do the same request again to see that a new location has been received. Another
+            way would be to review the logfile of the daemon since each connection and location
+            update is logged.</para>
+        <para> </para>
+        <para>
+            <note>
+                <para>Remember that if the device is not connected to the computer over r
+                        <acronym>USB</acronym> it will by default go into sleep mode if no movement
+                    is detected within 3min and it will stop sending location updates.</para>
+            </note>
+        </para>
+        <section>
+            <title>Adding new presets</title>
+            <para>Presets are created by adding a new file (with the file suffix
+                    "<literal>.preset</literal>" in the preset directory. Each preset file has a
+                comment section at top which is shown when the preset help &lt;preset> is given and
+                then one or more commands. A comment line is started with a "<literal>#</literal>"
+                character. </para>
+            <para>The commands are the same as the daemon commands but written as function calls
+                with parenthesis. As an example the following preset file sets up
+                    <acronym>GPRS</acronym> communication and starts a device tracking (i.e. the
+                device sends back location data at regular interval) and sending it back to the
+                server at <acronym>IP</acronym> address <literal>85.226.91.109</literal></para>
+            <para>
+                <programlisting>#Enable GPRS tracking
+#This enable GPRS tracking back to a sever
+# Using Telenor APN (internet.telenor.se)
+# Server is 85.226.91.109, and port=3400
+# Keep alive packet are sent every 45s
+# Tracking every 2min regardless GPS fix
+comm(4,"","",internet.telenor.se,"","",85.226.91.109,3400,45,"")
+track(1,120,0,35,1,4,15)</programlisting>
+            </para>
+            <para>As can be seen the commands have to include all arguments even if they are empty.
+                The command reference (see <xref linkend="appendix.command-reference"/>) lists
+                all commands and there arguments.</para>
+            <para>To refresh the preset files remember to either restart the daemon or run
+                    "<command>preset refresh</command>" after a new preset file has been
+                added.</para>
+        </section>
+        <section xml:id="section.preset-templates">
+            <title>Preset templates</title>
+            <para>To make it easy the daemon includes a number of predefined preset template (for
+                example "<filename>gtrack.preset.template</filename>". This preset will both enable
+                the <acronym>GPRS</acronym> communication and also turn on tracking so that the
+                device will start sending updates at specified time interval.)</para>
+            <para>The template preset must be edited according to your preferences and operator details.
+                It should be clear in the template where to edit from the placeholder. </para>
+            <para>For example to adapt the <literal>gtrack</literal> template do the following</para>
+            <para>Start by copying the template to a file without the <literal>.template</literal>
+                suffix.</para>
+            <para>
+                <screen>> cp gtrack.preset.template gtrack.preset</screen>
+            </para>
+            <para>Then change the IP-address of your server, the time interval and the
+                    <literal>KEEP_ALIVE</literal> time. The template is shown in the listing below
+                with the placeholder you should change marked in bold</para>
+            <para>
+                <programlisting>#Enable GPRS tracking
+#This enable GPRS tracking back to a sever on port 3400
+#Using Telenor APN (internet.telenor.se)
+comm(4,"","",internet.telenor.se,"","",<emphasis role="bold">[SERVER_IP]</emphasis>,3400,<emphasis role="bold">[KEEPALIVE_TIME]</emphasis>,"")
+track(1,<emphasis role="bold">[TRACKTIME_SEC]</emphasis>,0,0,1,4,15)</programlisting>
+            </para>
+            <para>
+                <variablelist>
+                    <varlistentry>
+                        <term><literal>SERVER_IP</literal></term>
+                        <listitem>
+                            <para>IP Address of server</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>KEEPALIVE_TIME</literal></term>
+                        <listitem>
+                            <para>Keep alive time in seconds (usually in the range 30-180)</para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><literal>TRACKTIME_SEC</literal></term>
+                        <listitem>
+                            <para>Tracking interval in seconds for the device to send back position
+                                update to server</para>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>
+            </para>
+            <para>The above preset assumes that you have a Telenor <acronym>SIM</acronym> so it uses
+                the Telenor <acronym>APN</acronym> (<literal>internet.telenor.se</literal>) and that
+                you are using the default tracker port (<literal>3400</literal>). For a detailed
+                explanation of the meaning of all other parameters please see the command reference
+                    <xref linkend="appendix.command-reference"/>.</para>
+        </section>
+        
+    </section>
+    <section xml:id="section.gen-device-report">
+        <title>Generating a device report</title>
+        <para>The number of possible settings of the device is quite large and can be difficult to
+            overview. In order to get a good overview of the current settings of the device it is
+            possible to generate a device reports which is a PDF file listing all the current
+            settings of the device. The report is generated with the server command
+                "<command>.report</command>" (see <xref linkend="cmd.srv-report"/>). An example of
+            the report with two pages are shown in <xref linkend="fig.pdf_report_pg1"/> and <xref linkend="fig.pdf_report_pg2"/></para>
+        <para>In order to make the report easy to read a few graphical icons are used to illustrated
+            the different settings and most should be self evident. A few comments might be in place
+            though:</para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>The battery voltage graph shows the battery voltage as percentage of the
+                        maximum voltage. This is an indicator of how the battery is doing. An older
+                        battery will seldom reach above ~80-90%</para>
+                </listitem>
+                <listitem>
+                    <para>For a number of alerts the indicator has three parts (see "Battery Low
+                        Alert" in  <xref linkend="fig.pdf_report_pg1"/>  as an example) </para>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>A slider which shows if the alert is on/off</para>
+                            </listitem>
+                            <listitem>
+                                <para>Action consisting of two letters "<literal>L</literal>" and
+                                        "<literal>S</literal>" with either green or gray background,
+                                        "<literal>L</literal>"=<emphasis>Log to device</emphasis>,
+                                        "<literal>S</literal>"=<emphasis>Send to server</emphasis>.
+                                    If the background is green the action is enabled.</para>
+                            </listitem>
+                            <listitem>
+                                <para>A number with an orange background, this number indicates
+                                    which of the VIP-phone numbers will receive an alert SMS. This
+                                    number is the binary OR of the enabled VIP numbers as
+                                    interpreted as binary numbers. So
+                                        <literal>7</literal>=<emphasis>VIP nr 1</emphasis> +
+                                        <emphasis>VIP nr 2</emphasis> + <emphasis>VIP nr
+                                        3</emphasis></para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Some aspect of the report, primarily the geo-fence event listing at the end of the
+            report can be controlled by settings in the config file (see <xref
+                linkend="config-section.report"/>) This is used to control whether the geo-fence
+            events should start on a new page and whether unused (empty) geo-fence events should be
+            inlcuded in the listing or not.</para>
+        <para>In addition to the device <acronym>PDF</acronym> report a raw device report is also
+            generated in <acronym>JSON</acronym> (text) format that is suitable for machine
+            processing (see <xref linkend="appendix.references.tools"/>).  The text report also
+            differs in the way that the values stored are the raw device values and not the
+            translated human readable strings.</para>
+        <para>Both reports are saved in a directory specified in the config file ( by default
+                "<filename>/tmp</filename>")</para>
+        <para>
+            <figure xml:id="fig.pdf_report_pg1">
+                <title>Example of Device Report page 1</title>
+                <mediaobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="pdf_report_pg1.png" scalefit="1"
+                            width="120%" contentwidth="120%"/>
+                    </imageobject>
+                    <imageobject role="html">
+                        <imagedata fileref="pdf_report_pg1.png" scalefit="1"
+                            contentwidth="400px"/> 
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <figure xml:id="fig.pdf_report_pg2">
+                <title>Example of Device Report page 2</title>
+                <mediaobject>
+                    <imageobject role="fo">
+                        <imagedata fileref="pdf_report_pg2.png" scalefit="1"
+                            width="120%" contentwidth="120%"/>
+                    </imageobject>
+                    <imageobject role="html">
+                        <imagedata fileref="pdf_report_pg2.png" scalefit="1"
+                            contentwidth="400px"/> 
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            
+        </para>    
+        
+    </section>
+</section>

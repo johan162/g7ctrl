@@ -1,0 +1,4 @@
+# Turn off Geo fence alarm (GFEN)
+# This is the opposite from alarm_on preset even though this off command
+# will only disable the Geo Fence but keep the GPRS connection as is.
+gfen(0,0,0,0,0)

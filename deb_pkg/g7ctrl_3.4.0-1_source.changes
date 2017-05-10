@@ -1,0 +1,45 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Format: 1.8
+Date: Wed, 4 May 2016 00:22:35 +0100
+Source: g7ctrl
+Binary: g7ctrl
+Architecture: source
+Version: 3.4.0-1
+Distribution: trusty
+Urgency: high
+Maintainer: Johan Persson <johan162@gmail.com>
+Changed-By: Johan Persson <johan162@gmail.com>
+Description: 
+ g7ctrl     - Control daemon for the GM7 GPS tracker
+Changes: 
+ g7ctrl (3.4.0-1) trusty; urgency=high
+ .
+   * Make it possible to adjust geolocation cache size
+   * Minor layout improvements in PDF report
+   * Fixed a bug when saving cache files in certain cases
+Checksums-Sha1: 
+ 2cbc258b1ad85e5d4ed1ef38801cc0cca7f31311 1460 g7ctrl_3.4.0-1.dsc
+ 40dcbd9996360fd288343b4c9b8220b30c220fd1 3383015 g7ctrl_3.4.0.orig.tar.gz
+ 1962d4c9a0b0629d5926eb3c7e8de47f4c766574 2816 g7ctrl_3.4.0-1.debian.tar.gz
+Checksums-Sha256: 
+ d9bd2358c7809b133d53386c119ce7fb6e7fa219abb907f9fee91246881c2779 1460 g7ctrl_3.4.0-1.dsc
+ 1cf656b00aada5a54fc84974588adfdf88705563457e29981c852bb44d0857b9 3383015 g7ctrl_3.4.0.orig.tar.gz
+ b04f00cb0ad2b1398a1520564149a09fc56432fd32f83453f442e51233005091 2816 g7ctrl_3.4.0-1.debian.tar.gz
+Files: 
+ be5e9c8c8c5e5ae3c6c140b0e28fb905 1460 misc optional g7ctrl_3.4.0-1.dsc
+ 844ae5c507aefad65b0cd0f513c96cc4 3383015 misc optional g7ctrl_3.4.0.orig.tar.gz
+ 9e0fd912d4568d2fbbcf3ba35aa24269 2816 misc optional g7ctrl_3.4.0-1.debian.tar.gz
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBAgAGBQJXKSbIAAoJEBGyba/BKD80QeoH/10vIavccB96J6htc3gfPd4S
+fXymjRhDViHxEu9BNluGCXW6sMe95DvrkCp2eAEEclPnqsYAVHAS518iH0P45Kz7
+5bDruH6KcVEEJWrbMjVTqXlNF4qByHMJ2d6U6y6AI0V4eXPDxDSiMxSMmv3I/aMz
+qLfPNGNNGg860XoRND19d11BM8MWuMi6Zqn1EpAuC522jahoRjY/4UliYgiADx71
+eEyAvaEjLLeJZoDBPL9fkX520m03uztU4ur7xPNoPRBjT8mp42y5CA2XnGhkCkM/
+0afFnE2OeltwqywPzsSYDmE9XMrqPo7fN04XpN89exesz0/EXkkMm6F4V29NVsc=
+=KiWI
+-----END PGP SIGNATURE-----

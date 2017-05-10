@@ -1,0 +1,4 @@
+#Enable GPRS as main communication 
+#This enable GPRS communication using Telenor APN (services.telenor.se)
+#Keep alive packet are sent every 120s
+comm(4,"","",internet.telenor.se,"","",[SERVER_IP],3400,120,"")

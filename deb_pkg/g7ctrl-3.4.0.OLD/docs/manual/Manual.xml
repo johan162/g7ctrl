@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbookxi.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+
+<article xmlns="http://docbook.org/ns/docbook" 
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        version="5.0"
+        >
+    
+    <info>
+        <title>'g7ctrl' Manual &amp; Handbook</title>
+        <subtitle>Xtreme GM7 GPS Tracker Daemon
+            <mediaobject>
+                <imageobject role="fo">
+                    <imagedata fileref="gm7_tracker_tall.jpg" scalefit="1"
+                        width="100%" contentwidth="100%"/>
+                </imageobject>
+                <imageobject role="html">
+                    <imagedata fileref="gm7_tracker_tall.jpg" scalefit="1"
+                        contentwidth="400px"/>
+                </imageobject>
+            </mediaobject>
+        </subtitle>
+        <author>
+            <personname>Johan Persson</personname>
+            <email>johan162@gmail.com</email>
+        </author>
+        <copyright>
+            <year>2013-2016</year>
+            <holder>Johan Persson</holder>
+        </copyright>
+        <releaseinfo>Manual RA19 (For daemon v3.4.0)</releaseinfo>
+    </info>
+ 
+<?hard-pagebreak?>
+    <xi:include href="Preface.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="ReleaseHistory.xml" parse="xml"/>
+<?hard-pagebreak?>    
+    <xi:include href="Introduction.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="Installing.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="RunningTheDaemon.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="TheCommandShell.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="ConnectingDevice.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="ControllingDevice.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="ReceivingData.xml" parse="xml"/>   
+<?hard-pagebreak?>
+    <xi:include href="ExportingDB.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="ConfiguringDaemon.xml" parse="xml"/>    
+<?hard-pagebreak?>
+    <xi:include href="TroubleShooting.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="CommandReference.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="Technical.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="References.xml" parse="xml"/>
+<?hard-pagebreak?>
+    <xi:include href="NEWS.xml" parse="xml"/>    
+<?hard-pagebreak?>
+    <xi:include href="Backlog.xml" parse="xml"/>
+</article>

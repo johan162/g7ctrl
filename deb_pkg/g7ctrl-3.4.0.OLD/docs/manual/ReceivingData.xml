@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="5.0"  xml:id="section.receiving-data">
+    <title>Receiving data</title>
+    <para>Once the daemon is running it will listen for incoming events from the tracker. By default
+        the daemon is listening on <acronym>TCP/IP</acronym> port 3400 for device connections. As
+        explained in <xref linkend="appendix.configuring-the-daemon"/> the port can be changed
+        in either the configuration file or via command line arguments when the daemon is
+        started.</para>
+    <section>
+        <title>Setting up device to receive location updates</title>
+        <para>To have the device start sending data two things must happen:</para>
+        <para>
+            <orderedlist>
+                <listitem>
+                    <para>The device must be put in <acronym>GPRS</acronym> communication mode. This
+                        is done via the "<command>comm</command>" command in the daemon which will
+                        configure the communication method of the device. </para>
+                    <para>In order to enable <acronym>GPRS</acronym> communication you must first
+                        find out some information from the operator you are using. At minimum you
+                        need to find your operators <acronym>APN</acronym> name and if you want to
+                        use a <acronym>DNS</acronym> name for your server (as opposed to a numeric
+                            <acronym>IP</acronym> address).</para>
+                    <para>The final bit of information/decision you need to make is decide how often
+                        the device will "phone home". Since the operator has to manage a lot of
+                        devices (where most of them are mobile phones) and there is a limited number
+                        of IP addresses the operator will re-use addresses when it decides it is not
+                        longer in use. The operator assumes a device does no longer need its
+                        communication path if it has been silent for a certain time. When the device
+                        starts talking again a new IP address and communication path will be
+                        setup.</para>
+                    <para>Therefore to keep the channel open with the same address the device will
+                        regularly send a message back to the server to indicate that the device is
+                        alive and kicking even if it hasn't sent any other events in a while.</para>
+                    <para>When establishing a <acronym>GPRS</acronym> connection you need to decide
+                        how often these so called "KEEP ALIVE" messages (for obvious reasons) should
+                        be sent. Sending them to often will drain the battery but on the other hand
+                        sending them too slow will have the operator close the connection and force
+                        the device to create a new communication (with a new IP address). The daemon
+                        is clever enough to keep track of each device regardless of what IP address
+                        it gets so dropping the connection is not really a big issue. The only small
+                        drawback is that if its too far between the KEEP ALIVE messages it can take
+                        a while to discover that the device has a problem.</para>
+                    <para>The time depends on the operator but to keep the same
+                            <acronym>IP</acronym> address most likely the time needs to be less than
+                        2min.</para>
+                </listitem>
+                <listitem>
+                    <para>Tell the tracker to start sending location updates according to
+                        specifications. The tracker can be told to send back location updates at
+                        regular interval (either time, distance or both). See the "track" command
+                            (<xref linkend="cmd.track"/>) for more details.</para>
+                </listitem>
+            </orderedlist>
+        </para>
+        <para>To make it easy the daemon includes a predefined <emphasis role="bold"
+                >preset</emphasis> template "<filename>gtrack.preset.template</filename>". This
+            preset will both enable the <acronym>GPRS</acronym> communication and also turn on
+            tracking so that the device will start sending updates at specified time interval. See
+                <xref linkend="section.preset-templates"/> for more details. </para>
+        <para>To disable the tracking send the command "<command>set track off</command>" (see <xref
+                linkend="cmd.track"/>) to the device.</para>
+        <para>
+            <note>
+                <para>Please recall that the device by default will go into sleep mode if no
+                    movement is detected within 3 minutes and will then stop sending location
+                    updates.</para>
+            </note>
+        </para>
+    </section>
+</section>
+

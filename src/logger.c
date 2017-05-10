@@ -49,7 +49,7 @@
 #include "config.h"
 #include "logger.h"
 #include "utils.h"
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "futils.h"
 #include "g7ctrl.h"
 #include "g7config.h"
@@ -184,7 +184,13 @@ void logmsg(int priority, const char *msg, ...) {
         va_start(ap, msg);
 
         int erroffset = 0;
-        if (priority == LOG_WARNING) {
+        if (priority == LOG_DEBUG) {
+            tmpbuff[0] = '>';
+            tmpbuff[1] = '>';
+            tmpbuff[2] = '>';
+            tmpbuff[3] = ' ';
+            erroffset = 4;
+        } else if (priority == LOG_WARNING) {
             tmpbuff[0] = '*';
             tmpbuff[1] = ' ';
             erroffset = 2;

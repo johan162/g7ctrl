@@ -26,12 +26,11 @@
 # 
 # These files are listed here to be added to EXTRA_DIST and so that they can be copied over
 # properly for builddir != srcdir builds.
-#
 XML_FILES = Manual.xml CommandReference.xml ControllingDevice.xml Introduction.xml \
     ReceivingData.xml Technical.xml ConfiguringDaemon.xml ExportingDB.xml References.xml \
     TheCommandShell.xml ConnectingDevice.xml Installing.xml Preface.xml RunningTheDaemon.xml \
     TroubleShooting.xml TheCommandShell.xml ReleaseHistory.xml Backlog.xml \
-    NEWS.xml table-src-stats.xml
+    NEWS.xml table-src-stats.xml 
 
 CSS_FILES = css_stylesheets/article.css \
     css_stylesheets/article.css css_stylesheets/article-fancyterm.css \
@@ -52,7 +51,8 @@ CSS_FILES = css_stylesheets/article.css \
 
 CSS_DIRECTORIES = css_stylesheets/img css_stylesheets
 
-IMAGE_FILES = gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png
+IMAGE_FILES = gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png \
+ pdf_report_pg1.png  pdf_report_pg2.png fop.cfg
 
 # Documentation for the database that should be included in the distribution 
 DBDOC_FILES = dbdoc/export_db.rng dbdoc/README dbdoc/db_schema.sql \
@@ -141,9 +141,9 @@ distclean-local:
 
 
 table-src-stats.xml:
-	cloc --autoconf --quiet --progress-rate=0 --force-lang=make,in \
+	${CLOC} --autoconf --quiet --progress-rate=0 --force-lang=make,in \
 	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
-	../../src/ ../. | gawk --file=$(srcdir)/src-stat.awk > table-src-stats.xml
+	../../src/ ../. | ${GAWK} --file=$(srcdir)/src-stat.awk > table-src-stats.xml
 	
 #
 # Again, this get overly complicated just because of the need to add the
@@ -187,6 +187,7 @@ endif
 
 clean-local:
 	-rm -rf out
+	-rm -f table-src-stats.xml
 
 if have_javafop
 
@@ -223,7 +224,7 @@ out/pdf/Manual-A4-duplex.pdf: $(XML_FILES) xsl_stylesheets/fo.xsl xsl_stylesheet
 	done ;							    \
 	fi	
 	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl $<
-	- ${FOP} -q out/pdf/Manual.fo $@  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
+	- ${FOP} -c fop.cfg -q out/pdf/Manual.fo $@  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
 #rm out/pdf/Manual.fo
 	@echo " ================================================================================================"
 	@echo " == INFORMATION: It is safe to ignore warnings about paragraph overflows and font substitution =="
@@ -245,6 +246,15 @@ out/txt/Manual.txt:
 	touch $@
 
 endif
+  
+
+out/html/pdf_report_pg1.png:
+	[ -d "out/html" ] ||  mkdir -p out/html
+	[ -e "out/html/pdf_report_pg1.png" ] || cp pdf_report_pg1.png out/html
+
+out/html/pdf_report_pg2.png:
+	[ -d "out/html" ] ||  mkdir -p out/html
+	[ -e "out/html/pdf_report_pg2.png" ] || cp pdf_report_pg2.png out/html
 
 out/html/gm7_tracker_small.jpg:
 	[ -d "out/html" ] ||  mkdir -p out/html
@@ -262,5 +272,6 @@ out/html/event_mail_with_minimap_large.png:
 dist_stdpackagedoc_DATA = out/pdf/Manual-A4-duplex.pdf
 
 dist_stdpackagedochtml_DATA = out/html/index.html css_stylesheets/article.css \
-    out/html/gm7_tracker_small.jpg out/html/gm7_tracker_tall.jpg out/html/event_mail_with_minimap_large.png
+    out/html/gm7_tracker_small.jpg out/html/gm7_tracker_tall.jpg out/html/event_mail_with_minimap_large.png \
+    out/html/pdf_report_pg1.png out/html/pdf_report_pg2.png 
 

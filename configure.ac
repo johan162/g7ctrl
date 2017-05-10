@@ -1,11 +1,9 @@
 # ===============================================================================
-# $Id$
 # Autoconf script for the g7ctrl daemon
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.3.0],[johan162@gmail.com])
-AC_REVISION([$Id$])
+AC_INIT([g7ctrl],[3.4.2],[johan162@gmail.com])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2015 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
@@ -16,12 +14,14 @@ AC_PROG_LN_S
 AC_PROG_CC_C99
 AC_CONFIG_HEADER([src/config.h])
 
+
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
 src/libiniparser/Makefile
 src/libsmtpmail/Makefile
 src/libhpdftbl/Makefile
+src/libxstr/Makefile
 src/shell/Makefile
 src/emul/Makefile
 src/etc/g7ctrl.conf.template
@@ -43,11 +43,20 @@ docs/manual/xsl_stylesheets/website.xsl
 docs/manual/xsl_stylesheets/common.xsl
 ])
 
+
+if test ! x$SYSTEM_NAME = xDarwin; then
+    export PATH="/usr/local/bin:${PATH}"
+fi
+
 # ===============================================================================
 # Set default sysconfdir to "/etc" in case prefix is not set by user
-# We also check that the user hasnt specified sysconfdir directly
+# We also check that the user hasn't specified sysconfdir directly
 # ===============================================================================
-AS_IF([ test "$prefix" = NONE],[test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc] )
+AS_IF([ test "$prefix" = NONE],
+    [test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc],
+    AS_IF([ test x"$prefix" = "x/usr" -o x"$prefix" = "x/usr/local"],
+          [test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc],
+          [test "$sysconfdir" = '${prefix}/etc' && sysconfdir=${prefix}/etc] ))
 
 
 # ===============================================================================
@@ -58,17 +67,32 @@ AS_IF([ test "$prefix" = NONE],
   [AC_DEFINE_UNQUOTED(DEFAULT_DATA_DIR,"/usr/share/$PACKAGE",[Default data directory for all assets])],
   [AC_DEFINE_UNQUOTED(DEFAULT_DATA_DIR,"$prefix/share/$PACKAGE",[Default data directory for all assets])] )
 
+# ===============================================================================
+# We add the AC_SUBST definition to be able to print the paths at the end of 
+# running configure
+# ===============================================================================
 AS_IF([ test "$prefix" = NONE],
   [AC_SUBST(DEFAULT_CONF_DATA_DIR,"/usr/share/$PACKAGE",[Default data directory for all assets])],
   [AC_SUBST(DEFAULT_CONF_DATA_DIR,"$prefix/share/$PACKAGE",[Default data directory for all assets])] )
 
+
+# ===============================================================================
+# If the final installation target is NONE or the usual "/usr" or "/usr/local"
+# the the DB_DIR will be "/var/lib/@PACKAGE" as stipulated by LSB.
+# For any other prefixes we assume that this is a stage build and really use the 
+# given prefix to control the final destination of DB_DIR
+# ===============================================================================
 AS_IF([ test "$prefix" = NONE],
   [AC_DEFINE_UNQUOTED(DEFAULT_DB_DIR,"/var/lib/$PACKAGE",[Default DB directory])],
-  [AC_DEFINE_UNQUOTED(DEFAULT_DB_DIR,"$prefix/var/lib/$PACKAGE",[Default DB directory])] )
+  AS_IF([ test x"$prefix" = "x/usr" -o x"$prefix" = "x/usr/local"],
+      [AC_DEFINE_UNQUOTED(DEFAULT_DB_DIR,"/var/lib/$PACKAGE",[Default DB directory])],
+      [AC_DEFINE_UNQUOTED(DEFAULT_DB_DIR,"$prefix/var/lib/$PACKAGE",[Default DB directory])] ))
 
 AS_IF([ test "$prefix" = NONE],
   [AC_SUBST(DEFAULT_CONF_DB_DIR,"/var/lib/$PACKAGE",[Default DB directory])],
-  [AC_SUBST(DEFAULT_CONF_DB_DIR,"$prefix/var/lib/$PACKAGE",[Default DB directory])] )
+  AS_IF([ test x"$prefix" = "x/usr" -o x"$prefix" = "x/usr/local"],
+      [AC_SUBST(DEFAULT_CONF_DB_DIR,"/var/lib/$PACKAGE",[Default DB directory])],
+      [AC_SUBST(DEFAULT_CONF_DB_DIR,"$prefix/var/lib/$PACKAGE",[Default DB directory])] ))
 
 
 AC_DEFINE_UNQUOTED(DEFAULT_USER,"$PACKAGE",[Default user for running daemon])
@@ -87,9 +111,11 @@ AC_ARG_ENABLE([simulate],
     [enable_simulate=${enableval}],
     [enable_simulate=no])
 
-if test "x${enable_simulate}" = xyes; then
-    AC_DEFINE(DEBUG_SIMULATE,1,[Enable simulated connected device])
-fi
+#if test "x${enable_simulate}" = xyes; then
+#    AC_DEFINE(DEBUG_SIMULATE,1,[Enable simulated connected device])
+#fi
+AS_IF([ test "x${enable_simulate}" = xyes],
+    [AC_DEFINE(DEBUG_SIMULATE,1,[Enable simulated connected device]) ] )
 
 AC_ARG_ENABLE([stacktrace],
     [  --enable-stacktrace    Enable a stacktrace dump in case of SIGSEGV or SIGBUS error],
@@ -127,19 +153,22 @@ fi
 # Optional ARGS
 # --with-systemdsystemunitdir  Specify directory for systemd service script
 # ===============================================================================
-PKG_PROG_PKG_CONFIG
-AC_ARG_WITH([systemdsystemunitdir],
-            AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
-            [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
-if test "x$with_systemdsystemunitdir" != xno; then
-    if test "x$with_systemdsystemunitdir" == x; then
-        with_systemdsystemunitdir=/usr/lib/systemd/system
+if test ! x$SYSTEM_NAME = xDarwin; then
+    PKG_PROG_PKG_CONFIG
+    AC_ARG_WITH([systemdsystemunitdir],
+                AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
+                [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
+    if test "x$with_systemdsystemunitdir" != xno; then
+        if test "x$with_systemdsystemunitdir" == x; then
+            with_systemdsystemunitdir=/usr/lib/systemd/system
+        fi
+        AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
     fi
-    AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
+    AC_DEFINE_UNQUOTED(SYSTEMD_INSTDIR,"$with_systemdsystemunitdir",[Where to install systemd service file])
+    AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
+else
+    AM_CONDITIONAL(HAVE_SYSTEMD,0)
 fi
-AC_DEFINE_UNQUOTED(SYSTEMD_INSTDIR,"$with_systemdsystemunitdir",[Where to install systemd service file])
-AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
-
 
 # ===============================================================================
 # Setup directory for package documentation 
@@ -174,7 +203,7 @@ if test x$SYSTEM_NAME = xDarwin; then
     else
         AC_MSG_RESULT([yes])
         OSX_GNU_READLINE=yes
-    fi
+    fi    
 else
     AC_MSG_RESULT([Not OSX])
 fi
@@ -224,17 +253,11 @@ if test "x${have_iniparser_h}" = xyes; then
 fi
 
 AC_CHECK_LIB(m, lroundf,,AC_MSG_ERROR([No math library found. Please install libm-dev (or similar)]))
-
 AC_CHECK_LIB(sqlite3, sqlite3_open,,AC_MSG_ERROR([No sqlite3 library found. Please install sqlite3-dev (or similar)]))
-
 AC_CHECK_LIB(pcre, pcre_compile,,AC_MSG_ERROR([No pcre library found. Please install pcre-dev (or similar)]))
-
 AC_CHECK_LIB(xml2, xmlStrcmp,,AC_MSG_ERROR([No xml2 library found. Please install libxml2-dev (or similar)]))
-
 AC_CHECK_LIB(curl, curl_global_init,,AC_MSG_ERROR([No curl library found. Please install libcurl-dev (or similar)]))
-
 AC_CHECK_LIB(hpdf, HPDF_New,,AC_MSG_ERROR([No Haru PDF library found. Please install libhpdf-dev (or similar)]))
-
 
 
 # ===============================================================================
@@ -257,6 +280,7 @@ AC_TYPE_SIZE_T
 # ===============================================================================
 AC_CHECK_FUNCS([atexit bzero floor getcwd memset mkdir rmdir select socket strchr strnlen strdup strerror])
 
+
 # ===============================================================================
 # MACRO AX_CHECK_XSLDOCBOOK
 # The following macro will check to see if a working Docbook 5 environment can be found. It will also
@@ -266,34 +290,39 @@ AC_CHECK_FUNCS([atexit bzero floor getcwd memset mkdir rmdir select socket strch
 # rebuild the man pages will need to have a full Docbook 5 setup.
 # ===============================================================================
 AC_DEFUN([AX_CHECK_XSLDOCBOOK],[
-DOCBOOK_XSL=
-    for i in /usr/share/xml/docbook/stylesheet/docbook-xsl-ns /usr/share/xml/docbook/stylesheet/nwalsh5/current /usr/share/sgml/docbook/stylesheet/xsl/nwalsh5 /usr/share/sgml/docbook/xsl-stylesheets 
-    do
-            if test -d "$i"; then
-                    DOCBOOK_XSL=$i
-                    break;
-            fi
-    done
 AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
 AC_CHECK_PROG(XML2CONFIG,xml2-config,xml2-config,)
 # AC_PATH_PROG (variable, prog-to-check-for, [value-if-not-found], [path])
 
+XML_CATALOG=
+for i in /etc/xml/catalog /usr/local/etc/xml/catalog do
+    do
+        if test -f "$i"; then
+            XML_CATALOG_FILES=$i
+            export XML_CATALOG_FILES
+            break;
+        fi
+    done
+AC_MSG_NOTICE([ Using XML Catalog in ${XML_CATALOG_FILES} ])
 
 XSLTPROC_WORKS=no
 if test  "$XSLTPROC" -a "$XML2CONFIG" ; then
-	AC_MSG_CHECKING([if Docbook 5 is installed])
-    DOCBOOK_XSL_SCHEMA="$DOCBOOK_XSL/html/docbook.xsl"
-	$XSLTPROC --nonet $DOCBOOK_XSL_SCHEMA > /dev/null 2>&1 << END
-<?xml version="1.0" encoding='ISO-8859-1'?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML 5.0//EN" "http://www.oasis-open.org/docbook/xml/5.0/dtd/docbook.dtd">
-<book id="test">
-</book>
+    AC_MSG_CHECKING([ for working docbook 5 is installation])
+    DOCBOOK_XSL_SCHEMA="http://docbook.sourceforge.net/release/xsl-ns/current/html/docbook.xsl"
+    $XSLTPROC --nonet $DOCBOOK_XSL_SCHEMA  << END
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://docbook.org/ns/docbook" 
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        version="5.0"
+        >
+</article>
 END
 	if test "$?" = 0; then
 		XSLTPROC_WORKS=yes
                 AC_MSG_RESULT([yes.])
         else
-        	AC_MSG_RESULT([no. schema=$DOCBOOK_XSL])
+        	AC_MSG_RESULT([Docbook schema does not work. Check your catalog! ])
 	fi
 fi
 
@@ -303,14 +332,10 @@ AC_CHECK_PROG(LINKS_WWW,links,yes,no)
 AM_CONDITIONAL(have_links, test "$LINKS_WWW" = "yes")
 
 AC_CHECK_PROG(JAVAFOP,fop,yes,no)
-if test "$JAVAFOP" = "no"; then
-    AC_PATH_PROG(FOP,fop,fop,)
-else
-    AC_PATH_PROG(FOP,fop,fop,)
-fi
+AC_PATH_PROG(FOP,fop,fop,)
 AM_CONDITIONAL(have_javafop, test "$JAVAFOP" = "yes")
 
-AC_SUBST(DOCBOOK_XSL)
+AC_SUBST(XML_CATALOG)
 ])
 
 # ===============================================================================
@@ -376,6 +401,13 @@ AX_CHECK_XSLDOCBOOK
 AX_GEN_PWD
 AX_OSX_READLINE
 
+# ======================
+# ======================
+AC_CHECK_PROG(HAVE_GAWK,gawk,yes,no)
+AC_PATH_PROG(GAWK,gawk,gawk,)
+AC_CHECK_PROG(HAVE_CLOC,cloc,yes,no)
+AC_PATH_PROG(CLOC,cloc,cloc,)
+
 # ===============================================================================
 # Output all generated files
 # ===============================================================================
@@ -398,7 +430,7 @@ if test x$SYSTEM_NAME = xDarwin; then
     fi
 fi
 AC_MSG_NOTICE([ ])
-AC_MSG_NOTICE([  - Directory for config file: \"${sysconfdir}/g7ctrl\"])
+AC_MSG_NOTICE([  - Directory for config file: ${sysconfdir}/g7ctrl])
 AC_MSG_NOTICE([  - Directory for static data files: \"${DEFAULT_CONF_DATA_DIR}\" ])
 AC_MSG_NOTICE([  - Directory for dynamic data files: \"${DEFAULT_CONF_DB_DIR}\" ])
 AC_MSG_NOTICE([ ])
@@ -419,7 +451,7 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
         AC_MSG_NOTICE([    To also build PDF versions please install 'fop'])
     else
         AC_MSG_NOTICE([  - Working Docbook5 setup detected. Will rebuild documentation. ])
-        AC_MSG_NOTICE([  - Stylesheets: ${DOCBOOK_XSL} ])
+        AC_MSG_NOTICE([  - Using XML catalog \"${XML_CATALOG_FILES}\" ])
         AC_MSG_NOTICE([  - fop executable: ${FOP} ])
         AC_MSG_NOTICE([    In case of errors rebuilding PDF regarding missing hyphenation])
         AC_MSG_NOTICE([    please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html ])

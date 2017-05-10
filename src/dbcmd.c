@@ -45,7 +45,7 @@
 #include "g7ctrl.h"
 #include "utils.h"
 #include "futils.h"
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "dbcmd.h"
 #include "mailutil.h"
 #include "gpsdist.h"
@@ -54,6 +54,12 @@
 #include "geoloc.h"
 #include "unicode_tbl.h"
 
+#define ERR_DB_READ_EVENT "[ERR] Can not read number of events in DB."
+#define ERR_DB_READING "[ERR] Problem reading DB"
+#define ERR_DB_CONNECT "[ERR] Cannot connect to DB"
+#define ERR_DB_DATE "[ERR] \"From Date\" can not be larger than \"To Date\""
+#define ERR_DB_DIST_TWOPOINTS  "[ERR] Selection must have at least two points."
+#define INFO_DB_DIST  "Calculating approximate distance using %zd points.\n"
 
 char *db_filename = DEFAULT_TRACKER_DB;
 
@@ -95,11 +101,11 @@ sql_reslist_callback(void *res, int nColumns, char **values, char **colNames) {
 
 /**
  * Check DB Version callback sqlite3_exec()
- * @param currentDBVersion
- * @param nColumns
- * @param values
- * @param colNames
- * @return
+ * @param currentDBVersion Version to check against
+ * @param nColumns Number of columns in table
+ * @param values Values of each column
+ * @param colNames Name of columns
+ * @return 1 if version is the current version of DB 0 otherwise
  */
 static int
 _chk_db_version_cb(void *currentDBVersion, int nColumns, char **values, char **colNames) {
@@ -194,7 +200,7 @@ db_get_numevents(struct client_info *cli_info) {
     const int sockd = cli_info->cli_socket;
     int num;
     if (_db_get_size(&num)) {
-        _writef(sockd, "[ERR] Can not read number of events in DB.");
+        _writef(sockd, ERR_DB_READ_EVENT );
         return -1;
     }
     _writef(sockd, "%d", num);
@@ -614,15 +620,15 @@ db_empty_loc(struct client_info *cli_info) {
  * @param val Comparison value
  */
 void
-add_wcond(char *w, char *col, char *op, char *val) {
+db_add_wcond(char *w, size_t maxlen, char *col, char *op, char *val) {
     xstrtrim(val);
     if (*val) {
         if (*w) {
             char buf[256];
             snprintf(buf, sizeof (buf) - 1, " AND %s %s %s ", col, op, val);
-            strcat(w, buf);
+            xstrlcat(w, buf, maxlen);
         } else {
-            sprintf(w, "WHERE %s %s %s ", col, op, val);
+            snprintf(w, maxlen, "WHERE %s %s %s ", col, op, val);
         }
     }
 }
@@ -683,7 +689,7 @@ db_calc_distance(struct client_info *cli_info, ssize_t nf, char **fields) {
             if (resSetLength > 1) {
                 double dist = 0.0;
                 double dist2 = 0.0;
-                _writef(sockd, "Calculating approximate distance using %zd points.\n", resSetLength);
+                _writef(sockd, INFO_DB_DIST, resSetLength);
                 struct g7loc_t *p1, *p2;
                 for (size_t i = 0; i < resSetLength - 1; ++i) {
                     p1 = &g7loc_list[i];
@@ -701,26 +707,28 @@ db_calc_distance(struct client_info *cli_info, ssize_t nf, char **fields) {
                     _writef(sockd, "%.0f m", round(dist * 1000));
                 }
             } else {
-                _writef(sockd, "[ERR] Selection must have at least two points.");
+                _writef(sockd, ERR_DB_DIST_TWOPOINTS);
             }
 
         } else {
             if (-2 == rc) {
-                _writef(sockd, "\"From Date\" can not be larger than \"To Date\"");
+                _writef(sockd, ERR_DB_DATE);
             } else {
-                _writef(sockd, "[ERR] Problem reading DB");
+                _writef(sockd, ERR_DB_READING);
                 logmsg(LOG_ERR, "Export to internal set failed. Cannot calculate distance.");
             }
         }
         free_internal_set();
     } else {
         logmsg(LOG_ERR, "Cannot connect to DB");
-        _writef(sockd, "[ERR] Cannot connect to DB");
+        _writef(sockd, ERR_DB_CONNECT);
         rc = -1;
     }
 
     return rc;
 }
+
+
 
 static int sort_order = SORT_ARRIVALTIME;
 
@@ -799,6 +807,8 @@ db_lastloc(struct client_info *cli_info) {
    return db_loclist(cli_info, TRUE, 1);
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"
 /**
  * Command to get a list of locations stored in the database. The list is collected
  * either from the head or from the bottom in regards to the timestamp.
@@ -818,7 +828,7 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
         return -1;
     }
 
-    char *res[cols * numrows];
+    char *res[cols * numrows];    
     memset(res, 0, cols*numrows * sizeof(char *));
 
     // For head the list is in descending order (newest first)
@@ -895,6 +905,8 @@ db_loclist(struct client_info *cli_info, _Bool head, size_t numrows) {
     return rc;
 }
 
+#pragma GCC diagnostic pop
+
 /**
  * Print the latest positions in  a row
  * @param cli_info Client context
@@ -936,35 +948,33 @@ int
 mail_lastloc(struct client_info *cli_info) {
 
     const int sockd = cli_info->cli_socket;
-    const size_t MAX_KEYPAIRS = 50;
 
     // Setup key replacements
-    struct keypairs *keys = new_keypairlist(MAX_KEYPAIRS);
+    dict_t rkeys = new_dict();
     char valBuff[256];
-    size_t keyIdx = 0;
 
     // Get full current time to include in mail
     time_t now = time(NULL);
     ctime_r(&now, valBuff);
     valBuff[strnlen(valBuff, sizeof (valBuff)) - 1] = 0; // Remove trailing newline
-    add_keypair(keys, MAX_KEYPAIRS, "SERVERTIME", valBuff, &keyIdx);
+    add_dict(rkeys, "SERVERTIME", valBuff);
 
     // Include the server name in the mail
     gethostname(valBuff, sizeof (valBuff));
     valBuff[sizeof (valBuff) - 1] = '\0';
     
-    add_keypair(keys, MAX_KEYPAIRS, "SERVERNAME", valBuff, &keyIdx);
-    add_keypair(keys, MAX_KEYPAIRS, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
-    add_keypair(keys, MAX_KEYPAIRS, "FORMAT", "GPX", &keyIdx);
+    add_dict(rkeys, "SERVERNAME", valBuff);
+    add_dict(rkeys, "DAEMONVERSION", PACKAGE_VERSION);
+    add_dict(rkeys, "FORMAT", "GPX");
 
     // Add information on disk usage
     char ds_fs[64], ds_size[64], ds_avail[64], ds_used[64];
     int ds_use;
     if (0 == get_diskspace(db_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
-        add_keypair(keys, MAX_KEYPAIRS, "DISK_SIZE", ds_size, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DISK_USED", ds_used, &keyIdx);
+        add_dict(rkeys, "DISK_SIZE", ds_size);
+        add_dict(rkeys, "DISK_USED", ds_used);
         snprintf(valBuff, sizeof (valBuff), "%d", ds_use);
-        add_keypair(keys, MAX_KEYPAIRS, "DISK_PERCENT_USED", valBuff, &keyIdx);
+        add_dict(rkeys, "DISK_PERCENT_USED", valBuff);
     }
 
     char *res[_DB_GETLOCLIST_COLS];
@@ -997,17 +1007,17 @@ mail_lastloc(struct client_info *cli_info) {
                      use_short_devid ? short_devid : res[1]);
         }
 
-        snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] - Last location in DB",mail_subject_prefix, use_short_devid?short_devid:nick_devid);
+        snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_LASTLOCATION, mail_subject_prefix, use_short_devid?short_devid:nick_devid);
 
-        add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DATETIME", splitdatetime(res[0], dbuff), &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", res[1], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "LAT", res[2], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "LON", res[3], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "SPEED", res[4], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "APPROX_ADDRESS", res[5], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "VOLTAGE", res[6], &keyIdx);
+        add_dict(rkeys, "NICK", nick);
+        add_dict(rkeys, "NICK_DEVID", nick_devid);
+        add_dict(rkeys, "DATETIME", splitdatetime(res[0], dbuff));
+        add_dict(rkeys, "DEVICEID", res[1]);
+        add_dict(rkeys, "LAT", res[2]);
+        add_dict(rkeys, "LON", res[3]);
+        add_dict(rkeys, "SPEED", res[4]);
+        add_dict(rkeys, "APPROX_ADDRESS", res[5]);
+        add_dict(rkeys, "VOLTAGE", res[6]);
                         
         if (include_minimap) {
             
@@ -1015,13 +1025,13 @@ mail_lastloc(struct client_info *cli_info) {
 
             char kval[32];
             snprintf(kval,sizeof(kval),"%d",minimap_width);
-            add_keypair(keys, MAX_KEYPAIRS, "IMG_WIDTH", kval, &keyIdx);
+            add_dict(rkeys, "IMG_WIDTH", kval);
             
             snprintf(kval,sizeof(kval),"%d",minimap_overview_zoom);
-            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_OVERVIEW", kval, &keyIdx);
+            add_dict(rkeys, "ZOOM_OVERVIEW", kval);
             
             snprintf(kval,sizeof(kval),"%d",minimap_detailed_zoom);
-            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_DETAILED", kval, &keyIdx);
+            add_dict(rkeys, "ZOOM_DETAILED", kval);
 
             char *overview_imgdata, *detailed_imgdata;
             const char *lat = res[2];
@@ -1043,8 +1053,7 @@ mail_lastloc(struct client_info *cli_info) {
                 logmsg(LOG_ERR, "Sending mail without the static maps.");
                 rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                                 "mail_lastloc",
-                                keys, keyIdx, MAX_KEYPAIRS, 
-                                NULL, 0, NULL);
+                                rkeys, NULL, 0, NULL);
             } else {
                 struct inlineimage_t *inlineimg_arr = calloc(2, sizeof (struct inlineimage_t));
                 setup_inlineimg(&inlineimg_arr[0], overview_filename, overview_datasize, overview_imgdata);
@@ -1052,8 +1061,7 @@ mail_lastloc(struct client_info *cli_info) {
 
                 rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                                     "mail_lastloc_img",
-                                    keys, keyIdx, MAX_KEYPAIRS,
-                                    NULL, 2, inlineimg_arr);
+                                    rkeys, NULL, 2, inlineimg_arr);
 
                 free_inlineimg_array(inlineimg_arr, 2);
                 free(inlineimg_arr);
@@ -1062,8 +1070,9 @@ mail_lastloc(struct client_info *cli_info) {
 
         } else {
         
-            rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, "mail_lastloc", keys, 
-                                    keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+            rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, 
+                                    "mail_lastloc", 
+                                    rkeys, NULL, 0, NULL);
         }
         
         for (size_t i = 0; i < 6; ++i) {
@@ -1073,7 +1082,7 @@ mail_lastloc(struct client_info *cli_info) {
         if (-1 == rc) {
             logmsg(LOG_ERR, "Cannot send mail with last location ( %d : %s )", errno, strerror(errno));
             _writef(sockd, "[ERR] Could not send mail.");
-            free(keys);
+            free_dict(rkeys);
             return -1;
         }
 
@@ -1087,7 +1096,7 @@ mail_lastloc(struct client_info *cli_info) {
         rc = -1;
         
     }
-    free(keys);
+    free_dict(rkeys);
     return rc;
 }
 

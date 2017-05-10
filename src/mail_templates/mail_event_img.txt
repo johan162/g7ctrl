@@ -14,6 +14,8 @@ Tracker
 Satellites: [SAT] 
    Battery: [VOLTAGE]V
 
+
+
 Server 
 ------
       Name: [SERVERNAME]  
@@ -21,6 +23,24 @@ Local time: [SERVERTIME]
  Disk size: [DISK_SIZE] 
  Disk used: [DISK_USED] ([DISK_PERCENT_USED]%)
   Load avg: [SYSTEM_LOADAVG]
+
+Address cache
+-------------
+Hitrate: [ADDRESS_CACHE_HITRATE]
+   Fill: [ADDRESS_CACHE_FILL]
+    Mem: [ADDRESS_CACHE_MEM]
+
+   Size: [ADDRESS_CACHE_MAXSIZE]
+Lookups: [ADDRESS_CACHE_TOTCALLS]
+
+Minimap cache
+------------- 
+   Fill: [MINIMAP_CACHE_FILL]
+Hitrate: [MINIMAP_CACHE_HITRATE]
+    Mem: [MINIMAP_CACHE_MEM]
+
+   Size: [MINIMAP_CACHE_MAXSIZE]
+Lookups: [MINIMAP_CACHE_TOTCALLS]
 
 Daemon
 ------

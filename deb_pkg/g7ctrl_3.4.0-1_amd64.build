@@ -1,0 +1,629 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc
+dpkg-buildpackage: source package g7ctrl
+dpkg-buildpackage: source version 3.4.0-1
+dpkg-buildpackage: source distribution trusty
+dpkg-buildpackage: source changed by Johan Persson <johan162@gmail.com>
+ dpkg-source --before-build g7ctrl-3.4.0
+dpkg-buildpackage: host architecture amd64
+ fakeroot debian/rules clean
+dh clean
+   dh_testdir
+   dh_auto_clean
+   dh_clean
+ dpkg-source -b g7ctrl-3.4.0
+dpkg-source: info: using source format `3.0 (quilt)'
+dpkg-source: info: building g7ctrl using existing ./g7ctrl_3.4.0.orig.tar.gz
+dpkg-source: info: building g7ctrl in g7ctrl_3.4.0-1.debian.tar.gz
+dpkg-source: info: building g7ctrl in g7ctrl_3.4.0-1.dsc
+ debian/rules build
+dh build
+   dh_testdir
+   dh_auto_configure
+configure: WARNING: unrecognized options: --disable-maintainer-mode
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking target system type... x86_64-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+checking for style of include used by make... GNU
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking dependency style of gcc... none
+checking for ar... ar
+checking the archiver (ar) interface... ar
+checking whether ln -s works... yes
+checking for gcc option to accept ISO C99... -std=gnu99
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking whether make sets $(MAKE)... (cached) yes
+checking how to run the C preprocessor... gcc -std=gnu99 -E
+checking for grep that handles long lines and -e... /bin/grep
+checking for egrep... /bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking readline/readline.h usability... yes
+checking readline/readline.h presence... yes
+checking for readline/readline.h... yes
+checking arpa/inet.h usability... yes
+checking arpa/inet.h presence... yes
+checking for arpa/inet.h... yes
+checking fcntl.h usability... yes
+checking fcntl.h presence... yes
+checking for fcntl.h... yes
+checking for stdlib.h... (cached) yes
+checking for string.h... (cached) yes
+checking for strings.h... (cached) yes
+checking sys/param.h usability... yes
+checking sys/param.h presence... yes
+checking for sys/param.h... yes
+checking sys/socket.h usability... yes
+checking sys/socket.h presence... yes
+checking for sys/socket.h... yes
+checking for sys/stat.h... (cached) yes
+checking sys/ioctl.h usability... yes
+checking sys/ioctl.h presence... yes
+checking for sys/ioctl.h... yes
+checking syslog.h usability... yes
+checking syslog.h presence... yes
+checking for syslog.h... yes
+checking for unistd.h... (cached) yes
+checking iniparser.h usability... no
+checking iniparser.h presence... no
+checking for iniparser.h... no
+configure: iniparser.h not available. Will use built-in version
+checking sys/inotify.h usability... yes
+checking sys/inotify.h presence... yes
+checking for sys/inotify.h... yes
+checking errno.h usability... yes
+checking errno.h presence... yes
+checking for errno.h... yes
+checking for syslog.h... (cached) yes
+checking getopt.h usability... yes
+checking getopt.h presence... yes
+checking for getopt.h... yes
+checking signal.h usability... yes
+checking signal.h presence... yes
+checking for signal.h... yes
+checking for fcntl.h... (cached) yes
+checking pwd.h usability... yes
+checking pwd.h presence... yes
+checking for pwd.h... yes
+checking grp.h usability... yes
+checking grp.h presence... yes
+checking for grp.h... yes
+checking libgen.h usability... yes
+checking libgen.h presence... yes
+checking for libgen.h... yes
+checking dirent.h usability... yes
+checking dirent.h presence... yes
+checking for dirent.h... yes
+checking pcre.h usability... yes
+checking pcre.h presence... yes
+checking for pcre.h... yes
+checking sqlite3.h usability... yes
+checking sqlite3.h presence... yes
+checking for sqlite3.h... yes
+checking for ranlib... ranlib
+checking for pthread_create in -lpthread... yes
+checking for lroundf in -lm... yes
+checking for sqlite3_open in -lsqlite3... yes
+checking for pcre_compile in -lpcre... yes
+checking for xmlStrcmp in -lxml2... yes
+checking for curl_global_init in -lcurl... yes
+checking for HPDF_New in -lhpdf... yes
+checking for pid_t... yes
+checking vfork.h usability... no
+checking vfork.h presence... no
+checking for vfork.h... no
+checking for fork... yes
+checking for vfork... yes
+checking for working fork... yes
+checking for working vfork... (cached) yes
+checking whether time.h and sys/time.h may both be included... yes
+checking for sys/time.h... yes
+checking for unistd.h... (cached) yes
+checking for alarm... yes
+checking for working mktime... yes
+checking for uid_t in sys/types.h... yes
+checking for mode_t... yes
+checking for pid_t... (cached) yes
+checking for size_t... yes
+checking for atexit... yes
+checking for bzero... yes
+checking for floor... yes
+checking for getcwd... yes
+checking for memset... yes
+checking for mkdir... yes
+checking for rmdir... yes
+checking for select... yes
+checking for socket... yes
+checking for strchr... yes
+checking for strnlen... yes
+checking for strdup... yes
+checking for strerror... yes
+checking If system uses debian style init.d... yes
+checking If system uses Upstart init scripts... yes
+configure:  Found Docbook 5 in /usr/share/xml/docbook/stylesheet/docbook-xsl-ns
+checking for xsltproc... xsltproc
+checking for xml2-config... xml2-config
+configure:  Found XML Catalog in /etc/xml/catalog
+checking if Docbook 5 is installed... yes.
+checking for links... yes
+checking for fop... yes
+checking for fop... /usr/bin/fop
+checking If it is OSX and GNU readline is installed... Not OSX
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating src/Makefile
+config.status: creating src/libiniparser/Makefile
+config.status: creating src/libsmtpmail/Makefile
+config.status: creating src/libhpdftbl/Makefile
+config.status: creating src/libxstr/Makefile
+config.status: creating src/shell/Makefile
+config.status: creating src/emul/Makefile
+config.status: creating src/etc/g7ctrl.conf.template
+config.status: creating src/etc/deb.init.d
+config.status: creating src/etc/deb.init.conf
+config.status: creating src/etc/suse.init.d
+config.status: creating src/etc/ubuntu.init.d
+config.status: creating src/etc/g7ctrl.service
+config.status: creating src/etc/Makefile
+config.status: creating docs/Makefile
+config.status: creating docs/manpages/Makefile
+config.status: creating docs/manual/Makefile
+config.status: creating docs/manual/xsl_stylesheets/fo.xsl
+config.status: creating docs/manual/xsl_stylesheets/chunk.xsl
+config.status: creating docs/manual/xsl_stylesheets/epub.xsl
+config.status: creating docs/manual/xsl_stylesheets/html.fancycmd.xsl
+config.status: creating docs/manual/xsl_stylesheets/html.xsl
+config.status: creating docs/manual/xsl_stylesheets/website.xsl
+config.status: creating docs/manual/xsl_stylesheets/common.xsl
+config.status: creating src/config.h
+config.status: executing depfiles commands
+configure: WARNING: unrecognized options: --disable-maintainer-mode
+configure: --------------------------------------------------------------------------------
+configure: INSTALLATION SUMMARY
+configure:  
+configure:   - Directory for config file: /etc/g7ctrl
+configure:   - Directory for static data files: "/usr/share/g7ctrl" 
+configure:   - Directory for dynamic data files: "/var/lib/g7ctrl" 
+configure:  
+configure:   - Will install logrotate configuration file 
+configure:  
+configure:   - Working Docbook5 setup detected. Will rebuild documentation. 
+configure:   - Catalog "/etc/xml/catalog" points to local stylesheets in "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns" 
+configure:   - fop executable: /usr/bin/fop 
+configure:     In case of errors rebuilding PDF regarding missing hyphenation
+configure:     please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html 
+configure:   - Text browser "links" found. Can generate text version of manual
+configure: --------------------------------------------------------------------------------
+   dh_auto_build
+make[1]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making all in .
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+make[2]: Nothing to be done for `all-am'.
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making all in src
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+rm -f configmake.h-t && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  echo '#define PREFIX "/usr"'; \
+	  echo '#define EXEC_PREFIX "/usr"'; \
+	  echo '#define BINDIR "/usr/bin"'; \
+	  echo '#define SBINDIR "/usr/sbin"'; \
+	  echo '#define LIBEXECDIR "/usr/lib/x86_64-linux-gnu"'; \
+	  echo '#define DATAROOTDIR "/usr/share"'; \
+	  echo '#define DATADIR "/usr/share"'; \
+	  echo '#define SYSCONFDIR "/etc"'; \
+	  echo '#define SHAREDSTATEDIR "/usr/com"'; \
+	  echo '#define LOCALSTATEDIR "/var"'; \
+	  echo '#define STATEDIR "/var/lib"'; \
+	  echo '#define RUNSTATEDIR ""'; \
+	  echo '#define INCLUDEDIR "/usr/include"'; \
+	  echo '#define OLDINCLUDEDIR "/usr/include"'; \
+	  echo '#define DOCDIR "/usr/share/doc/g7ctrl"'; \
+	  echo '#define INFODIR "/usr/share/info"'; \
+	  echo '#define HTMLDIR "/usr/share/doc/g7ctrl"'; \
+	  echo '#define DVIDIR "/usr/share/doc/g7ctrl"'; \
+	  echo '#define PDFDIR "/usr/share/doc/g7ctrl"'; \
+	  echo '#define PSDIR "/usr/share/doc/g7ctrl"'; \
+	  echo '#define LIBDIR "/usr/lib/x86_64-linux-gnu"'; \
+	  echo '#define LISPDIR ""'; \
+	  echo '#define LOCALEDIR "/usr/share/locale"'; \
+	  echo '#define MANDIR "/usr/share/man"'; \
+	  echo '#define MANEXT ""'; \
+	  echo '#define PKGDATADIR "/usr/share/g7ctrl"'; \
+	  echo '#define PKGINCLUDEDIR "/usr/include/g7ctrl"'; \
+	  echo '#define PKGLIBDIR "/usr/lib/x86_64-linux-gnu/g7ctrl"'; \
+	  echo '#define PKGLIBEXECDIR "/usr/lib/x86_64-linux-gnu/g7ctrl"'; \
+	} | sed '/""/d' > configmake.h-t && \
+	mv -f configmake.h-t configmake.h
+make  all-recursive
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making all in libiniparser
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"'  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o dictionary.o dictionary.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"'  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o iniparser.o iniparser.c
+rm -f libiniparser.a
+ar cru libiniparser.a dictionary.o iniparser.o 
+ranlib libiniparser.a
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+Making all in libsmtpmail
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o base64ed.o base64ed.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o mailclientlib.o mailclientlib.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o quotprinted.o quotprinted.c
+rm -f libsmtpmail.a
+ar cru libsmtpmail.a base64ed.o mailclientlib.o quotprinted.o 
+ranlib libsmtpmail.a
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+Making all in libhpdftbl
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o hpdf_errstr.o hpdf_errstr.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o hpdf_grid.o hpdf_grid.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o hpdf_table.o hpdf_table.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o hpdf_table_widget.o hpdf_table_widget.c
+rm -f libhpdftbl.a
+ar cru libhpdftbl.a hpdf_errstr.o hpdf_grid.o hpdf_table.o hpdf_table_widget.o 
+ranlib libhpdftbl.a
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+Making all in libxstr
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o xstr.o xstr.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wno-error=unknown-pragmas -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o assocarray.o assocarray.c
+rm -f libxstr.a
+ar cru libxstr.a xstr.o assocarray.o 
+ranlib libxstr.a
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+Making all in .
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7ctrl.o g7ctrl.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7config.o g7config.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o futils.o futils.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o utils.o utils.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o lockfile.o lockfile.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o logger.o logger.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o pcredmalloc.o pcredmalloc.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o socklistener.o socklistener.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o serial.o serial.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7cmd.o g7cmd.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o tracker.o tracker.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o connwatcher.o connwatcher.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o dbcmd.o dbcmd.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o presets.o presets.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o dict.o dict.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o mailutil.o mailutil.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o gpsdist.o gpsdist.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7srvcmd.o g7srvcmd.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7sendcmd.o g7sendcmd.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o sighandling.o sighandling.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o nicks.o nicks.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o export.o export.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o geoloc.o geoloc.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o wreply.o wreply.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o unicode_tbl.o unicode_tbl.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7pdf_report_model.o g7pdf_report_model.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7pdf_report_view.o g7pdf_report_view.c
+gcc -std=gnu99 -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o geoloc_cache.o geoloc_cache.c
+gcc -std=gnu99 -DCONFDIR='"/etc"' -pedantic -Wall -Werror -Wpointer-arith -Wstrict-prototypes -Wextra -Wshadow -Wno-error=unknown-pragmas -Werror=format -Wformat=2 -fstack-protector --param=ssp-buffer-size=4 -Wstack-protector `xml2-config --cflags` `curl-config --cflags` -D_FORTIFY_SOURCE=2  -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Xlinker --defsym="__BUILD_NUMBER=$(cat buildnumber.txt)" -Xlinker --defsym="__BUILD_DATE=$(date +'%y%m%d')" -Wl,-Bsymbolic-functions -Wl,-z,relro -o g7ctrl g7ctrl.o g7config.o futils.o utils.o lockfile.o logger.o pcredmalloc.o socklistener.o serial.o g7cmd.o tracker.o connwatcher.o dbcmd.o presets.o dict.o mailutil.o gpsdist.o g7srvcmd.o g7sendcmd.o sighandling.o nicks.o export.o geoloc.o wreply.o unicode_tbl.o g7pdf_report_model.o g7pdf_report_view.o geoloc_cache.o  libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a  -lhpdf -lcurl -lxml2 -lpcre -lsqlite3 -lm -lpthread 
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making all in shell
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I../../src   -D_FORTIFY_SOURCE=2 -DCONFDIR="\"/etc\"" -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wshadow -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -c -o g7sh-g7shell.o `test -f 'g7shell.c' || echo './'`g7shell.c
+gcc -std=gnu99 -DCONFDIR="\"/etc\"" -pedantic -Wall -Werror -Wextra -Wpointer-arith -Wstrict-prototypes -Wshadow -D_FORTIFY_SOURCE=2 -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Xlinker --defsym -Xlinker "__BUILD_NUMBER=$(cat buildnumber.txt)" -Xlinker --defsym -Xlinker "__BUILD_DATE=$(date +'%y%m%d')"  -Wl,-Bsymbolic-functions -Wl,-z,relro -o g7sh g7sh-g7shell.o ../libxstr/libxstr.a ../libiniparser/libiniparser.a -lreadline -lhpdf -lcurl -lxml2 -lpcre -lsqlite3 -lm -lpthread 
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+Making all in etc
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+Making all in .
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[5]: Nothing to be done for `all-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making all in docs
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making all in .
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[3]: Nothing to be done for `all-am'.
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making all in manpages
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+Making all in manual
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+rm -rf out/pdf
+mkdir -p out/pdf
+set -e; if [ x"." != x"." ] ; then            \
+	for d in xsl_stylesheets/images/ xsl_stylesheets ; do                            \
+	    [ -d "./$d" ] || mkdir -p "./$d" ;   \
+	done ;                                                      \
+	for f in xsl_stylesheets/xmldepend.xsl xsl_stylesheets/images/caution.png xsl_stylesheets/images/caution-small.png xsl_stylesheets/images/caution.svg xsl_stylesheets/images/important.png xsl_stylesheets/images/important-small.png xsl_stylesheets/images/important.svg xsl_stylesheets/images/note.png xsl_stylesheets/images/note-small.png xsl_stylesheets/images/note.svg xsl_stylesheets/images/tip.png xsl_stylesheets/images/tip-small.png xsl_stylesheets/images/tip.svg xsl_stylesheets/images/warning.png xsl_stylesheets/images/warning-small.png xsl_stylesheets/images/warning.svg ; do                                  \
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;							\
+	for d in css_stylesheets/img css_stylesheets ; do                            \
+	    [ -d "./$d" ] || mkdir -p "./$d" ;   \
+	done ;                                                      \
+	for f in css_stylesheets/article.css css_stylesheets/article.css css_stylesheets/article-fancyterm.css css_stylesheets/comment_tn.gif css_stylesheets/comment_wh.gif css_stylesheets/icon-collapse-minus-large.gif css_stylesheets/icon-expand-plus-large.gif css_stylesheets/leaf_tn.gif css_stylesheets/ledblue.png css_stylesheets/ledgreen.png css_stylesheets/ledorange.png css_stylesheets/ledred.png css_stylesheets/ledyellow.png css_stylesheets/minus-arrow.gif css_stylesheets/minus.gif css_stylesheets/plus-arrow.gif css_stylesheets/plus.gif css_stylesheets/img/admon-bug2.png css_stylesheets/img/admon-bug2_small.png css_stylesheets/img/admon-bug.png css_stylesheets/img/admon-caution.png css_stylesheets/img/admon-note.png css_stylesheets/img/admon-tip.png css_stylesheets/img/admon-warning.png css_stylesheets/img/checkmark-green.png css_stylesheets/img/checkmark-large.png css_stylesheets/img/checkmark-plain.gif css_stylesheets/img/code-anonymous-bottom.png css_stylesheets/img/code-anonymous-middle.png css_stylesheets/img/code-anonymous-top.png ; do                                  \
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;                                                      \
+	for d in dbdoc ; do                          \
+	    [ -d "./$d" ] || mkdir -p "./$d" ;   \
+	done ;                                                      \
+	for f in dbdoc/export_db.rng dbdoc/README dbdoc/db_schema.sql dbdoc/export_db-rng-grammar.png ; do                                \
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;							\
+	for f in gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png pdf_report_pg1.png  pdf_report_pg2.png ; do                                \
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;							    \
+	fi	
+xsltproc --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl Manual.xml
+Making portrait pages on A4 paper (210mmx297mm)
+/usr/bin/fop -q out/pdf/Manual.fo out/pdf/Manual-A4-duplex.pdf  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
+ ================================================================================================
+ == INFORMATION: It is safe to ignore warnings about paragraph overflows and font substitution ==
+ ================================================================================================
+rm -rf out/html
+mkdir -p out/html/img	
+set -e; if [ x"." != x"." ] ; then        	\
+	for d in css_stylesheets/img css_stylesheets ; do                            	\
+	    [ -d "./$d" ] || mkdir -p "./$d" ;   	\
+	done ;                                                      	\
+	for f in css_stylesheets/article.css css_stylesheets/article.css css_stylesheets/article-fancyterm.css css_stylesheets/comment_tn.gif css_stylesheets/comment_wh.gif css_stylesheets/icon-collapse-minus-large.gif css_stylesheets/icon-expand-plus-large.gif css_stylesheets/leaf_tn.gif css_stylesheets/ledblue.png css_stylesheets/ledgreen.png css_stylesheets/ledorange.png css_stylesheets/ledred.png css_stylesheets/ledyellow.png css_stylesheets/minus-arrow.gif css_stylesheets/minus.gif css_stylesheets/plus-arrow.gif css_stylesheets/plus.gif css_stylesheets/img/admon-bug2.png css_stylesheets/img/admon-bug2_small.png css_stylesheets/img/admon-bug.png css_stylesheets/img/admon-caution.png css_stylesheets/img/admon-note.png css_stylesheets/img/admon-tip.png css_stylesheets/img/admon-warning.png css_stylesheets/img/checkmark-green.png css_stylesheets/img/checkmark-large.png css_stylesheets/img/checkmark-plain.gif css_stylesheets/img/code-anonymous-bottom.png css_stylesheets/img/code-anonymous-middle.png css_stylesheets/img/code-anonymous-top.png ; do                                  	\
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;                                                      	\
+	for d in dbdoc ; do                          	\
+	    [ -d "./$d" ] || mkdir -p "./$d" ;   	\
+	done ;                                                      	\
+	for f in dbdoc/export_db.rng dbdoc/README dbdoc/db_schema.sql dbdoc/export_db-rng-grammar.png ; do                                	\
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;							    	\
+	for f in gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png pdf_report_pg1.png  pdf_report_pg2.png ; do                                	\
+	    [ -e "./$f" ] || cp "./$f" "./$f" ;                  \
+	done ;							    	\
+        fi
+xsltproc --nonet --xinclude --output out/html/index.html xsl_stylesheets/html.xsl Manual.xml
+Writing index.html for article
+cp css_stylesheets/img/*.png out/html/img
+cp css_stylesheets/*.css out/html
+for f in gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png pdf_report_pg1.png  pdf_report_pg2.png ; do \
+	    cp "./$f" "out/html" ; \
+	done ;
+rm -rf out/txt
+mkdir -p out/txt 
+links -width 100 -dump out/html/index.html > out/txt/Manual.txt
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[1]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+   dh_auto_test
+make[1]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making check in .
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+make[2]: Nothing to be done for `check-am'.
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making check in src
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make  check-recursive
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making check in libiniparser
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+make[4]: Nothing to be done for `check'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+Making check in libsmtpmail
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+make[4]: Nothing to be done for `check'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+Making check in libhpdftbl
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+make[4]: Nothing to be done for `check'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+Making check in libxstr
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+make[4]: Nothing to be done for `check'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+Making check in .
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making check in shell
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+make[4]: Nothing to be done for `check'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+Making check in etc
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+Making check in .
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[5]: Nothing to be done for `check-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making check in docs
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making check in .
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[3]: Nothing to be done for `check-am'.
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making check in manpages
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+make[3]: Nothing to be done for `check'.
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+Making check in manual
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[3]: Nothing to be done for `check'.
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[1]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+ fakeroot debian/rules binary
+dh binary
+   dh_testroot
+   dh_prep
+   dh_installdirs
+   dh_auto_install
+make[1]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making install in .
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+make[3]: Nothing to be done for `install-exec-am'.
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/assets'
+ /usr/bin/install -c -m 644 assets/trainxbell.mp3 assets/gm7_tracker_small.jpg '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/assets'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/assets'
+ /usr/bin/install -c assets/dumpdb.sh '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/assets'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+Making install in src
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make  install-recursive
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making install in libiniparser
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libiniparser'
+Making install in libsmtpmail
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libsmtpmail'
+Making install in libhpdftbl
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libhpdftbl'
+Making install in libxstr
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/libxstr'
+Making install in .
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/bin'
+  /usr/bin/install -c g7ctrl '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/bin'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/mail_templates'
+ /usr/bin/install -c -m 644 mail_templates/mail_event.html mail_templates/mail_lastloc.html mail_templates/mail_tracker_conn.html mail_templates/mail_with_export_attachment.html mail_templates/mail_event.txt mail_templates/mail_lastloc.txt mail_templates/mail_tracker_conn.txt mail_templates/mail_with_export_attachment.txt mail_templates/mail_quotalimit.txt mail_templates/mail_quotalimit.html mail_templates/mail_event_img.html mail_templates/mail_event_img.txt mail_templates/mail_lastloc_img.html mail_templates/mail_lastloc_img.txt '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/mail_templates'
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making install in shell
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/bin'
+  /usr/bin/install -c g7sh '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/bin'
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/shell'
+Making install in etc
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+Making install in .
+make[5]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[6]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[6]: Nothing to be done for `install-exec-am'.
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/g7ctrl'
+ /usr/bin/install -c -m 644 g7ctrl.conf.template '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/g7ctrl'
+[ -d /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init.d ] || /usr/bin/install -c -d -m 755 /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init.d
+[ -d /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init ] || /usr/bin/install -c -d -m 755 /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init
+/usr/bin/install -c -m 644  deb.init.conf /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init/g7ctrl.conf
+ln -s -f /lib/init/upstart-job /home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/init.d/g7ctrl
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/logrotate.d'
+ /usr/bin/install -c -m 644 logrotate.g7ctrl '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/etc/logrotate.d'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/presets'
+ /usr/bin/install -c -m 644 presets/alarm_off.preset.template presets/gprs_off.preset presets/gtrack_on.preset.template presets/rec_on.preset.template presets/alarm_on.preset.template presets/gprs_on.preset.template presets/rec_off.preset.template presets/sleep_wm.preset.template '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/presets'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/event_scripts'
+ /usr/bin/install -c event-scripts/0_action.sh.template event-scripts/1_action.sh.template event-scripts/34_action.sh.template event-scripts/40_action.sh.template event-scripts/4_action.sh.template event-scripts/100_action.sh.template event-scripts/2_action.sh.template event-scripts/37_action.sh.template event-scripts/48_action.sh.template event-scripts/tracker_conn.sh.template '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/g7ctrl/event_scripts'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/lib/systemd/system'
+ /usr/bin/install -c -m 644 g7ctrl.service '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/lib/systemd/system'
+make[6]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[5]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src/etc'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/src'
+Making install in docs
+make[2]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making install in .
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+Making install in manpages
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+make[4]: Nothing to be done for `install-exec-am'.
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/man/man1'
+ /usr/bin/install -c -m 644 g7ctrl.1 g7sh.1 '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/man/man1'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl'
+ /usr/bin/install -c -m 644 g7ctrl.1.html g7ctrl.1.pdf g7sh.1.html g7sh.1.pdf '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manpages'
+Making install in manual
+make[3]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[4]: Entering directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[4]: Nothing to be done for `install-exec-am'.
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl'
+ /usr/bin/install -c -m 644 out/pdf/Manual-A4-duplex.pdf '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl'
+ /bin/mkdir -p '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl/manual'
+ /usr/bin/install -c -m 644 out/html/index.html css_stylesheets/article.css out/html/gm7_tracker_small.jpg out/html/gm7_tracker_tall.jpg out/html/event_mail_with_minimap_large.png out/html/pdf_report_pg1.png out/html/pdf_report_pg2.png '/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/debian/g7ctrl/usr/share/doc/packages/g7ctrl/manual'
+make[4]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[3]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs/manual'
+make[2]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0/docs'
+make[1]: Leaving directory `/home/ljp/Devel/g7ctrl/deb_pkg/g7ctrl-3.4.0'
+   dh_installdocs
+   dh_installchangelogs
+   dh_installman
+   dh_perl
+   dh_link
+   dh_compress
+   dh_fixperms
+   dh_strip
+   dh_makeshlibs
+   dh_shlibdeps
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package `g7ctrl' in `../g7ctrl_3.4.0-1_amd64.deb'.
+ dpkg-genchanges  >../g7ctrl_3.4.0-1_amd64.changes
+dpkg-genchanges: including full source code in upload
+ dpkg-source --after-build g7ctrl-3.4.0
+dpkg-buildpackage: full upload (original source is included)
+Now running lintian...
+W: g7ctrl: new-package-should-close-itp-bug
+W: g7ctrl: systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/g7ctrl.service syslog.target
+Finished running lintian.
+Now signing changes and any dsc files...
+ signfile g7ctrl_3.4.0-1.dsc Johan Persson <johan162@gmail.com>
+
+ signfile g7ctrl_3.4.0-1_amd64.changes Johan Persson <johan162@gmail.com>
+
+Successfully signed dsc and changes files

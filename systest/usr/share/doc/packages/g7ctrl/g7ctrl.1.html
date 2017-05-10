@@ -1,0 +1,542 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>g7ctrl</title><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h2 class="title"><a name="idm6231968"></a>g7ctrl</h2></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="refentrytitle"><a href="#g7ctrl">g7ctrl</a></span><span class="refpurpose"> &#8212; Control daemon for a GM7 GPS Tracker</span></dt></dl></div><div class="refentry"><a name="g7ctrl"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>g7ctrl &#8212; Control daemon for a GM7 GPS Tracker</p></div><div class="refsynopsisdiv"><a name="g7ctrl.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">g7ctrl</code>  [options...]</p></div></div><div class="refsect1"><a name="g7ctrl.description"></a><h2>Description</h2><p>The <span class="citerefentry"><span class="refentrytitle">g7ctrl</span>(1)</span> is a daemon that is used to manage a GM7 GPS tracker. The daemon has
+                two main functions. One) it can receive incoming location messages on a specified
+                TCP/IP port that the tracker sends and Two) It allows easy controlling of a GM7
+                tracker that is connected via USB to the server. Connecting the device with USB to
+                the server is the easiest way to configure the tracker. The daemon defines a command
+                set that is easier for the user compared with the native GM7 tracker protocol. It
+                does not require the user to memorize all commands and their arguments but rather
+                asks in clear text for what settings the user wants to change.</p><p>Even though it is perfectly possible to directly connect to the daemon on the
+                specified command port it is recommended to use the supplied command shell <span class="citerefentry"><span class="refentrytitle">g7sh</span>(1)</span>. This will offer both full command line editing as well has history
+                function. In addition it hides some of the extra protocol handling on the daemon to
+                make it even more user friendly.</p><p>The configuration of the daemon such as what ports to listen on is controlled by
+                the configuration file (by default this is found in
+                    <code class="filename">/etc/g7ctrl/g7ctrl.conf</code>).</p></div><div class="refsect1"><a name="g7ctrl.options"></a><h2>Arguments</h2><p>The following command line arguments are supported when starting the daemon</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>-d, --daemon [n|y]</code></em></span></dt><dd><p>Determine whether the server should be disconnected from the
+                            controlling terminal (a.k.a. running as a daemon). If the server is run
+                            as a daemon the logfile cannot be '<span class="emphasis"><em>stdout</em></span>'. This
+                            command line option will override the '<span class="emphasis"><em>daemon</em></span>'
+                            setting in the configuration file. The default setting is to run as a
+                            daemon.</p></dd><dt><span class="term"><em class="parameter"><code>-h, --help</code></em></span></dt><dd><p>Print help</p></dd><dt><span class="term"><em class="parameter"><code>-i file, --inifile=file</code></em></span></dt><dd><p>Use the specified file as configuration file. This will override
+                                the location specified at compile time. The default location is
+                                    '<code class="filename">/etc/g7ctrl/g7ctrl.conf</code>'</p></dd><dt><span class="term"><em class="parameter"><code>-l logfile, --logfile=file</code></em></span></dt><dd><p>Define the name of the logfile. Two special names can be used,
+                                <code class="filename">stdout</code> which will cause the log to be written
+                            to the <span class="emphasis"><em>stdout</em></span> and <code class="filename">syslog</code> which
+                            will cause the logs to be written using the default system logger. This
+                            command line option will override the '<span class="emphasis"><em>logfile</em></span>'
+                            setting in the configuration file. The default location is
+                                '<code class="filename">/var/log/g7ctrl/g7ctrl.log</code>'</p></dd><dt><span class="term"><em class="parameter"><code>-p n, --cmdport=n</code></em></span></dt><dd><p>Specify what TCP/IP port number that the server will listening on
+                                for commands. This will override the '<span class="emphasis"><em>port</em></span>'
+                                setting in the ini-file. By default the command port is 3100. </p></dd><dt><span class="term"><em class="parameter"><code>-s n, --stty=n</code></em></span></dt><dd><p>Specify what <code class="literal">ttyACM&lt;n&gt;</code> device to use when
+                                connecting over USB to device</p></dd><dt><span class="term"><em class="parameter"><code>-t n, --trkport=n</code></em></span></dt><dd><p>Specify TCP/IP port number for receiving tracker updates. This
+                                will override the setting in the config file. Default port is
+                                3400</p></dd><dt><span class="term"><em class="parameter"><code>-V n, --verbose</code></em></span></dt><dd><p>Log verbosity level. 0 will only log error messages, 1 will log
+                                error and info messages, 2 will log errors, info and additional
+                                notices finally 3 will also log (possibly) high volume debug
+                                messages.</p></dd><dt><span class="term"><em class="parameter"><code>-v, --version</code></em></span></dt><dd><p>Print version information and exit</p></dd><dt><span class="term"><em class="parameter"><code>---pidfile=file</code></em></span></dt><dd><p>Specify PID lock file to be used. By default this is
+                                <code class="filename">/var/run/g7ctrl/g7ctrl.pid</code> so if the daemon is
+                                not started as root it must be specified since only root has access to
+                                <code class="filename">/var/run</code>.</p></dd><dt><span class="term"><em class="parameter"><code>---datadir=directory</code></em></span></dt><dd><p>Specify directory for static data files (default,is
+                                <code class="filename">/usr/share/g7ctrl</code>) .</p></dd><dt><span class="term"><em class="parameter"><code>---dbdir=directory</code></em></span></dt><dd><p>Specify directory for dynamic data files (default,is
+                                <code class="filename">/var/lib/g7ctrl</code>) .</p></dd></dl></div><p>The default arguments corresponds to starting the server with</p><p>
+                </p><pre class="screen">g7ctrl -i "/etc/g7ctrl/g7ctrl.conf" -d Y -s 0 -p 3100 -t 3400 \
+-l "/var/log/g7ctrl/g7ctrl.log" V 2 --pidfile="/var/run/g7ctrl/g7ctrl.pid" \
+--dbdir="/var/lib/g7ctrl" --datadir="/usr/share/g7ctrl"</pre><p>
+            </p></div><div class="refsect1"><a name="idp48394240"></a><h2>Starting and stopping the server</h2><p>While strictly speaking not necessary the server should normally be started by the
+                    <code class="literal">root</code> user. As soon as the server doesn't need
+                    <code class="literal">root</code> privileges it will switch to run as the user specified
+                in the configuration file, by default this is the user <span class="emphasis"><em>g7ctrl</em></span>
+                if the configuration file has not been changed. This user should for security
+                reasons not be the 'root' user. This user should be a system user without login
+                shell. Such a user can normally be created by running the command
+                    '<span class="emphasis"><em>useradd</em></span>'. (If the daemon is installed via the RPM package
+                this user will be automatically created).</p><p>If your system supports the command <span class="command"><strong>useradd</strong></span> then start by
+                changing to root and add the user as so</p><pre class="screen">$&gt; useradd -r g7ctrl</pre><p>
+                </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The user created must normally belong to the group
+                            <code class="literal">dialout</code> on most system in order to have access to the
+                            <acronym class="acronym">USB</acronym>-serial device.</p></div><p>
+            </p><p>Then to start the server as root using the settings in the configuration file the
+                simplest way is to just call</p><pre class="screen">sudo g7ctrl</pre><p>In order to stop the server and allow it to do a clean shutdown the
+                    <code class="literal">SIGINT</code> (or <code class="literal">SIGSTOP</code>) signal should be sent
+                to the process running the server (assuming <span class="command"><strong>g7ctrl</strong></span> has been
+                started as a daemon). The distribution includes two support scripts to help with
+                this. This can of course also be done manually as (and reading the pid number from
+                the standard pid-file)</p><p>
+                </p><pre class="screen">sudo kill -SIGINT `cat /usr/share/g7ctrl/g7ctrl.pid`</pre><p>
+            </p><p>Please note the "<code class="code">`</code>" backward slashes.</p><p>While testing the server it is also possible to start the daemon as a "normal"
+                user. As a test start the daemon from command line for example as</p><p>
+                </p><pre class="screen">$g7ctrl -dN -V3 -lstdout</pre><p>
+            </p><p>The commands will start the application on the terminal <code class="code">-dN</code> (not as a
+                daemon), with maximum logging (<code class="code">-V3</code>) and print the log file directly to
+                the terminal (<code class="code">-lstdout</code>). This is a good way to do the initial testing
+                since any problem can usually be quickly seen in the log. Note that when the daemon
+                is not started as the root user it can not switch to the daemon user specified in
+                the configuration file. </p><p>Once the testing is completed the daemon can be setup to be started at the same
+                time as the server. Depending on the system this can done in a few different ways as
+                the following two sections show.</p><div class="refsect2"><a name="idp48529248"></a><h3>For system using old style <code class="filename">init.d</code></h3><p>To start the daemon automatically the installation will install two utility
+                    scripts. The first script will be installed in
+                        "<code class="filename">/etc/init.d/g7ctrl</code>" and follows the normal guidelines
+                    for a "<code class="filename">init.d</code>" service start/stopping script according to
+                        <acronym class="acronym">LSB</acronym> (Linux Standard Base). Using this script to start the
+                    server is then simply a matter of calling</p><pre class="screen">sudo /etc/init.d/g7ctrl start</pre><p>(or its alias <span class="command"><strong>rcg7ctrl</strong></span>) is given. The start-up script also
+                    supports the "<code class="literal">restart</code>" and "<code class="literal">status</code>"
+                    options.</p><p>If the server gives the error message : "<span class="emphasis"><em>Server can not be started.
+                        See system log</em></span>" then more information about the details of the
+                    problem can be found in the system log, normally
+                        <code class="filename">/var/log/messages</code>. The most common reason for this
+                    message is that the daemon is already running. </p><p>To stop the server give the command (as root)</p><pre class="screen">sudo /etc/init.d/g7ctrl stop</pre><p>Since the <code class="literal">init.d</code> system has been abandoned in most modern
+                    system the <code class="literal">init.d</code> scripts will then be automatically
+                    redirected to the corresponding <code class="literal">systemd</code> service. In that case
+                    it is better to just use the <code class="literal">systemd</code> service directly as the
+                    following section shows.</p></div><div class="refsect2"><a name="idp48538992"></a><h3>Using systemd</h3><p>If your system makes use of <code class="literal">systemd</code> then the second utility
+                    script will be installed as a <code class="literal">systemd</code> service. The
+                    configuration script will automatically figure out if your system supports this.
+                    In this case the daemon can be directly controlled via the usual
+                        <span class="command"><strong>systemctl</strong></span> command as shown below. See <span class="command"><strong>man
+                        systemctl</strong></span> for details.</p><p>
+                    </p><pre class="screen">sudo systemctl stop g7ctrl.service</pre><p>
+                </p><p>
+                    </p><pre class="screen">sudo systemctl start g7ctrl.service</pre><p>
+                </p><p>
+                    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="literal">g7ctrl</code> service needs to first be enabled after
+                            the initial installation with</p><p>
+                            </p><pre class="screen">sudo systemctl enable g7ctrl.service</pre><p>
+                        </p></div><p>
+                </p><p>If your system does not have the command <span class="command"><strong>systemctl</strong></span> then it
+                    is not using the <code class="literal">systemd</code> setup.</p></div><div class="refsect2"><a name="idp48547248"></a><h3>Using upstart</h3><p>Newer version of Debian and Ubuntu now uses "<code class="literal">upstart</code>" to manage
+                    daemons. The build system fylly supports this and after the usual "<span class="command"><strong>sudo make
+                        install</strong></span>" the daemon could be controlled by</p><p>
+                    </p><pre class="screen">sudo start g7ctrl
+sudo stop g7ctrl
+sudo status g7ctrl</pre><p>
+                </p><p>or alternatively by</p><p>
+                    </p><pre class="screen">sudo service g7ctrl start
+sudo service g7ctrl stop
+sudo service g7ctrl status</pre><p>
+                </p><p>
+                    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The configuration file for upstart is stored in
+                                <code class="filename">/etc/init/g7ctrl.conf</code></p></div><p>
+                </p></div></div><div class="refsect1"><a name="idp48553120"></a><h2>Interfacing with the server</h2><p>The primary interface to the server is via a TCP/IP connection to the server
+                running '<span class="emphasis"><em>g7ctrl</em></span>' via a dedicated port (by default 3100). The
+                server is controlled via a simple (but efficient) command language which allows
+                manipulation of future recordings and various other administrative tasks. All
+                commands are extensively described in the section 'Command language' below. </p><p>The preferred way of interacting with the server on the command level is by using
+                the supplied utility shell '<span class="application">g7sh</span>'. This supports history
+                and full command line editing and is recommended over a plain
+                    '<span class="application">telnet</span>' (<span class="application">nc</span> command)or
+                connections to the server.</p><p>See the section "Connecting to the server" below for more detailed
+                examples.</p></div><div class="refsect1"><a name="idp48557504"></a><h2>Connecting directly to the server</h2><p>By default the best way to communicate with the daemon is to us the
+                    <span class="command"><strong>g7sh</strong></span> command, see below. But the following information may be
+                used for additional troubleshooting.</p><p>We start by describing the direct method that communicates with the daemon
+                directly on the command port.  This is for illustrative purpose only and can be a
+                quick way to check that the daemon is really running when troubleshooting. For
+                normal usage it is recommended to use the <span class="citerefentry"><span class="refentrytitle">g7sh</span>(1)</span> utility shell program (seel also next section).</p><p>Once the server is running the easiest way to connect to the command is by using
+                the '<span class="emphasis"><em>nc</em></span>' ('net cat) program. Assuming that the
+                    <span class="emphasis"><em>g7ctrl</em></span> server is running on the localhost the following
+                command will connect to the server (assuming the default port 3100 has not been
+                changed (either in the configuration file (e.g.
+                    <code class="filename">/etc/g7ctrl.conf</code>) or by a command line argument).</p><pre class="screen">$&gt; nc localhost 3100</pre><p>After a successful connection the server will reply with a short, one line,
+                information message. The full returned information message at the connection time
+                should look something similar to the following (the version and build might be
+                different though):</p><pre class="screen">GM7 Server version 3.0.0 (build 150108-110)
+</pre><p>If password protection (see section "Security" below) the welcome message is not
+                be shown until the correct password has been specified. Instead when password
+                protection is enabled the connection sequence looks like this</p><pre class="screen">$&gt; nc localhost 3100
+Password:<span class="bold"><strong>xxxxxxx</strong></span>
+GM7 Server version 3.0.0 (build 150108-110)
+</pre><p>This means that the correct server password has to be given before the welcome
+                message is seen. The server is now ready to accept commands on this
+                connection.</p><p>To disconnect to the server give the command '<span class="command"><strong>exit</strong></span>'</p></div><div class="refsect1"><a name="idp48576272"></a><h2>Using the g7sh to connect to the daemon</h2><p>The package also includes a full command line shell, <span class="command"><strong>g7sh</strong></span>. This
+                allows much better editing (Emacs compatible editing) as well as full command line
+                history. This shell can also be used as a system login shell and hereby making it
+                possible to connect to the daemon using <span class="command"><strong>ssh</strong></span> for a more secure
+                communication by creating a unique user with g7sh as the login shell.</p><p>How to setup and use the g7sh command line shell is fully described in <span class="citerefentry"><span class="refentrytitle">g7sh</span>(1)</span></p><p>In its simplest form (assuming it is the same sever as the daemon) the shell can
+                be started with</p><p>
+                </p><pre class="screen">$ g7sh</pre><p>
+            </p><p>Run <span class="command"><strong>g7sh -h</strong></span> for a list of supported options.</p></div><div class="refsect1"><a name="idp48582240"></a><h2>Directory structure</h2><p>The daemon uses two distinct directories on the server; one data directory where
+                the database and log files are stored and one configuration directory. The default
+                location of these directories are specified at build but may be overridden by either
+                the configuration file or by command line arguments. The package default locations
+                are shown below</p><p>
+                </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="filename">/etc/g7ctrl</code></span></dt><dd><p>Configurations file.</p></dd><dt><span class="term"><code class="filename">/usr/share/g7ctrl</code></span></dt><dd><p>This is the data directory where static data files (like mail
+                                templates and presets) are stored.</p></dd><dt><span class="term"><code class="filename">/var/lib/g7ctrl</code></span></dt><dd><p>This is the data directory where dynamic data files (like DB) are
+                                stored.</p></dd></dl></div><p>
+            </p></div><div class="refsect1"><a name="idp48589856"></a><h2>Security</h2><p>In order to prevent unauthorized access to the server the server have a basic
+                password protection. This means that a password can be configured to be used before
+                a client can start giving command to the server. This is configured in the ini-file.
+                The configuration uses the same password for all clients so the server does not
+                support multiple users/multiple password. Since the password is stored in plain text
+                format the configuration file should have restricted access. This should not be
+                considered strong security but rather a weak "stop-messing-with-daemon" type of
+                protection.</p><p>Sine the password are sent unencrypted to the daemon it is also susceptible to
+                line snooping.</p><p>The setting whether password should be used or not and the actual password is
+                specified in the ini-file. </p><p>After connecting to the server when the password has been enabled the first string
+                sent back from the server will be the single string:</p><pre class="screen">Password:</pre><p>The rest of the reply is the same as when no password is used.</p><p>If security is of concern the daemon can also be configured to only allow
+                connections from the localhost, i.e. connections must be made from the same machine
+                that is running the daemon. This is done by enabling the option
+                    "<code class="literal">only_localhost</code>" in the config file.</p></div><div class="refsect1"><a name="idp48595200"></a><h2>Managing notifications mails</h2><p>When configuring the daemon it is possible to set options that will send
+                notification mails on important events in the daemon. This could be notifications on
+                errors that occurred but also notifications on that a transcoding was finished or
+                that the server was shutdown automatically while waiting for the next
+                recording.</p><p>All mail settings are specified in the "<code class="code">[mail]</code>" section of the
+                configuration file. More information is available in the full application
+                manual.</p></div><div class="refsect1"><a name="idp48597776"></a><h2>Commands (in alphabetic order)</h2><p>The following is a list and detailed explanation of the commands that are
+                recognized by the server. </p><p>Since there are quite a few commands we start with an overview with a one line
+                explanation of each command. Further details can be found below</p><p>There commands are divided into three different areas</p><p>
+        </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Device commands. They are commands that controls a connected device</p></li><li class="listitem"><p>Database commands. Commands to export and read the database</p></li><li class="listitem"><p>Preset commands. Commands to manipulate presets</p></li><li class="listitem"><p>Daemon commands.  Commands to act on the daemon itself.</p></li></ol></div><p>
+    </p><div class="refsect2"><a name="idp48608224"></a><h3>Device Command reference</h3><p>Below is the commands possible together with there parameters. In case a command can
+            accept argument the daemon will ask for each command in sequence. The prompt will always be
+            indicated by a "<code class="literal">?</code>" mark. To abort a specific command just type a single
+            dot "<code class="literal">.</code>" and the command shell will return to the start position (outer
+            level). Most commands only accept a selected value chosen from a list. All possible values
+            in the lists are shown below.</p><p>For even more detailed command information please refer to the "<span class="italic">GM7 Protocol specification</span>" available from where you purchased your
+            device.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="bold"><strong>address</strong></span></span></dt><dd><p>Return the current location as an approximate street
+                                address</p></dd><dt><a name="cmd.clrec"></a><span class="term"><span class="bold"><strong>clrec</strong></span></span></dt><dd><p>Erase all recorded locations in device memory. Use
+                                    <code class="literal">dlrec</code> to read back the recorded location
+                                positions in device memory to the database.</p></dd><dt><a name="comm"></a><span class="term"><span class="bold"><strong>comm</strong></span></span></dt><dd><p>Set/Read device communication type and its parameters</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>CommSelect</em></span> - Select primary type of
+                                            communication </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Use USB" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Use SMS over GSM"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "CSD (reserved)"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "UDP over GPRS" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>4</code></em> - "TCP/IP over GPRS"
+                                                  </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>SMS Base Phone</em></span> - SMS base number to
+                                            call </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>CSD Base Phone</em></span> - CSD base number
+                                            (reserved and not used) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS APN</em></span> - The operators APN
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS User</em></span> - User name if required
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS Passwd</em></span> - Password if required
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS Server</em></span> - Server IP address
+                                            where the device reports back to </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS Server Port</em></span> - TCP/IP Port to
+                                            use on server </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS Keep Alive</em></span> - Interval (in sec)
+                                            between Keep Alive Packets </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>GPRS DNS</em></span> - Optional DNS server for
+                                            device to use. </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.config"></a><span class="term"><span class="bold"><strong>config</strong></span></span></dt><dd><p>Set/Read device ID, Password, and PIN Code of the SIM card</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Device ID</em></span> - Set device ID (leftmost
+                                            digit must always be 3) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Device Password</em></span> - Set device
+                                            Password (numeric) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>SIM Card PIN</em></span> - The SIM cards PIN
+                                            code to use </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.dlrec"></a><span class="term"><span class="bold"><strong>dlrec</strong></span></span></dt><dd><p>Download all recorded position in device memory to the database.
+                                Positions that have been downloaded from the device memory in this
+                                way will have an event id of <code class="literal">1</code>. </p><p>
+                                </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Please note that download and DB update takes a bit of
+                                        time. As an example download and DB updated of 10,000
+                                        locations took 17s in one instance. The bulk of the time,
+                                        ~95%, is spent downloading the data from the device over the
+                                        serial line and ~5% was spent to update the DB with the new
+                                        locations.</p></div><p>
+                            </p></dd><dt><a name="cmd.geofevt"></a><span class="term"><span class="bold"><strong>geofevt</strong></span></span></dt><dd><p>Enable/Disable/Set/Read GEO-Fencing event</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Event ID</em></span> - Event ID. Maximum of 50
+                                            events. In range 50-99 </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Enabled</em></span> - Enable/Disable event </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Longitude</em></span> - Longitude for center of
+                                            event zone </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Latitude</em></span> - Latitude for center of
+                                            event zone </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Radius</em></span> - Radius of event zone in
+                                            meters (0-65535) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>ZoneControl</em></span> - How to trigger event </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Entering zone" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Leaving zone" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Action</em></span> - What to do on event </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Log to device" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Send to server"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Both log and send"
+                                                  </p></li></ul></div></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.gfen"></a><span class="term"><span class="bold"><strong>gfen</strong></span></span></dt><dd><p>Enable/Disabling GEO-fencing functionality</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Enabled</em></span> - Turn option on/off
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Radius</em></span> - Radius in meter for fence
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Zone trigger</em></span> - Trigger when leaving
+                                            or entering zone </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Inside zone" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Outside zone" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Report action</em></span> - What to do on event </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Disabled" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Log to device" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Send to server"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Both log and send"
+                                                  </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP mask</em></span> - Bitmask of VIP numbers
+                                            to alert </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.imei"></a><span class="term"><span class="bold"><strong>imei</strong></span></span></dt><dd><p>Query the IMEI number of the internal GSM module</p></dd><dt><a name="cmd.led"></a><span class="term"><span class="bold"><strong>led</strong></span></span></dt><dd><p>Enable/Disable the LED indicator on/off</p></dd><dt><a name="cmd.loc"></a><span class="term"><span class="bold"><strong>loc</strong></span></span></dt><dd><p>Get latest location</p></dd><dt><span class="term"><span class="bold"><strong>locg</strong></span></span></dt><dd><p>Get the latest position as a Google map link</p></dd><dt><a name="cmd.lowbatt"></a><span class="term"><span class="bold"><strong>lowbatt</strong></span></span></dt><dd><p>Set/Read the internal battery low level alert</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Report action</em></span> - Action to perform
+                                            at low battery voltage </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Disable" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Log on device" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Send back to server"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Both log and send back
+                                                  ro server" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP mask</em></span> - Bit-mask of VIP numbers
+                                            to alert </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.mswitch"></a><span class="term"><span class="bold"><strong>mswitch</strong></span></span></dt><dd><p>Enable/Disable detached report</p></dd><dt><a name="cmd.nrec"></a><span class="term"><span class="bold"><strong>nrec</strong></span></span></dt><dd><p>Return date range and number of location records stored in device
+                                memory</p></dd><dt><a name="cmd.phone"></a><span class="term"><span class="bold"><strong>phone</strong></span></span></dt><dd><p>Enable the function "Get the current location by making a phone
+                                call"</p></dd><dt><a name="cmd.ps"></a><span class="term"><span class="bold"><strong>ps</strong></span></span></dt><dd><p>Enable/Disable power saving mode</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Mode</em></span> - Select when to enable sleep
+                                            mode to save battery </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Sleep after 3min of no
+                                                  movement. Wake up on movements. GSM=Standby,
+                                                  GPRS=GPS=Off, G-sensor=On" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Always enter sleep
+                                                  after 3min and wake every n seconds specified.
+                                                  GSM=GPRS=GPS=G-sensor=Off" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Always enter sleep
+                                                  after 3min and wake up on timer.
+                                                  GSM=GPRS=GPS=G-sensor=Off" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Always enter sleep
+                                                  after 3min and wake up on movement.
+                                                  GSM=GPRS=GPS=Off, G-sensor=On" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Sleep interval</em></span> - Used with sleep
+                                            mode 1, Interval in minutes between wake-ups </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Wake up report</em></span> - Action when awaken </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Disable" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Log on device" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Send back to server"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Both log and send back
+                                                  ro server" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP mask</em></span> - Bit-mask of VIP numbers
+                                            to alert on awake </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Timer 1</em></span> - Used with mode=2. 00-23
+                                            hr </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Timer 2</em></span> - Used with mode=2. 00-23
+                                            hr </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Timer 3</em></span> - Used with mode=2. 00-23
+                                            hr </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.reboot"></a><span class="term"><span class="bold"><strong>reboot</strong></span></span></dt><dd><p>Restart-up the device</p></dd><dt><a name="cmd.rec"></a><span class="term"><span class="bold"><strong>rec</strong></span></span></dt><dd><p>Enable/Disable/read logging function to the device</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Mode</em></span> - When should logging be done </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Disable" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Time mode, log every n
+                                                  seconds" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Distance mode, log
+                                                  every n meters" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Time AND Distance
+                                                  mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>4</code></em> - "Time OR Distance mode"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>5</code></em> - "Heading mode, logging
+                                                  starts when heading &gt; set value" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>6</code></em> - "Heading OR Time mode"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>7</code></em> - "Heading OR Distance"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>8</code></em> - "Heading OR (Time AND
+                                                  Distance)" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>9</code></em> - "Heading OR Time OR
+                                                  Distance" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Time interval</em></span> - Time interval (in
+                                            sec) used in mode setting </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Distance interval</em></span> - Distance
+                                            interval (in meters) used in mode setting </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Number of reports</em></span> - The number of
+                                            reports to send back on event (0=continuous logging) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Record basis</em></span> - Logging mode </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Wait for GPS fix
+                                                  before sending back report" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Don't wait for GPS fix
+                                                  before sending back report" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Heading</em></span> - Heading value used in
+                                            mode (10-90) </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.reset"></a><span class="term"><span class="bold"><strong>reset</strong></span></span></dt><dd><p>Reset all parameters to the manufacture default settings</p></dd><dt><a name="cmd.roam"></a><span class="term"><span class="bold"><strong>roam</strong></span></span></dt><dd><p>Enable/Disable GPRS roaming function</p></dd><dt><a name="cmd.sim"></a><span class="term"><span class="bold"><strong>sim</strong></span></span></dt><dd><p>Query the identification of the SIM card</p></dd><dt><a name="cmd.sleep"></a><span class="term"><span class="bold"><strong>sleep</strong></span></span></dt><dd><p>Enable/Disable "Sleeping Report"</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Message mode</em></span> - Set how to handle
+                                            message at when device enters sleep </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "log message to device"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "send back message"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "both log and send back
+                                                  message" </p></li></ul></div></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.sms"></a><span class="term"><span class="bold"><strong>sms</strong></span></span></dt><dd><p>Switch the SMS format (Text of PDU mode)</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Mode</em></span> - Set format for SMS sent back </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Use PDU mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Use text mode" </p></li></ul></div></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.stopdl"></a><span class="term"><span class="bold"><strong>stopdl</strong></span></span></dt><dd><p>Stop downloading logging data from the device</p></dd><dt><span class="term"><span class="bold"><strong>test</strong></span></span></dt><dd><p>Device diagnostic function</p></dd><dt><a name="cmd.track"></a><span class="term"><span class="bold"><strong>track</strong></span></span></dt><dd><p>Control if device should be sending back automatic tracking
+                                information.</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Tracking mode</em></span> - Set condition for
+                                            when tracking is started </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Time mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Distance mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "Time AND Distance
+                                                  mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>4</code></em> - "Time OR distance"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>5</code></em> - "Heading mode" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>6</code></em> - "Heading OR time"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>7</code></em> - "Heading OR distance"
+                                                  </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>8</code></em> - "Heading OR (Time AND
+                                                  Distance" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>9</code></em> - "Heading OR Time OR
+                                                  Distance" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Timer interval</em></span> - Used for mode 1
+                                        </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Distance interval</em></span> - Used for mode
+                                            2-9 </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Number of tracking</em></span> - Use 0 for
+                                            continuous tracking </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Track basis</em></span> - Wait for GPS fix or
+                                            not </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Send report ONLY if
+                                                  GPS is fixed" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Send report regardless
+                                                  of GPS status" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Comm select</em></span> - Set type of report </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "Over USB" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>1</code></em> - "Over GSM" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>2</code></em> - "Over Reserved (not
+                                                  used)" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>3</code></em> - "UDP over GPRS" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>4</code></em> - "TCP/IP over GPRS"
+                                                  </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Heading</em></span> - Used for modes 5-9
+                                        </p></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.tz"></a><span class="term"><span class="bold"><strong>tz</strong></span></span></dt><dd><p>Set the time zone information for the device</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>Sign</em></span> - Ahead or before GMT zone </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>+</code></em> - "Ahead of GMT" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>-</code></em> - "Before GMT" </p></li></ul></div></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Hour</em></span> - Number of hours to adjust
+                                            (0-9) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>Min</em></span> - Minutes to adjust </p><p>Possible values and description:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                                                  <em class="parameter"><code>0</code></em> - "0 min" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>15</code></em> - "15 min" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>30</code></em> - "30 min" </p></li><li class="listitem"><p>
+                                                  <em class="parameter"><code>45</code></em> - "45 min" </p></li></ul></div></li></ul></div><p>
+                            </p></dd><dt><a name="cmd.ver"></a><span class="term"><span class="bold"><strong>ver</strong></span></span></dt><dd><p>Get current firmware version</p></dd><dt><a name="cmd.vip"></a><span class="term"><span class="bold"><strong>vip</strong></span></span></dt><dd><p>Preset up to 5 SMS phone numbers for receiving different
+                                alerts</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP 1</em></span> - Mobile number 1 (full
+                                            number incl country prefix '+' if needed) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP 2</em></span> - Mobile number 2 (full
+                                            number incl country prefix '+' if needed) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP 3</em></span> - Mobile number 3 (full
+                                            number incl country prefix '+' if needed) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP 4</em></span> - Mobile number 4 (full
+                                            number incl country prefix '+' if needed) </p></li><li class="listitem"><p>
+                                            <span class="emphasis"><em>VIP 5</em></span> - Mobile number 5 (full
+                                            number incl country prefix '+' if needed) </p></li></ul></div><p>
+                            </p></dd></dl></div></div><div class="refsect2"><a name="idp48857408"></a><h3>Database commands</h3><p>The database commands are used to manage the stored location updates from the
+                devices.</p><div class="variablelist"><dl class="variablelist"><dt><a name="cmd.db-dist"></a><span class="term"><code class="literal">db dist [dev=nnn] [ev=nnn] [from to]</code></span></dt><dd><p>Calculate the <span class="bold"><strong><span class="underline">approximate distance</span></strong></span> traveled using
+                                the selected data set of location points.</p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">[dev=nnn]</code> - Filter on a specific
+                                            device-id. If not set all devices will be
+                                            considered.</p></li><li class="listitem"><p><code class="literal">[ev=nnn]</code> - Filter on specific
+                                            event. If not set all events will be considered.</p></li><li class="listitem"><p><code class="literal">[from to]</code> - Filter on a specific
+                                            date range. Dates are given in
+                                                <code class="literal">YYYY-MM-DD</code> format with optional
+                                            time specification as <code class="literal">HH:MM</code> in 24h
+                                            format (military time). If omitted all dates are
+                                            considered.</p></li></ul></div><p>
+                            </p><p>Calculation of distance is approximation of the distance between
+                                two <acronym class="acronym">GPS</acronym> points (assuming WGS-84 projection) and
+                                returns the result using both the <span class="italic">Haversine</span> method (great circle distance) and
+                                    <span class="italic">Vincenty</span> method (iterative).
+                                The reply from the daemon is given as two lines exemplified
+                                by</p><p>
+                                </p><pre class="screen">Calculating approximate distance using 344 points.
+25.3 km (alt. 25399.5 m)</pre><p>
+                            </p><p>The second distance in <code class="literal">m</code> are calculated using
+                                the <span class="italic">Vincenty</span> method and the first
+                                distance (in <code class="literal">km</code>) is calculated using the
+                                    <span class="italic">Haversine</span> method.</p><p>Due to the number of error sources in getting location updates and
+                                limitations inherent in this type of distance calculations <span class="bold"><strong>we can not in general assume to have perfect
+                                    accuracy</strong></span>. The accuracy will also vary depending on
+                                the absolute location due to differences in the earth radius. The
+                                way traveled between recorded positions is assumed to follow the
+                                great circle between the points so the more points the better
+                                approximation of the actual real distance. </p><p>
+                                </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The precise volatility in the distance figures are very
+                                        difficult to quantify due to the large number of factors
+                                        that influence the <acronym class="acronym">GPS</acronym> signal and the way
+                                        the distance can be calculated. However,practical tests
+                                        (with the GM7 device) have shown that in general it is safe
+                                        to assume that the true distance (as measured in the middle
+                                        part of Sweden around lat 57°) in more than 80% of the
+                                        cases have less than 5% error compared with the distance as
+                                        measured by an odometer. If more accuracy is needed in a
+                                        particular area then field tests with known distances needs
+                                        to be performed and correction factors introduced.</p><p>Often the distance is slightly underestimated and the
+                                        longer time interval between each measure the more the
+                                        distance is underestimated. This is due to the fact that the
+                                        distance travelled between each measured point is assumed to
+                                        be the shortest (great circle) distance and in practice the
+                                        real distance is always longer.</p><p>(The <span class="italic">Vincenity</span> method
+                                        will generally have better accuracy assuming perfect
+                                            <acronym class="acronym">GPS</acronym> positions. )</p></div><p>
+                            </p><p><span class="bold"><strong> Examples: </strong></span></p><p>
+                                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">db dist</code></p><p>Use all the data points and calculate the total
+                                            traveled distance</p></li><li class="listitem"><p><code class="literal">db dist ev=1 2013-08-01
+                                            2013-08-01</code></p><p>Calculate the traveled distance from the previously
+                                            imported data points from the internal memory of the
+                                            device (they will have eventid=1) for the 1:st of August
+                                            2013.</p></li><li class="listitem"><p><code class="literal">db dist 2013-01-01 2013-12-31
+                                            13:00</code></p><p>Calculate the total distance in DB for 2013 regardless
+                                            of what event triggered the location update</p></li></ul></div><p>
+                            </p></dd><dt><span class="term">db export [dev=nnn] [ev=nnn] [from to] (gpx|kml|xml|csv|json)
+                            [filename]</span></dt><dd><p>Exports the database in the selected format</p><p>
+                            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">[dev=nnn]</code> - Filter on a specific device
+                                            id. If not set all devices will be considered.</p></li><li class="listitem"><p><code class="literal">[ev=nnn]</code> - Filter on specific event. If
+                                            not set all events will be considered.</p></li><li class="listitem"><p><code class="literal">[from to]</code> - Filter on a specific date
+                                        range. Dates are given in YYYY-MM-DD format. If omitted all
+                                        dates are considered.</p></li><li class="listitem"><p><code class="literal">(gpx|kml|xml|csv|json)</code> - Export format
+                                            to use</p></li><li class="listitem"><p><code class="literal">[filename]</code> - Full filename path to
+                                            export to. If omitted the data will be exported to
+                                                <code class="filename">/var/lib/g7ctrl/export.&lt;format&gt;</code>
+                                        </p></li></ul></div><p>
+                        </p><p><span class="bold"><strong>
+                            Examples:
+                        </strong></span></p><p>
+                            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="literal">db export gpx</code></p><p>Export all stored location in GPX format to
+                                                <code class="filename">/var/lib/g7ctrl/export.gpx</code></p></li><li class="listitem"><p><code class="literal">db export dev=3000000001 2013-02-01 2013-02-28 xml
+                                            /tmp/myexport.xml</code></p><p>Export all location reported in February for device
+                                            <code class="literal">3000000001</code> in g7ctgrl own <acronym class="acronym">XML</acronym> format to
+                                        the file <code class="filename">/tmp/myexport.xml</code></p></li></ul></div><p>
+                        </p></dd><dt><span class="term">db lastloc</span></dt><dd><p>Display the latest recorded position</p></dd><dt><span class="term">db mailpos</span></dt><dd><p>Mail the last recorded position</p></dd><dt><span class="term">db mailgpx</span></dt><dd><p>Mail a compressed version of a GPX export of the entire DB to the
+                                predefined mail address.</p></dd><dt><span class="term">db mailcsv</span></dt><dd><p>Mail a compressed version of a CSV export of the entire DB to the
+                                predefined mail address.</p></dd></dl></div></div><div class="refsect2"><a name="idp48911088"></a><h3>Preset commands</h3><p>The preset commands are used to manage the stored commands in the presets</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="literal">preset list</code></span></dt><dd><p>List all define presets</p></dd><dt><span class="term"><code class="literal">preset refresh</code></span></dt><dd><p>Re-read all presets from disk</p></dd><dt><span class="term"><code class="literal">preset use &lt;preset-name&gt;</code></span></dt><dd><p>Execute the specified preset. A shortcut for this is
+                                "<code class="literal">@&lt;preset-name&gt;</code>"</p></dd><dt><span class="term"><code class="literal">preset help &lt;preset-name&gt;</code></span></dt><dd><p>Print help for the specified preset</p></dd></dl></div></div><div class="refsect2"><a name="idp48920224"></a><h3>Daemon commands</h3><p>Daemon commands are internal commands to work with the daemon itself.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">.ver</span></dt><dd><p>Display the version of the daemon</p></dd><dt><span class="term">.dev</span></dt><dd><p>Show if the device is connected or not</p></dd><dt><span class="term">.lc</span></dt><dd><p>List active command connections</p></dd><dt><span class="term">.ld</span></dt><dd><p>List all connected devices, both over GPRS and on USB</p></dd><dt><span class="term">.target &lt;dev&gt;</span></dt><dd><p>List or set device connected over GPRS to receive commands</p></dd><dt><span class="term">.usb &lt;dev&gt;</span></dt><dd><p>List or set device connected on USB to receive commands</p></dd><dt><span class="term">.nick</span></dt><dd><p>Specify a new nick name for device</p></dd><dt><span class="term">.ln</span></dt><dd><p>List all defined nick names</p></dd><dt><span class="term">.dn</span></dt><dd><p>Delete the specified nick</p></dd></dl></div></div></div><div class="refsect1"><a name="g7ctrl.files"></a><h2>Files</h2><p>Note: The system configuration directory to be used is a compile time settings and
+                specified with the '<span class="emphasis"><em>configuration</em></span>' argument '--sysconfdir'. </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="filename">/var/log/g7ctrl/g7ctrl.log</code></span></dt><dd><p>The logfile. The log-directory is specified in the ini-file. It can
+                            also be specified as a command line argument (<code class="option">-l,
+                                --logfile</code>) which will then override any config file
+                            setting. By default the log file will be stored under
+                                <code class="filename">/var/log/g7ctrl/g7ctrl.log</code>.</p></dd><dt><span class="term"><code class="filename">/var/run/g7ctrl/g7ctrl.pid</code></span></dt><dd><p>The pid of the started 'g7ctrl' server. This is used to easily find
+                            the pid in order to shutdown the server. This is used by the
+                                <span class="emphasis"><em>stop-g7ctrl</em></span> script. Note that in order to use
+                            this directory the daemon has to be started by the root user. </p></dd><dt><span class="term"><code class="filename">/etc/g7ctrl/g7ctrl.conf</code></span></dt><dd><p>Default configuration file</p></dd><dt><span class="term"><code class="filename">/var/lib/g7ctrl/gm7tracker_db.sqlite3</code></span></dt><dd><p>The sqlite3 database where all locations are stored.. </p></dd></dl></div></div><div class="refsect1"><a name="idp48948032"></a><h2>Limitations</h2><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>All information, error messages and loggings are hard coded in
+                            English.</p></li></ul></div><p>
+            </p></div><div class="refsect1"><a name="idp48950480"></a><h2>Bugs</h2><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The configuration file has too many settings. </p></li></ul></div></div><div class="refsect1"><a name="idp48952496"></a><h2>Notes</h2><p>Any errors that are discovered in the start-up phase before a logfile has been
+                established will be written to the default system log (normally
+                    <code class="filename">/var/log/messages</code> or <code class="filename">/var/log/syslog</code>) </p></div><div class="refsect1"><a name="idp48954736"></a><h2>Resources</h2><p>
+                </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>SourceForge:
+                            &lt;<code class="uri">http://sourceforge.net/projects/g7ctrl/</code>&gt;</p></li></ul></div><p>
+            </p></div><div class="refsect1"><a name="idp48957600"></a><h2>Author</h2><p>Written and maintained by Johan Persson
+                &lt;<code class="email">&lt;<a class="email" href="mailto:johan162@gmail.com">johan162@gmail.com</a>&gt;</code>&gt;</p></div><div class="refsect1"><a name="idp48959328"></a><h2>Copyright</h2><p>Free use of this software is granted under the terms of the <acronym class="acronym">GNU</acronym> General Public
+                License (GPL v3), see the file <code class="filename">COPYING</code> included in the
+                distribution archive for details.</p></div><div class="refsect1"><a name="g7ctrl.seealso"></a><h2>See also</h2><p><span class="citerefentry"><span class="refentrytitle">g7sh</span>(1)</span></p></div></div></div></body></html>

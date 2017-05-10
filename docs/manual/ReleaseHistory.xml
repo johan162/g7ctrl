@@ -41,6 +41,56 @@
         <para>Only rmajor new functionality is listed here.For a complete list see the NEWS file 
             (<xref xlink:href="#appendix.news" />)</para>
     <variablelist>
+        
+        <varlistentry>            
+            <term>v3.4.1 (Feb 2017)</term>
+            <listitem>
+                <para>
+                    This is mainly an update for the build environment. The primary build environment
+                    is now <command>gcc v5.4.0</command> (was 4.8.4). For the documentation to process
+                    the XML files fop v2.1. is now the default (was 1.1)
+                </para>
+                <para>
+                    The environment update has forced some minor code updates (primarily some
+                    instrumentation to shut down false positive warning for use of C99 variable
+                    length arrays on the stack (VLA). The move to fop 2.1 requires a configuration
+                    file to set the proper base URI for inclusion of external objects (e.g. images in
+                    the manual).
+                </para>
+                <para>See NEWS file for more detailed list of changes</para>
+            </listitem>
+        </varlistentry>        
+        
+        <varlistentry>            
+            <term>v3.4.0 (Maj 2016)</term>
+            <listitem>
+                <para>Minor tweaks to PDF report layout and improvements in cache file handling
+		and reported statistics. Cache statistics now survives dameon restarts.
+		</para>
+		<para>Note: Official build for OpenSuSE is discontinued. This is not a reflection of the technical
+		merits of the OpenSuSE distribution. This is only a way to minimize maintenace and test cykel work.
+		</para>
+            </listitem>
+        </varlistentry>        
+        
+        <varlistentry>            
+            <term>v3.3.1 - 3.3.3 (Oct 2015)</term>
+            <listitem>
+                <para>Some minor aestethical update in command handling for report generation and
+                        the addition of config settings for min/max battery voltage corresponding to
+                        zero or full capacity as stated in the PDF report.
+			In addition a number of tweaks to the PDF report as well as addition of the
+			new commnd ".breport" (Basic-Report) to avoid querying the device for all
+			its 50 possible geo-fence stored events. This makes it easier to generate
+			a report over teh GPRS connection.
+		</para>
+		<para> One important bug-fix was also the re-enabling of password protection for 
+		the command shell which had been inadvertedly disabled in the refactoring for 3.3.0
+		</para>
+            </listitem>
+        </varlistentry>        
+        
+        
         <varlistentry>            
             <term>v3.3.0 (Oct 2015)</term>
             <listitem>

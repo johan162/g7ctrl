@@ -1,0 +1,29 @@
+GM7 Event Notification: "[EVENTDESC]" ([EVENTCMD])
+
+http://maps.google.com/maps?q=[LAT],[LON]
+
+Tracker
+-------
+        ID: [NICK_DEVID]
+      Date: [DATETIME]
+       Lat: [LAT] 
+       Lon: [LON]
+   Address: [APPROX_ADDRESS]
+     Speed: [SPEED]
+   Heading: [HEADING]        
+Satellites: [SAT] 
+   Battery: [VOLTAGE]V
+
+Server 
+------
+      Name: [SERVERNAME]  
+Local time: [SERVERTIME]
+ Disk size: [DISK_SIZE] 
+ Disk used: [DISK_USED] ([DISK_PERCENT_USED]%)
+  Load avg: [SYSTEM_LOADAVG]
+
+Daemon
+------
+Ver: [DAEMONVERSION]
+
+

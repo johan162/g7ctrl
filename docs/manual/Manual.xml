@@ -27,10 +27,10 @@
             <email>johan162@gmail.com</email>
         </author>
         <copyright>
-            <year>2013-2015</year>
+            <year>2013-2017</year>
             <holder>Johan Persson</holder>
         </copyright>
-        <releaseinfo>Manual RA16 (For daemon v3.3.0)</releaseinfo>
+        <releaseinfo>Manual RA20 (For daemon v3.4.1)</releaseinfo>
     </info>
  
 <?hard-pagebreak?>

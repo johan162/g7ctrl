@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <title>GM7 Event Mail</title>
+</head>
+<body>
+<p style="font-family:sans-serif;font-size:14pt;font-weight:bold;">GM7 Event Notification:<br /> <span style="color:#900;">"[EVENTDESC]"</span> ([EVENTCMD])</p>
+<p style="font-size:12pt;"><a href="http://maps.google.com/maps?q=[LAT],[LON]">Google map link</a></p>
+
+
+<p style="font-family:sans-serif;font-size:12pt;font-weight:bold;margin-bottom:1px;">Tracker</p>
+<table style="width:32em;border:1px solid gray;border-spacing:0;">
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px; background:#444444;color:#E6AD63;text-align:left;font-weight:bold;font-size:9pt;font-family:sans-serif;" colspan="2">ID:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align:left;font-weight:bold;font-size:9pt;font-family:sans-serif;" colspan="2">Date & Time:</th>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding:6px;font-size:11pt;color:#900;">[NICK_DEVID]</td>
+        <td colspan="2" style="padding:6px;font-size:11pt;">[DATETIME]</td>
+    </tr>
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" colspan="4">Street address:</th>
+    </tr>
+    <tr>
+        <td colspan="4" style="padding:6px;font-size:11pt;">[APPROX_ADDRESS]</td>
+    </tr>
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" colspan="2">Lat:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" colspan="2">Lon:</th>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding:6px;font-size:11pt;">[LAT]</td>
+        <td colspan="2" style="padding:6px;font-size:11pt;">[LON]</td>
+    </tr>
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Satellites:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Speed:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Heading:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Battery:</th>
+    </tr>
+    <tr>
+        <td style="padding:6px;font-size:11pt;">[SAT]</td>
+        <td style="padding:6px;font-size:11pt;">[SPEED]</td>
+        <td style="padding:6px;font-size:11pt;">[HEADING]</td>
+        <td style="padding:6px;font-size:11pt;">[VOLTAGE]V</td>
+    </tr>
+</table>
+
+<p style="font-family:sans-serif;font-size:12pt;font-weight:bold;margin-bottom:1px;">Server</p>
+<table style="width:32em;border:1px solid gray;border-spacing:0;">
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Name:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Local time:</th>
+    </tr>
+    <tr>
+        <td style="padding:6px;font-size:11pt;">[SERVERNAME]</td>
+        <td style="padding:6px;font-size:11pt;">[SERVERTIME]</td>
+    </tr>
+    <tr>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Disk usage:</th>
+        <th style="padding-bottom: 2px;padding-top: 2px;background:#444444;color:#E6AD63;text-align: left;font-weight:bold;font-size:9pt;font-family:sans-serif;" >Load avg:</th>
+    </tr>
+    <tr>
+        <td style="padding:6px;font-size:11pt;">[DISK_USED] / [DISK_SIZE] ([DISK_PERCENT_USED]%)</td>
+        <td style="padding:6px;font-size:11pt;">[SYSTEM_LOADAVG]</td>
+    </tr>
+</table>
+
+<p style="color:#999;font-style:italic;font-size:10pt;">g7ctrl ver: [DAEMONVERSION]</p>
+
+</body>
+</html>
+
+

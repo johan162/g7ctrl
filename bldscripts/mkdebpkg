@@ -1,0 +1,76 @@
+#!/bin/sh
+#Setup srtucture to createa a debian package
+
+fmt=gz
+basename=g7ctrl
+builddir=deb_pkg
+ver=
+rver=
+upload=
+nosign=
+while getopts v:ur:n o
+do  case "$o" in
+    v)      ver="$OPTARG"
+            ;;
+    r)      rver="$OPTARG"
+            ;;
+    u)      upload="true"
+            ;;
+    n)      nosign="true"
+            ;;
+    [?])    printf >&2 "Usage; $0 -v ver -r rel [-u] [-n] \n"
+            printf >&2 "-v Version, -r Release,  -u Upload, -n No sign \n"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$ver" -o -z "$rver" ]; then
+    printf >&2 "Both version and release must be specified.\n"
+    printf >&2 "Usage: $0 -v version -r release [-u] [-n]\n"
+    exit 1
+fi
+
+if [ x${nosign} = x"true" -a x${upload} = x"true" ]; then
+    echo "Cannot combine -u and -n options"
+    exit 1;
+fi
+
+if [ ! -e $basename-$ver.tar.$fmt ]; then
+   echo "tar ball version $ver is missing!"
+   exit 1
+fi
+
+echo ${basename}_${ver}-${rver}_source.changes
+
+if [ ! -d $builddir ]; then
+	mkdir $builddir
+fi
+
+cp ${basename}-$ver.tar.$fmt $builddir/${basename}_$ver.orig.tar.$fmt
+cd $builddir
+
+if [ -d ${basename}-$ver ]; then 
+    mv ${basename}-$ver ${basename}-$ver.OLD 
+fi
+
+tar xf ${basename}_$ver.orig.tar.$fmt
+cp -r ../dpkg/debian ${basename}-$ver
+cd ${basename}-$ver
+
+
+if [ x${upload} = x"true" ]; then
+    debuild -S 
+    if [ $? -eq 0 ] ; then
+        cd ..
+        dput ppa:johan162/g7ctrl ${basename}_${ver}-${rver}_source.changes
+    fi
+else
+    if [ x${nosign} = x"true" ]; then
+        debuild -us -uc ;
+    else 
+        debuild
+    fi
+fi
+
+

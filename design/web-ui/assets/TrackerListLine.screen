@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Panel" id="1" x="25" y="30" width="464" height="59" measuredWidth="464" measuredHeight="59"/>
+  <widgets xsi:type="model:Label" id="2" x="168" y="57" text="Storgatan 12, 123 45 Storskogen" measuredWidth="197" measuredHeight="22">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Image" id="3" x="32" y="34" width="52" height="51" measuredWidth="52" measuredHeight="51"/>
+  <widgets xsi:type="model:Panel" id="4" x="107" y="39" width="206" height="19" measuredWidth="206" measuredHeight="19" background="#274e13"/>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

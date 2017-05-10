@@ -1,0 +1,12 @@
+[Unit]
+Description=GM7 Service Daemon
+After=syslog.target
+
+[Service]
+Type=forking
+ExecStart=@prefix@/bin/@PACKAGE_NAME@
+ExecStop=/bin/kill -HUP $MAINPID
+PIDFILE=@prefix@/share/@PACKAGE_NAME@/@PACKAGE_NAME@.pid
+
+[Install]
+WantedBy=multi-user.target

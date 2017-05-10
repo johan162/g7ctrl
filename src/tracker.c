@@ -48,15 +48,15 @@
 #include "logger.h"
 #include "g7config.h"
 #include "serial.h"
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "dbcmd.h"
 #include "g7cmd.h"
 #include "g7sendcmd.h"
 #include "mailutil.h"
 #include "nicks.h"
 #include "geoloc.h"
+#include "geoloc_cache.h"
 
-#define MAX_KEYPAIRS 32
 #define LEN_10K (10*1024)
 #define LEN_1K (1024)
 #define LEN_LARGE LEN_10K
@@ -97,7 +97,7 @@ chk_specialhandling(struct splitfields *flds, struct client_info *cli_info) {
                 get_device_pin(pinbuff, sizeof (pinbuff) - 1);
 
                 // Special tag for this occasion to supress warning on stray command in tracker thread
-                strcpy(tagbuff, GFEN_TRACK_TAG);
+                xstrlcpy(tagbuff, GFEN_TRACK_TAG, sizeof(tagbuff));
 
                 snprintf(cmdbuff, sizeof (cmdbuff), "$WP+TRACK+%s=%s,1,%u,0,0,0,4,15\r\n", tagbuff, pinbuff, (unsigned) gfen_tracking_interval);
                 int rc = write(cli_info->cli_socket, cmdbuff, strlen(cmdbuff));
@@ -190,6 +190,58 @@ chk_actionscript(struct splitfields *flds) {
 }
 
 /**
+ * Add information about disk usage to the dictionary
+ * @param rkeys
+ * @return 0 on success, -1 on failure
+ */
+static int add_diskspace2dict(dict_t dict) {
+    // Add information on disk usage
+    char ds_fs[LEN_SMALL], ds_size[LEN_SMALL], ds_avail[LEN_SMALL], ds_used[LEN_SMALL];
+    int ds_use;
+    if (0 == get_diskspace(data_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
+        char buf[16];
+        add_dict(dict, "DISK_SIZE", ds_size);
+        add_dict(dict, "DISK_USED", ds_used);
+        snprintf(buf, sizeof (buf), "%d", ds_use);
+        add_dict(dict, "DISK_PERCENT_USED", buf);
+        return 0;
+    }    
+    return -1;
+}
+
+static void
+add_serverinfo2dict(dict_t dict) {
+        
+    // Get full current time to include in mail
+    char buf[LEN_MEDIUM];
+    time_t now = time(NULL);
+    ctime_r(&now, buf);
+    buf[strnlen(buf, sizeof (buf)) - 1] = 0; // Remove trailing newline
+    add_dict(dict, "SERVERTIME", buf);
+
+    // Include the server name in the mail
+    gethostname(buf, sizeof (buf));
+    buf[sizeof (buf) - 1] = '\0';
+    add_dict(dict, "SERVERNAME", buf);
+    
+}
+
+static int
+add_avgload2dict(dict_t dict) {
+
+    // Add system load information
+    double avg1 = 0, avg5 = 0, avg15 = 0;
+    char sysloadBuffer[64];
+    sysloadBuffer[0] = '\0';
+    if (0 == getsysload(&avg1, &avg5, &avg15)) {
+        snprintf(sysloadBuffer, sizeof (sysloadBuffer), "%.2f %.2f %.2f", avg1, avg5, avg15);
+        add_dict(dict, "SYSTEM_LOADAVG", sysloadBuffer);
+        return 0;
+    }
+    return -1;
+}
+
+/**
  * This gets called once for each new tracker connection the server receives
  * and if this is enabled (in config) then it has the possibility to both send
  * a mail and execute a shell script. This can typically be setup as an alarm
@@ -237,10 +289,8 @@ chk_connection_notification(char *devid, struct client_info *cli_info) {
 
     // Then check if we should send a mail
     if (mail_on_tracker_conn) {
-        struct keypairs *keys = new_keypairlist(MAX_KEYPAIRS);
-        char valBuff[LEN_MEDIUM];
-        size_t keyIdx = 0;
-
+        dict_t dict = new_dict();
+        
         char short_devid[8];        
         *short_devid = '\0';            
         if( use_short_devid ) {
@@ -249,43 +299,38 @@ chk_connection_notification(char *devid, struct client_info *cli_info) {
                 short_devid[i] = devid[devid_len-4+i];
             }            
             short_devid[4] = '\0';            
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", short_devid, &keyIdx);
+            add_dict(dict, "DEVICEID", short_devid);
         } else {
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", devid, &keyIdx);
+            add_dict(dict, "DEVICEID", devid);
         }
-                
-        // Get full current time to include in mail
-        time_t now = time(NULL);
-        ctime_r(&now, valBuff);
-        valBuff[strnlen(valBuff, sizeof (valBuff)) - 1] = 0; // Remove trailing newline
-        add_keypair(keys, MAX_KEYPAIRS, "SERVERTIME", valBuff, &keyIdx);
-
-        // Include the server name in the mail
-        gethostname(valBuff, sizeof (valBuff));
-        valBuff[sizeof (valBuff) - 1] = '\0';
-        add_keypair(keys, MAX_KEYPAIRS, "SERVERNAME", valBuff, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "CLIENT_IP", cli_info->cli_ipadr, &keyIdx);
+                        
+        add_serverinfo2dict(dict);
+        add_diskspace2dict(dict);
+        add_avgload2dict(dict);
+        
+        add_dict(dict,  "NICK", nick);
+        add_dict(dict,  "NICK_DEVID", nick_devid);
+        add_dict(dict,  "DAEMONVERSION", PACKAGE_VERSION);
+        add_dict(dict,  "CLIENT_IP", cli_info->cli_ipadr);
 
         char subjectbuff[LEN_SMALL];
         if( use_short_devid ) {
-            snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] New connection",mail_subject_prefix, short_devid);
+            snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_NEWCONNECTION, mail_subject_prefix, short_devid);
         } else {
-            snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] New connection",mail_subject_prefix, devid);
+            snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_NEWCONNECTION, mail_subject_prefix, devid);
         }
         
         if (-1 == send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, "mail_tracker_conn", 
-                keys, keyIdx, MAX_KEYPAIRS, NULL, 0, NULL)) {
+                                     dict, NULL, 0, NULL)) {
             logmsg(LOG_ERR, "Failed to send mail using template \"mail_tracker_conn\"");
         }
         
         logmsg(LOG_INFO, "Sent mail for new device connection (%s) to \"%s\"", devid, send_mailaddress);
-        free_keypairlist(keys, keyIdx);
+        free_dict(dict);
 
     }
 }
+
 
 /**
  * Check if a mail should be sent for this event. Normally no mail is sent
@@ -308,39 +353,11 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
             return;
         }
 
-        struct keypairs *keys = new_keypairlist(MAX_KEYPAIRS);
-        char valBuff[LEN_MEDIUM];
-        size_t keyIdx = 0;
-
-        // Get full current time to include in mail
-        time_t now = time(NULL);
-        ctime_r(&now, valBuff);
-        valBuff[strnlen(valBuff, sizeof (valBuff)) - 1] = 0; // Remove trailing newline
-        add_keypair(keys, MAX_KEYPAIRS, "SERVERTIME", valBuff, &keyIdx);
-
-        // Include the server name in the mail
-        gethostname(valBuff, sizeof (valBuff));
-        valBuff[sizeof (valBuff) - 1] = '\0';
-        add_keypair(keys, MAX_KEYPAIRS, "SERVERNAME", valBuff, &keyIdx);
-
-        // Add information on disk usage
-        char ds_fs[LEN_SMALL], ds_size[LEN_SMALL], ds_avail[LEN_SMALL], ds_used[LEN_SMALL];
-        int ds_use;
-        if (0 == get_diskspace(data_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
-            add_keypair(keys, MAX_KEYPAIRS, "DISK_SIZE", ds_size, &keyIdx);
-            add_keypair(keys, MAX_KEYPAIRS, "DISK_USED", ds_used, &keyIdx);
-            snprintf(valBuff, sizeof (valBuff), "%d", ds_use);
-            add_keypair(keys, MAX_KEYPAIRS, "DISK_PERCENT_USED", valBuff, &keyIdx);
-        }
-
-        // Add system load information
-        double avg1 = 0, avg5 = 0, avg15 = 0;
-        char sysloadBuffer[64];
-        sysloadBuffer[0] = '\0';
-        if (0 == getsysload(&avg1, &avg5, &avg15)) {
-            snprintf(sysloadBuffer, sizeof (sysloadBuffer), "%.2f %.2f %.2f", avg1, avg5, avg15);
-        }
-        add_keypair(keys, MAX_KEYPAIRS, "SYSTEM_LOADAVG", sysloadBuffer, &keyIdx);
+        dict_t dict = new_dict();
+        
+        add_serverinfo2dict(dict);
+        add_diskspace2dict(dict);
+        add_avgload2dict(dict);
 
         // Format the displayed date/time from the device so it is a bit easier to read in the mail
         char datetimeFmt[32];
@@ -385,42 +402,88 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
                 short_devid[i] = flds->fld[GM7_LOC_DEVID][devid_len-4+i];
             }            
             short_devid[4] = '\0';            
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", short_devid, &keyIdx);
+            add_dict(dict, "DEVICEID", short_devid);
         } else {
-            add_keypair(keys, MAX_KEYPAIRS, "DEVICEID", flds->fld[GM7_LOC_DEVID], &keyIdx);
+            add_dict(dict, "DEVICEID", flds->fld[GM7_LOC_DEVID]);
         }
         
+        // Add generic fields
+        add_dict(dict,"NICK_DEVID", nick_devid);
+        add_dict(dict, "EVENTCMD", eventCmd);
+        add_dict(dict, "EVENTDESC", eventDesc);
+        add_dict(dict, "DAEMONVERSION", PACKAGE_VERSION);
+        add_dict(dict, "NICK", nick);
+        add_dict(dict, "DATETIME", datetimeFmt);
         
+        //
+        // Add cache stat fields
+        //
+        unsigned cache_calls;
+        double cache_hitrate, cache_fill;
+        size_t cache_mem;
+        char valbuff[32];
+        
+        get_cache_stat(GEOCACHE_ADDR, &cache_calls, &cache_hitrate, &cache_fill, &cache_mem);        
+        
+        snprintf(valbuff,sizeof(valbuff),"%u",geocache_address_size);
+        add_dict(dict,"ADDRESS_CACHE_MAXSIZE", valbuff);
+
+        snprintf(valbuff,sizeof(valbuff),"%.0f %%",cache_fill*100);
+        add_dict(dict,"ADDRESS_CACHE_FILL", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff),"%.0f %% ",cache_hitrate*100);
+        add_dict(dict,"ADDRESS_CACHE_HITRATE", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff),"%zu kB ",cache_mem/1024);
+        add_dict(dict,"ADDRESS_CACHE_MEM", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff),"%u",cache_calls);        
+        add_dict(dict,"ADDRESS_CACHE_TOTCALLS", valbuff);
+        
+
+        get_cache_stat(GEOCACHE_MINIMAP, &cache_calls, &cache_hitrate, &cache_fill, &cache_mem);        
+        
+        snprintf(valbuff,sizeof(valbuff),"%u",geocache_minimap_size);
+        add_dict(dict,"MINIMAP_CACHE_MAXSIZE", valbuff);
+
+        snprintf(valbuff,sizeof(valbuff),"%.0f %%",cache_fill*100);
+        add_dict(dict,"MINIMAP_CACHE_FILL", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff),"%.0f %% ",cache_hitrate*100);
+        add_dict(dict,"MINIMAP_CACHE_HITRATE", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff)," %zu kB ",cache_mem/1024);
+        add_dict(dict,"MINIMAP_CACHE_MEM", valbuff);
+        
+        snprintf(valbuff,sizeof(valbuff),"%u",cache_calls);        
+        add_dict(dict,"MINIMAP_CACHE_TOTCALLS", valbuff);
+        
+        //
         // Add location update data from device
-        add_keypair(keys, MAX_KEYPAIRS, "NICK_DEVID", nick_devid, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "EVENTCMD", eventCmd, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "EVENTDESC", eventDesc, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DAEMONVERSION", PACKAGE_VERSION, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "NICK", nick, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "DATETIME", datetimeFmt, &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "LON", flds->fld[GM7_LOC_LON], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "LAT", flds->fld[GM7_LOC_LAT], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "VOLTAGE", flds->fld[GM7_LOC_VOLT], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "SPEED", flds->fld[GM7_LOC_SPEED], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "SAT", flds->fld[GM7_LOC_SAT], &keyIdx);
-        add_keypair(keys, MAX_KEYPAIRS, "HEADING", flds->fld[GM7_LOC_HEADING], &keyIdx);
+        //
+        add_dict(dict, "LON", flds->fld[GM7_LOC_LON]);
+        add_dict(dict, "LAT", flds->fld[GM7_LOC_LAT]);
+        add_dict(dict, "VOLTAGE", flds->fld[GM7_LOC_VOLT]);
+        add_dict(dict, "SPEED", flds->fld[GM7_LOC_SPEED]);
+        add_dict(dict, "SAT", flds->fld[GM7_LOC_SAT]);
+        add_dict(dict, "HEADING", flds->fld[GM7_LOC_HEADING]);
 
         char rndval[32];
         snprintf(rndval,sizeof(rndval),"%d",rand());
-        add_keypair(keys, MAX_KEYPAIRS, "RANDOM", rndval, &keyIdx);
+        add_dict(dict, "RANDOM", rndval);
         
         // Check to see if we should do a reverse address lookup
         if (use_address_lookup) {
             char address[512];            
             // No need for error check since the address field will have  "?" in case of error
             get_address_from_latlon(flds->fld[GM7_LOC_LAT], flds->fld[GM7_LOC_LON], address, sizeof (address));
-            add_keypair(keys, MAX_KEYPAIRS, "APPROX_ADDRESS", address, &keyIdx);
+            add_dict(dict, "APPROX_ADDRESS", address);
         } else {
-            add_keypair(keys, MAX_KEYPAIRS, "APPROX_ADDRESS", "(disabled)", &keyIdx);
+            add_dict(dict, "APPROX_ADDRESS", "(disabled)");
         }
 
         char subjectbuff[LEN_SMALL];
-        snprintf(subjectbuff, sizeof (subjectbuff), "%s[ID:%s] \"%s\"", 
+        snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_EVENTMAIL, 
                 mail_subject_prefix, 
                 use_short_devid ? short_devid : flds->fld[GM7_LOC_DEVID], 
                 eventDesc);
@@ -432,13 +495,13 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
 
             char kval[32];
             snprintf(kval,sizeof(kval),"%d",minimap_width);
-            add_keypair(keys, MAX_KEYPAIRS, "IMG_WIDTH", kval, &keyIdx);
+            add_dict(dict, "IMG_WIDTH", kval);
             
             snprintf(kval,sizeof(kval),"%d",minimap_overview_zoom);
-            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_OVERVIEW", kval, &keyIdx);
+            add_dict(dict, "ZOOM_OVERVIEW", kval);
             
             snprintf(kval,sizeof(kval),"%d",minimap_detailed_zoom);
-            add_keypair(keys, MAX_KEYPAIRS, "ZOOM_DETAILED", kval, &keyIdx);
+            add_dict(dict, "ZOOM_DETAILED", kval);
 
             char *overview_imgdata, *detailed_imgdata;
             const char *lat = flds->fld[GM7_LOC_LAT];
@@ -460,7 +523,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
                 logmsg(LOG_ERR, "Sending mail without the static maps.");
                 rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                                 "mail_event",
-                                keys, keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+                                dict, NULL, 0, NULL);
             } else {
                 struct inlineimage_t *inlineimg_arr = calloc(2, sizeof (struct inlineimage_t));
                 setup_inlineimg(&inlineimg_arr[0], overview_filename, overview_datasize, overview_imgdata);
@@ -468,8 +531,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
 
                 rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                                     "mail_event_img",
-                                    keys, keyIdx, MAX_KEYPAIRS,
-                                    NULL, 2, inlineimg_arr);
+                                    dict, NULL, 2, inlineimg_arr);
 
                 free_inlineimg_array(inlineimg_arr, 2);
                 free(inlineimg_arr);
@@ -479,7 +541,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
         } else {
             rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                     "mail_event",
-                    keys, keyIdx, MAX_KEYPAIRS, NULL, 0, NULL);
+                    dict, NULL, 0, NULL);
         }
         
         if (-1 == rc) {
@@ -488,7 +550,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
             logmsg(LOG_INFO, "Sent mail for event \"%s\" to \"%s\"", eventCmd, send_mailaddress);
         }        
         
-        free_keypairlist(keys, keyIdx);
+        free_dict(dict);
     }
 }
 
@@ -793,7 +855,7 @@ tracker_clientsrv(void *arg) {
     pthread_cleanup_push(trk_thread_cleanup, arg);
 
     unsigned idle_time = 0;
-    char *buffer = calloc(BUFFER_50K, 1);
+    char *buffer = calloc(BUFFER_50K, sizeof(char));
     if (!buffer) {
         logmsg(LOG_CRIT, "Cannot allocate memory for reading incoming tracker data. Aborting.");
     } else {

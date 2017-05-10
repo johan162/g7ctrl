@@ -1,0 +1,3 @@
+#Disable GPRS as main communication 
+#All settings are reset and USB is the main communication method
+comm(0,"","","","","","","","","")

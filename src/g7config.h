@@ -195,14 +195,35 @@ extern "C" {
 #define DEFAULT_TRACKER_DB "gm7tracker_db.sqlite3"
 
 /**
+ * Default size for geolocation cache vectors
+ */
+#define DEFAULT_GEOCACHE_ADDRESS_SIZE 10000
+#define DEFAULT_GEOCACHE_MINIMAP_SIZE 20000
+        
+/**
  * Default file name for storing the geocache
  */
 #define DEFAULT_ADDRESS_GEOCACHE_FILE "geoloc_addrcache.txt"
 
 /**
+ * Default file name for backup of saved geoloc addr cache
+ */
+#define DEFAULT_ADDRESS_GEOCACHE_BACKUPFILE "geoloc_addrcache_backup.txt"
+
+/**
  * Default file name for storing the geocache
  */
 #define DEFAULT_MINIMAP_GEOCACHE_FILE "geoloc_minimapcache.txt"
+
+/**
+ * Default file name for backup of saved geoloc minimap cache
+ */
+#define DEFAULT_MINIMAP_GEOCACHE_BACKUPFILE "geoloc_minimapcache_backup.txt"
+
+/**
+ * Default file name for stored hit/miss statistics between invocations of daemon
+ */    
+#define DEFAULT_GEOCACHE_SAVEDSTAT_FILE "geoloc_cachestat.txt"
 
 /**
  * Default directory where all minimap images are stored under
@@ -409,12 +430,22 @@ extern char smtp_user[64] ;
 extern char smtp_pwd[64] ;
 extern int  smtp_port ;
 extern int force_mail_on_all_events ;
-extern _Bool include_minimap ;
+extern _Bool include_minimap ; 
     
-extern int minimap_overview_zoom;
-extern int minimap_detailed_zoom;
-extern int minimap_width;
-extern int minimap_height;
+/**
+ * Handling of included mini maps in mail
+ */
+extern unsigned minimap_overview_zoom;
+extern unsigned minimap_detailed_zoom;
+extern unsigned minimap_width;
+extern unsigned minimap_height;
+
+/**
+ * Geolocation cache size
+ */
+extern unsigned geocache_address_size;
+extern unsigned geocache_minimap_size;
+
 
 extern _Bool script_on_tracker_conn ;
 extern _Bool mail_on_tracker_conn ;
@@ -443,9 +474,21 @@ extern _Bool pdfreport_hide_empty_geoevent ;
 extern char pdfreport_dir[1024] ;
 
 /**
+ * DEFAULT_MIN_BATT_VOLTAGE double
+ */
+#define DEFAULT_MIN_BATT_VOLTAGE 3.60
+extern double min_battery_voltage ;
+
+/**
+ * DEFAULT_MAX_BATT_VOLTAGE double
+ */
+#define DEFAULT_MAX_BATT_VOLTAGE 4.20
+extern double max_battery_voltage ;
+
+/**
  * Handle to dictionary which holds all variables read from the inifile
  */
-extern dictionary *dict;
+extern dictionary *inifile_dict;
 
 void
 close_inifile(void);
@@ -476,6 +519,64 @@ read_inisettings_startup(void);
 #define GM7_LOC_VOLT 9
 #define GM7_LOC_DETACH 10
 
+
+/** 
+ * Subject for mail sent 
+ */
+
+// Subject for mails when a new tracker connection is made.
+// The parameters are: mail_subject_prefix, short_devid
+#define SUBJECT_NEWCONNECTION "%s[ID:%s] New connection"
+
+// Subject for notification of maile rate limit exceeded
+// The parameters are: mail_subject_prefix
+#define SUBJECT_LOCRATEEXCEEDED "%sGoogle rate limit exceeded"
+
+// Subject in mail with exported DB
+// The parameters are: mail_subject_prefix
+#define SUBJECT_EXPORTEDDB  "%sExported database" 
+
+// Subject in mail with last location
+// The parameters are: mail_subject_prefix
+#define SUBJECT_LASTLOCATION "%s[ID:%s] Last location in DB"
+
+// Subject in mails with event updated
+// The parameters are: mail_subject_prefix, Device ID and Event description
+#define SUBJECT_EVENTMAIL  "%s[ID:%s] Event: \"%s\""
+
+
+// Name for the events. The names are used in the mails sent when an event is received
+#define EVENTDESC_EVENT_GETLOC "Position data"
+#define EVENTDESC_EVENT_REC "Logging data"
+#define EVENTDESC_EVENT_TRACK "Position update"
+#define EVENTDESC_EVENT_TIMER "Timer report"
+#define EVENTDESC_EVENT_WAKEUP "Wake Up Report"
+#define EVENTDESC_EVENT_SLEEP "Enter Sleeping Report"
+#define EVENTDESC_EVENT_LOWBATT "Internal Battery Low Alert"
+#define EVENTDESC_EVENT_GFEN "Virtual fence crossing"
+#define EVENTDESC_EVENT_SETRA "Unit Detaching Report"
+
+
+// Misc. messages
+
+// Invalid command
+// Parameters: The command given
+#define INVALID_CMD_MSG_GET "Command \"get %s\" is not valid. Try help."
+
+// Invalid set command
+// Parameters: The command given
+#define INVALID_CMD_MSG_SET "Command \"set %s\" is not valid. Try help."
+
+// Invalid do command
+// Parameters: The command given
+#define INVALID_CMD_MSG_DO "Command \"do %s\" is not valid. Try help."
+
+// Invalid binary command
+// Parameters: The command given
+#define INVALID_BINARY_CMD "Command \"%s\" is not valid. Try help."
+
+// Invalid user authentication
+#define INVALID_AUTHENTICATION "Authentication failed. Connection closed."
 
 #ifdef	__cplusplus
 }

@@ -1,0 +1,7 @@
+g7ctrl (3.4.0-1) trusty; urgency=high
+
+  * Make it possible to adjust geolocation cache size 
+  * Minor layout improvements in PDF report
+  * Fixed a bug when saving cache files in certain cases
+
+ -- Johan Persson <johan162@gmail.com>  Wed, 4 May 2016 00:22:35 +0100

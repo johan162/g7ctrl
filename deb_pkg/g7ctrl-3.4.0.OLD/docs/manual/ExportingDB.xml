@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="section.exporting-db">
+    <title>Exporting the DB</title>
+    <para>The database managed by the daemon contains all position update events received. To make
+        it possible to interact with other programs (for example to plot routes in using the site
+            <link xlink:href="http://www.gpsvisualizer.com/">www.gpsvisualizer.com</link>) it is
+        possible to export the database in several commonly used formats. </para>
+    <section>
+        <title>Supported export formats</title>
+        <para>The supported export formats are:</para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para><acronym>GPX</acronym> - The <acronym>GPS</acronym> exchange format. When
+                        creating GPX export it is possible to have the locations grouped into tracks
+                        and track segments. This is typically used to group temporally close
+                        locations into logical tracks. The split time for two locations to be
+                        considered to be part of different tracks are configurable. </para>
+                </listitem>
+                <listitem>
+                    <para><acronym>KML</acronym> - Format used by Google Earth</para>
+                </listitem>
+                <listitem>
+                    <para><acronym>CSV</acronym> - Comma separated values. Useful for post
+                        processing using a spreadsheet program. All recorded information are
+                        exported.</para>
+                </listitem>
+                <listitem>
+                    <para xlink:href=""><acronym>XML</acronym> - Internal format which is a
+                        serialization of the DB in <acronym>XML</acronym>. This format has the
+                        advantage of including all information sent back by the tracker which the
+                        other <acronym>XML</acronym> based format does not have support for. A
+                        detailed description of the grammar (in <acronym>RNG</acronym> format) for
+                        the <acronym>XML</acronym> format used is available in <xref
+                            xlink:href="#section.internal-export-format"/>.</para>
+                </listitem>
+                <listitem>
+                    <para><acronym>JSON</acronym> - JavaScript Object Notation. A format suitable
+                        for easy post processing with 3:rd party program</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>A detailed description of the commands are available in <xref
+                xlink:href="#appendix.database-commands"/></para>
+        <para><emphasis role="bold">Examples:</emphasis></para>
+        <para>
+            <screen>g7ctrl> db export gpx
+g7ctrl> db export 2013-01-01 2013-01-31 csv /tmp/jan.csv
+g7ctrl> db export dev=3000000002 kml</screen>
+        </para>
+        <para>The first command will export all locations in the database to the file
+                <filename>/usr/share/g7ctrl/export.gpx</filename>, the second command for the
+            selected date range to <filename>/tmp/jan.csv</filename> and the third command will
+            export all location updates for the specified device to
+                <filename>/usr/share/g7ctrl/export.kml</filename>. </para>
+        <para>For detailed information on the command see <xref xlink:href="#cmd.db-export"
+            />.</para>
+        <para>
+            <tip>
+                <para>The config file settings <literal>trackseg_split_time</literal> and
+                        <literal>track_split_time</literal> specifies how the export should break up
+                    sequences of locations into tracks and track segments.</para>
+            </tip>
+        </para>
+        <para>
+            <tip>
+                <para>In order to visualize a track there are several web-services available that
+                    directly can import an exported <acronym>GPX</acronym> database. One example is
+                        <link xlink:href="http://www.gpsvisualizer.com/"/></para>
+            </tip>
+        </para>
+    </section>
+    
+</section>

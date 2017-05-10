@@ -41,7 +41,7 @@
 #include "logger.h"
 #endif
 
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "unicode_tbl.h"
 #include "utils.h"
 
@@ -923,7 +923,8 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
     return 0;
 }
 
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"
 
 /**
  * Stroke the entire table in the specified style to specified string buffer
@@ -1311,6 +1312,8 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
 
     return 0;
 }
+
+#pragma GCC diagnostic pop
 
 
 #ifdef TABLE_UNIT_TEST

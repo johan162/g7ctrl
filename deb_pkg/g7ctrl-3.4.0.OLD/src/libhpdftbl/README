@@ -1,0 +1,4 @@
+README - libhpdftable
+
+This directory contains a small utility library to facilitate the creation of tables
+with the Haru PDF library.

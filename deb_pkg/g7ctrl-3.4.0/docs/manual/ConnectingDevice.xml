@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<section xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0"  xml:id="section.connecting-device">
+    <title>Connecting the device </title>
+    <para>The tracker is connected to the server in one of three ways each with there own advantages
+        and disadvantages.</para>
+    <orderedlist>
+        <listitem>
+            <para>Direct with a <acronym>USB</acronym> cable</para>
+            <para><emphasis role="bold"><emphasis role="italic">Pros:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>Does not incur any cost.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Does not require special setup</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para><emphasis role="bold"><emphasis role="italic">Cons:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>The tracker must be physically close to the server</para>
+                    </listitem>
+                    <listitem>
+                        <para>This can be done even without the daemon but will require the user to
+                            set up a serial connection to the device and use software to communicate
+                            with the device.</para>
+                    </listitem>
+                </itemizedlist></para>
+        </listitem>
+        <listitem>
+            <para>Over <acronym>GPRS</acronym></para>
+            <para><emphasis role="bold"><emphasis role="italic">Pros:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>Allows server to control the device over a distance which makes it
+                            easy for the end user</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para><emphasis role="bold"><emphasis role="italic">Cons:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>Consumes bandwidth and incur costs</para>
+                    </listitem>
+                    <listitem>
+                        <para>Requires a server software to talk to the device</para>
+                    </listitem>
+                    <listitem>
+                        <para>Requires the setup of device GPRS connection which will drain the
+                            battery. Due to the way a connection is established a constant
+                            connection must be established by regularly sending data even when the
+                            end user has made no such requests. The daemon will automatically send
+                            data as necessary to keep the connection alive.</para>
+                    </listitem>
+                </itemizedlist></para>
+        </listitem>
+        <listitem>
+            <para>Using <acronym>GSM</acronym> text messages (a.k.a <acronym>SMS</acronym>,
+                    <emphasis role="italic">Short Message Service</emphasis>)</para>
+            <para><emphasis role="bold"><emphasis role="italic">Pros:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>Can control the device over distance</para>
+                    </listitem>
+                    <listitem>
+                        <para>Does not require any extra software or server</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para><emphasis role="bold"><emphasis role="italic">Cons:</emphasis></emphasis>
+                <itemizedlist>
+                    <listitem>
+                        <para>Incur cost for each message (both in sending phone and in device since
+                            a reply is normally sent)</para>
+                    </listitem>
+                    <listitem>
+                        <para>Tedious and error prone to enter long commands as texts</para>
+                    </listitem>
+                    <listitem>
+                        <para>Requires the user to learn the detailed device protocol</para>
+                    </listitem>
+                </itemizedlist></para>
+        </listitem>
+    </orderedlist>
+    <section>
+        <title>Connecting over USB</title>
+        <para>This only requires a mini USB cable between the device and your computer. When a new
+            device have been connected the daemon will automatically detect this and when the device
+            is ready it will read back the device ID. The connected <acronym>USB</acronym> devices
+            can be listed with the "<command>.usb</command>" command. The active USB port (the one
+            receiving the given commands) is indicated with a '*'. Withe the same command it is
+            possible to select which of the connected devices should receive the commands (See <xref
+                xlink:href="#cmd.srv-usb"/>). Please allow for 20s after the device have been
+            attached to the computer for the connection to be fully established and it will start to
+            accept commands.</para>
+        <para>If no device is connected an error message will be shown if you try to give commands
+            to the device (unless you are using a debug version of the daemon configured with the
+                <literal>--enable-simulate</literal> option, see <xref
+                xlink:href="#section.build-environment"/>). An easy way to verify that the device is
+            recognized is to query the device, for example by asking for the version of the firmware
+            via the "<literal>get ver</literal>" command.</para>
+        <para>
+            <important>
+                <para>On Linux the user running the daemon must have read/write access to the
+                        <acronym>USB</acronym> device (usually <literal>ttyACM0</literal> or
+                    similar). On most system this requires the user to be a member of the
+                        "<literal>dialout</literal>" group. </para>
+            </important>
+        </para>
+    </section>
+    <section>
+        <title>Configuring USB connection</title>
+        <para>On Linux the <acronym>USB</acronym> connections shows up as a
+                <literal>ttyACM</literal><emphasis role="italic">n</emphasis> but on
+                <productname>OSX</productname> it shows up as
+                <literal>cu.usbmodem</literal><emphasis role="italic">nnnn</emphasis>. To help the
+            daemon identify the device it is necessary to specify the correct number in the config
+            file. On Linux based system it usually doesn't matter what <acronym>USB</acronym> port
+            you connect on, it will still give the device to the same <literal>ttyACM</literal>
+            device. The ports are numbered from 0 unless you have a number of other peripheral
+            permanently connected. In that case you most likely need to set a higher start number
+            then "0" i the configuration file so that the daemon does not try to connect to the
+            other peripheral.</para>
+        <para>However, for <acronym>OSX</acronym> this number will differ depending on which
+                <acronym>USB</acronym> port you connect the device on. Therefore you should check
+            which device it shows up as by listing the devices under the "<filename>/dev</filename>"
+            directory. On <productname>OSX</productname> this will be a 4 digit number (e.g. 1411)
+            but on Linux it will be a single digit number. The config file setting for this is the
+                <literal>stty_device</literal> variable at the top of the config file. For
+                <productname>OSX</productname> a list of possible <acronym>USB</acronym> ports to
+            watch can be given since they are not numbered sequentially as they are on Linux.</para>
+        <para>
+            <note>
+                <para>The connection over <acronym>USB</acronym> on <productname>OSX</productname>
+                    should be considered an experimental feature. The connection can sometimes have
+                    a temperament and <productname>OSX</productname> might refuse to recognize a
+                    connected device. In case of problem try reconnect the device after it been to
+                    sleep and woken up. The cause for the (sometimes) instability on
+                        <productname>OSX</productname> is so far unknown. </para>
+                <para>The <acronym>USB</acronym> connection on Linux is however extremly stable and
+                    hence should be the preferred platform when working with devices over
+                        <acronym>USB</acronym>.</para>
+            </note>
+        </para>
+    </section>
+    <section>
+        <title>Connecting over GPRS</title>
+        <para>It is possible to send command to the device remotely over <acronym>GPRS</acronym>. In
+            order for this to work it is first necessary to enable <acronym>GPRS</acronym> as a
+            communication channel. This is done using the "<command>comm</command>" command (<xref
+                xlink:href="#cmd.comm"/>). Once this is setup the device will constantly be in touch
+            with the base over GPRS. Please note that this will drain the battery fairly soon so it
+            should only be used on devices with external power supply or for a short period of time. </para>
+        <para>Since it is possible for the daemon to have multiple trackers connected either on
+                <acronym>USB</acronym> or over <acronym>GPRS</acronym> the daemon must be told which
+            tracker to send commands to. This is done with either the "<command>.usb</command>"
+            command (<xref xlink:href="#cmd.srv-usb"/>) which specifies the <acronym>USB</acronym>
+            target for the following commands or by the <command>.target</command> (<xref
+                linkend="cmd.srv-target"/>) command hich specifies
+            the <acronym>GPRS</acronym> target for the following commands. A target can be specified
+            with either its nick-name or its client number as listed by the "<command>.ld</command>"
+            command.</para>
+        <para>
+            <tip>
+                <para>To make it easier configure the preset "<command>gprs_on</command>" to enable
+                        <acronym>GPRS</acronym> communication. Please note however that the exact
+                    setting the preset template must be customized with the details of the operator
+                    providing the <acronym>SIM</acronym> used in the device.</para>
+            </tip>
+        </para>
+    </section>
+    <section>
+        <title>Connecting with text messages</title>
+        <para>Please see the supplied manual for the tracker. This requires no special setup on the
+            behalf of the daemon.</para>
+    </section>
+</section>
+

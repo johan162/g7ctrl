@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Panel" id="2" x="58" y="70" width="535" height="419" measuredWidth="535" measuredHeight="419"/>
+  <widgets xsi:type="model:Master" id="3" x="80" y="88" width="489" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:VScrollbar" id="4" x="576" y="76" height="407" measuredWidth="17" measuredHeight="407"/>
+  <widgets xsi:type="model:Master" id="5" x="80" y="156" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="6" x="80" y="224" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="7" x="80" y="288" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="8" x="80" y="356" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="9" x="80" y="424" measuredWidth="489" measuredHeight="59" dimmed="true">
+    <screen xsi:type="model:Screen" href="assets/TrackerListLine.screen#/"/>
+    <overrides>
+      <widgets ref="1" width="489"/>
+      <widgets ref="2" x="175" width="207"/>
+      <widgets ref="3" width="54"/>
+    </overrides>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

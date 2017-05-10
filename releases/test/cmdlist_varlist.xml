@@ -1,0 +1,562 @@
+<variablelist>
+<varlistentry>
+<term><emphasis role="bold">clearlog</emphasis></term><listitem>
+<para>Erase all logging data from the device</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">comm</emphasis></term><listitem>
+<para>Set/Read device communication type and its parameters</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>CommSelect</emphasis> - Select primary type of communication
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Use USB"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Use SMS over GSM"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "CSD (reserved)"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "UDP over GPRS"
+</para></listitem>
+<listitem><para>
+<parameter>4</parameter> - "TCP/IP over GPRS"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>SMS Base Phone</emphasis> - SMS base number to call
+</para></listitem>
+<listitem><para>
+<emphasis>CSD Base Phone</emphasis> - CSD base number (reserved and not used)
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS APN</emphasis> - The operators APN
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS User</emphasis> - User name if required
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS Passwd</emphasis> - Password if required
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS Server</emphasis> - Server IP address where the device reports back to
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS Server Port</emphasis> - TCP/IP Port to use on server
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS Keep Alive</emphasis> - Interval (in sec) between Keep Alive Packets
+</para></listitem>
+<listitem><para>
+<emphasis>GPRS DNS</emphasis> - Optional DNS server for device to use.
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">config</emphasis></term><listitem>
+<para>Set/Read device ID, Password, and PIN Code of the SIM card</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Device ID</emphasis> - Set device ID (leftmost digit must always be 3)
+</para></listitem>
+<listitem><para>
+<emphasis>Device Password</emphasis> - Set device Password (numeric)
+</para></listitem>
+<listitem><para>
+<emphasis>SIM Card PIN</emphasis> - The SIM cards PIN code to use
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">geofevt</emphasis></term><listitem>
+<para>Enable/Disable/Set/Read GEO-Fencing event</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Event ID</emphasis> - Event ID. Maximum of 50 events. In range 50-99
+</para></listitem>
+<listitem><para>
+<emphasis>Enabled</emphasis> - Enable/Disable evenet
+</para></listitem>
+<listitem><para>
+<emphasis>Longitude</emphasis> - Longitude for center of event zone
+</para></listitem>
+<listitem><para>
+<emphasis>Latitude</emphasis> - Latitude for center of event zone
+</para></listitem>
+<listitem><para>
+<emphasis>Radius</emphasis> - Radius of event zone in meters (0-65535)
+</para></listitem>
+<listitem><para>
+<emphasis>ZoneControl</emphasis> - HOw to trigger event
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>1</parameter> - "Entering zone"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Leaving zone"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Action</emphasis> - What to do on event
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>1</parameter> - "Log to device"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Send to server"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Both log and send"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">gfen</emphasis></term><listitem>
+<para>Enable/Disabling GEO-fencing functionality</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>_Enabled</emphasis> - Turn option on/off
+</para></listitem>
+<listitem><para>
+<emphasis>Radius</emphasis> - Radius in meter for fence
+</para></listitem>
+<listitem><para>
+<emphasis>Zone trigger</emphasis> - Trigger when leaving or entering zone
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>1</parameter> - "Inside zone"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Outside zone"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Report action</emphasis> - What to do on event
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Disabled"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Log to device"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Send to server"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Both log and send"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">imei</emphasis></term><listitem>
+<para>Query the IMEI number of the internal GSM module</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">led</emphasis></term><listitem>
+<para>Enable/Disable the LED indicator on/off</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">loc</emphasis></term><listitem>
+<para>Get latest location</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">logs</emphasis></term><listitem>
+<para>Download entire/selective logging data from the memory of th device</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">lowbatt</emphasis></term><listitem>
+<para>Set/Read the internal battery low level alert</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Report action</emphasis> - Action to perform at low battery voltage
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Disable"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Log on device"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Send back to server"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Both log and send back ro server"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">mswitch</emphasis></term><listitem>
+<para>Enable/Disable detached report</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">phone</emphasis></term><listitem>
+<para>Enable the function "Get the current location by making a phone call"</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">ps</emphasis></term><listitem>
+<para>Enable/Disable power saving mode</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Mode</emphasis> - Select when to enable sleep mode to save battery
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Sleep after 3min of no movement. Wake up on movements. GSM=Standby, GPRS=GPS=Off, G-sensor=On"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Always enter sleep after 3min and wake every n seconds specified. GSM=GPRS=GPS=G-sensor=Off"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Always enter sleep after 3min and wake up on timer. GSM=GPRS=GPS=G-sensor=Off"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Always enter sleep after 3min and wake up on movement. GSM=GPRS=GPS=Off, G-sensor=On"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Sleep interval</emphasis> - Used with sleep mode 1, Interval in minutes between wakeups
+</para></listitem>
+<listitem><para>
+<emphasis>Wake up report</emphasis> - Action when awaken
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Disable"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Log on device"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Send back to server"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Both log and send back ro server"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>VIP mask</emphasis> - Bitmask of VIP numbers to alert on awake
+</para></listitem>
+<listitem><para>
+<emphasis>Timer 1</emphasis> - Used with mode=2. 00-23 hr
+</para></listitem>
+<listitem><para>
+<emphasis>Timer 2</emphasis> - Used with mode=2. 00-23 hr
+</para></listitem>
+<listitem><para>
+<emphasis>Timer 3</emphasis> - Used with mode=2. 00-23 hr
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">reboot</emphasis></term><listitem>
+<para>Restart-up the device</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">rec</emphasis></term><listitem>
+<para>Enable/Disable/read logging function to the device</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Mode</emphasis> - When should logging be done
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Disable"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Time mode, log every n seconds"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Distance mode, log every n meters"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Time AND Distance mode"
+</para></listitem>
+<listitem><para>
+<parameter>4</parameter> - "Time OR Distance mode"
+</para></listitem>
+<listitem><para>
+<parameter>5</parameter> - "Heading mode, logging starts when heading > set value"
+</para></listitem>
+<listitem><para>
+<parameter>6</parameter> - "Heading OR Time mode"
+</para></listitem>
+<listitem><para>
+<parameter>7</parameter> - "Heading OR Distance"
+</para></listitem>
+<listitem><para>
+<parameter>8</parameter> - "Heading OR (Time AND Distance)"
+</para></listitem>
+<listitem><para>
+<parameter>9</parameter> - "Heading OR Time OR Distance"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Time interval</emphasis> - Time interval (in sec) used in mode setting
+</para></listitem>
+<listitem><para>
+<emphasis>Distance interval</emphasis> - Distance interval (in meters) used in mode setting
+</para></listitem>
+<listitem><para>
+<emphasis>Number of reports</emphasis> - The number of reports to send bakc on event (0=continously logging)
+</para></listitem>
+<listitem><para>
+<emphasis>Record basis</emphasis> - Logging mode
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Wait for GPS fix before sending back report"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Don't wait for GPS fix before sending back report"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Heading</emphasis> - Heading value used in mode (10-90)
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">reset</emphasis></term><listitem>
+<para>Reset all parameters to the manufactory default settings</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">roam</emphasis></term><listitem>
+<para>Enable/Disable GPRS roaming function</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">sim</emphasis></term><listitem>
+<para>Query the identification of the SIM card</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">sleep</emphasis></term><listitem>
+<para>Enable/Disable "Sleeping Report"</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Message mode</emphasis> - Set how to handle message at when device enters sleep
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>1</parameter> - "log message to device"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "send back message"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "both log and send back message"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">sms</emphasis></term><listitem>
+<para>Switch the SMS format (Text of PDU mode)</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Mode</emphasis> - Set format for SMS sent back
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Use PDU mode"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Use text mode"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">stopdl</emphasis></term><listitem>
+<para>Stop downloading logging data from the device</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">test</emphasis></term><listitem>
+<para>Device diagnostic function</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">track</emphasis></term><listitem>
+<para>Control if device should be sending back automatic tracking information.</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Tracking mode</emphasis> - Set condition for when tracking is started
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>1</parameter> - "Time mode"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Distance mode"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "Time AND Distance mode"
+</para></listitem>
+<listitem><para>
+<parameter>4</parameter> - "Time OR distance"
+</para></listitem>
+<listitem><para>
+<parameter>5</parameter> - "Heading mode"
+</para></listitem>
+<listitem><para>
+<parameter>6</parameter> - "Heading OR time"
+</para></listitem>
+<listitem><para>
+<parameter>7</parameter> - "Heading OR distance"
+</para></listitem>
+<listitem><para>
+<parameter>8</parameter> - "Heading OR (Time AND Distance"
+</para></listitem>
+<listitem><para>
+<parameter>9</parameter> - "Heading OR Time OR Distance"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Timer interval</emphasis> - Used for mode 1
+</para></listitem>
+<listitem><para>
+<emphasis>Distance interval</emphasis> - Used for mode 2-9
+</para></listitem>
+<listitem><para>
+<emphasis>Number of trackings</emphasis> - Use 0 for continously tracking
+</para></listitem>
+<listitem><para>
+<emphasis>Track basis</emphasis> - Wait for GPS fix or not
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Send report ONLY if GPS is fixed"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Send report regardless of GPS status"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Comm select</emphasis> - Set type of report
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "Over USB"
+</para></listitem>
+<listitem><para>
+<parameter>1</parameter> - "Over GSM"
+</para></listitem>
+<listitem><para>
+<parameter>2</parameter> - "Over Reserved (not used)"
+</para></listitem>
+<listitem><para>
+<parameter>3</parameter> - "UDP over GPRS"
+</para></listitem>
+<listitem><para>
+<parameter>4</parameter> - "TCP/IP over GPRS"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Heading</emphasis> - Used for modes 5-9
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">tz</emphasis></term><listitem>
+<para>Set the time zone information for the device</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>Sign</emphasis> - Ahead or before GMT zone
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>+</parameter> - "Ahead of GMT"
+</para></listitem>
+<listitem><para>
+<parameter>-</parameter> - "Before GMT"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+<listitem><para>
+<emphasis>Hour</emphasis> - Number of hours to adjust (0-9)
+</para></listitem>
+<listitem><para>
+<emphasis>Min</emphasis> - Minutes to adjust
+</para><para>Possible values and description:<itemizedlist>
+<listitem><para>
+<parameter>0</parameter> - "0 min"
+</para></listitem>
+<listitem><para>
+<parameter>15</parameter> - "15 min"
+</para></listitem>
+<listitem><para>
+<parameter>30</parameter> - "30 min"
+</para></listitem>
+<listitem><para>
+<parameter>45</parameter> - "45 min"
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">ver</emphasis></term><listitem>
+<para>Get current firmware version</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><emphasis role="bold">vip</emphasis></term><listitem>
+<para>Preset up to 5 SMS phone numbers for receiving different alerts</para>
+<para><itemizedlist>
+<listitem><para>
+<emphasis>VIP 1</emphasis> - Mobile number 1 (full number incl country prefix '+' if needed)
+</para></listitem>
+<listitem><para>
+<emphasis>VIP 2</emphasis> - Mobile number 2 (full number incl country prefix '+' if needed)
+</para></listitem>
+<listitem><para>
+<emphasis>VIP 3</emphasis> - Mobile number 3 (full number incl country prefix '+' if needed)
+</para></listitem>
+<listitem><para>
+<emphasis>VIP 4</emphasis> - Mobile number 4 (full number incl country prefix '+' if needed)
+</para></listitem>
+<listitem><para>
+<emphasis>VIP 5</emphasis> - Mobile number 5 (full number incl country prefix '+' if needed)
+</para></listitem>
+</itemizedlist></para>
+</listitem>
+</varlistentry>
+</variablelist>

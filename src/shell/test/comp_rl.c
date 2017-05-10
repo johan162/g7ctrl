@@ -43,7 +43,6 @@
 #include <pwd.h>
 #include <stdarg.h>
 
-
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -235,7 +234,7 @@ setup_sighandlers(void) {
 
 char *cmd_list[] = {
   "get","set","do","help","db",
-  "preset",  
+  "preset","nick",  
   ".date",".cachestat",".usb",".target",".ver",".lc",".ld",
   ".address",".table",".nick",".ln",".dn",".ratereset",
   (char *)NULL
@@ -262,8 +261,7 @@ char *get_cmd_list[] = {
 };
 
 char *set_cmd_list[] = {
-  "tz", 
-  "roam","led","gfen","sleep","loc","phone",
+  "tz","roam","led","gfen","sleep","loc","phone",
   "imei","sim","ver","nrec","batt","track","mswitch","tz",
   "sms","comm","vip","ps","config","rec","lowbatt","sens",
   (char *)NULL
@@ -496,7 +494,6 @@ static char** cmd_completion( const char * text , int start,  int end)
 {
     char **matches;
     matches = (char **)NULL;
-    rl_attempted_completion_over = 1;	
 
     if( 0==strncmp("db ",rl_line_buffer,3) ) {
       if (strlen(rl_line_buffer) > 5) {

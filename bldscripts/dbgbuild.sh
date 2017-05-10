@@ -1,4 +1,5 @@
 #!/bin/sh
+# $Id$
 # Utility script to do a standard build
 bldscripts/dbgconfig.sh
 if test "$?" = 0; then

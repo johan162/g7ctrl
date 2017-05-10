@@ -1,0 +1,48 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+Format: 1.8
+Date: Wed, 4 May 2016 00:22:35 +0100
+Source: g7ctrl
+Binary: g7ctrl
+Architecture: source amd64
+Version: 3.4.0-1
+Distribution: trusty
+Urgency: high
+Maintainer: Johan Persson <johan162@gmail.com>
+Changed-By: Johan Persson <johan162@gmail.com>
+Description: 
+ g7ctrl     - Control daemon for the GM7 GPS tracker
+Changes: 
+ g7ctrl (3.4.0-1) trusty; urgency=high
+ .
+   * Make it possible to adjust geolocation cache size
+   * Minor layout improvements in PDF report
+   * Fixed a bug when saving cache files in certain cases
+Checksums-Sha1: 
+ aa8075b2b736cb322c73708c60a24fb5103fb845 1460 g7ctrl_3.4.0-1.dsc
+ 40dcbd9996360fd288343b4c9b8220b30c220fd1 3383015 g7ctrl_3.4.0.orig.tar.gz
+ 0fefe1bbdb31e6ea4c29fb941f8cc631481abb41 2817 g7ctrl_3.4.0-1.debian.tar.gz
+ 6d9f1faf6f344a5e704f94108c66a24ecc657e2c 1957112 g7ctrl_3.4.0-1_amd64.deb
+Checksums-Sha256: 
+ d434cbec206c462757146e73ff4e961d8f15fdbeab639fafc497039d5cf75a8e 1460 g7ctrl_3.4.0-1.dsc
+ 1cf656b00aada5a54fc84974588adfdf88705563457e29981c852bb44d0857b9 3383015 g7ctrl_3.4.0.orig.tar.gz
+ 3f22081d1d787c013b40592a18ec273b98e2bc8e1cd5ec17958e51d9c73de48e 2817 g7ctrl_3.4.0-1.debian.tar.gz
+ 595774ef66997d4204916e059d134e861581b05db3419192326679584999e31b 1957112 g7ctrl_3.4.0-1_amd64.deb
+Files: 
+ 095465f6096ea7851d1ea9b74acf7efd 1460 misc optional g7ctrl_3.4.0-1.dsc
+ 844ae5c507aefad65b0cd0f513c96cc4 3383015 misc optional g7ctrl_3.4.0.orig.tar.gz
+ b76a4bd036cff91f91a52260a09f2421 2817 misc optional g7ctrl_3.4.0-1.debian.tar.gz
+ eeff338420245e1bb3174b46b7d9188a 1957112 misc optional g7ctrl_3.4.0-1_amd64.deb
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBAgAGBQJXKSayAAoJEBGyba/BKD80gHwH/3dGXqk9rtaTPbXiGw5wnESe
+NfYBIhmdz+Gh2fe1RfzbBQ3NpF2XovabPpyG4TqZeocJsPgOMpFeWmnTMaB2NNXq
+3R7uiRxiytJwR8+M0upvOta6cCN+Rxgru5osg6fv/6a8eEKDwxTrpZScZz0rS75V
+jTgMBSSzD58RGoHviQSOcanrMA9/Tm2ZDey2ycg1q+rDbE2GKcdfXHeGxPZNrQ6/
+2mrPnxhn7vw9PGgStDHoEdx5xq4RUSbHFQI7w+cqHLd09zQrf+vOmAQk+BSsU0ZD
+Ihi6CDLwN5S1hb2Woel07/mMcblpKuvyYZ/Iee+cwnAIakSLBxf53ExXDS+NkbE=
+=63O5
+-----END PGP SIGNATURE-----

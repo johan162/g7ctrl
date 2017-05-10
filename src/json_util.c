@@ -41,7 +41,7 @@
 #include "futils.h"
 #include "logger.h"
 #include "g7config.h"
-#include "xstr.h"
+#include "libxstr/xstr.h"
 #include "json_util.h"
 
 

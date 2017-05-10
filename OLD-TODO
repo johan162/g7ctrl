@@ -1,0 +1,307 @@
+========================================================================================
+OLD TODO's up to version 1.0.0
+========================================================================================
+
+
+Planned for v0.0.1 [**COMPLETED]
+--------------------------------
+TAGLINE: Setup infrastructure and buildsystem for a socket server.
+
+Backlog:
+- <empty>
+
+Done:
+- Set-up svn repository
+- Initial automake/autoconf build system
+- Threaded socket server daemon to listen on cmd and device port
+- Parameter configuration by ini file
+- Infrastructure to build manpages in HTML/PDF/TROFF format
+- Template for DocBook5 man pages
+- Add command line argument to daemon
+- Use autoconf to initialize the app-config files (AC_GENERATE)
+- Build verification on OpenSuSE 12.3
+
+
+
+Planned for v0.0.2 [**COMPLETED]
+--------------------------------
+TAGLINE: Core communication over USB-serial to device and sqlite3 DB
+         support.
+
+Backlog:
+- <empty>
+
+Done:
+- Detections of connected/disconnected device
+- Core communication with device over serial line
+- Design human command structure
+- Setup core PCRE pattern matching for commands
+- Initial set of get/set/do commands to control device
+- Initial on-line help for each supported command
+- Ability to store received location update in sqlite3 DB
+
+
+
+
+Planned for v0.1.0 [**COMPLETED]
+---------------------------------
+TAGLINE: Usable shell and daemon to send and receive information from device
+         with infrastructure support according to LHF standards.
+
+Backlog:
+- <empty>
+
+Done:
+- Store the PID file in the DB directory
+- Prepare initial set of documentation, manpages and online command help
+- Switch running user to assigned daemon user, adjusting directory permissions
+- Setup "init/" files for daemon automatic startup/shutdown on OpenSuSE
+- Setup "upstart" support for Debian based systems (using initctl)
+- Daemon specific lockfile handling
+- Add separate command handling shell with history to easy communication
+  with server
+- Add error message for device commands if no device connected
+- Add build-time simulation option to allow running the daemon in full mode without
+  a real device connected. Replies from the device are only dummies. 
+  Attaching/Detaching device is simulated with dummy file that is watched
+  instead of the real device node.
+- Add possibility to send raw commands directly ($WP+...) switchable with a 
+  config setting.
+- Integrate core SMTP library
+
+
+
+Planned for v0.2.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Core functionality verified, received tracking data over GPRS. 
+         Exporting of tracker data to GPX/KML/CSL/XML format.
+           
+Backlog:
+- <empty>
+
+Done:
+- Create SMTP library with template handling
+- Create and setup data directory if it does not exist
+- Build verification on Debian using Linux Mint and variant HW
+- Implement initial set of DB extraction/export commands for GPX
+- Implement initial set of DB extraction/export commands for KML
+- Implement initial set of DB extraction/export commands for CSV
+- Implement proprietary DB XML export which can include all fields sent back
+  from device.
+- Define RNG grammar for proprietary XML export of full database
+- Define a number of user configurable "presets" to initialize a tracker
+  with predefined set of functionality. This includes the possibility 
+  to record a number of commands and store them as a "profile". This
+  will make it easier manage multiple devices as well as often performed
+  house-holding tasks.
+- Verify KeepAlive packet handling
+- Run through static checking ("cppcheck") target clean report.
+- Instrument code to work with "clang" LLVM compiler as well
+- Verify real incoming data connection from device on active tracking
+
+
+
+Planned for v0.3.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Mail handling implemented and verified
+
+Backlog:
+- <empty>
+
+Done:
+- Add mail integration
+- Create HTML/text mail templates to use on specific events
+- Send mail on specific events
+- Command to mail a compressed export in GPX format as attachment (all records)
+  db mailgpx
+
+
+
+Planned for v0.4.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Action scripts and first draft of manual
+
+Backlog:
+- <empty>
+  
+Done:
+- Establish a Docbook5 infrastructure for manual (using XInclude setup)
+- Create makefile.am build system
+- Add mailing of last recorded position
+- Add automatic stack trace dump in case of SIGSEGV
+- Action scripts
+- First draft of manual
+
+
+
+Planned for v0.5.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Pre-Alpha release (Feature freeze for 1.0.0, soft string freeze)
+
+Backlog:
+- <empty>
+
+Done:
+- Adapt for clean compile on OSX together with basic portability analysis
+- Clean up each README
+- Finalize manual and Unix man pages
+- Set-up predefined templates for "profiles", e.g. 
+  "Active tracking - GPRS", "Comm mode - GPRS"
+
+
+
+Planned for v0.5.1 [**COMPLETED]
+--------------------------------
+TAGLINE: Pre-Alpha release spin2 (Feature freeze for 1.0.0, soft string freeze)
+
+Backlog:
+- <empty>
+
+Done:
+- Manual update with new rendering.
+
+
+
+Planned for v0.5.2 [**COMPLETED]
+--------------------------------
+TAGLINE: Pre-Alpha release spin3 (Feature freeze for 1.0.0, soft string freeze)
+
+Backlog:
+- <empty>
+
+Done:
+- More manual updates
+
+
+
+Planned for v0.6.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Alpha release (Soft string, soft feature freeze)
+
+Backlog:
+- <empty>
+
+Done:
+- Adjust protocol from server to indicate end of data using "\r\n" to
+  indicate we are awaiting input from user rather than "\n\n"
+- Add some more parameter checks when collecting data from user before sending
+  to device
+- Complete Doxygen instrumentation to generate HTML source docs and first 
+  proofreading of manual
+
+
+
+Planned for v0.6.1 [**COMPLETED]
+--------------------------------
+TAGLINE: Alpha-spin1. Priority fixes from alpha release
+
+Backlog:
+- <empty>
+
+Done:
+- Instrument code with __attribute__ for more static error checking
+- Initial Doxygen cleanup
+- Add preset for tracking to device memory
+
+
+Planned for v0.6.2 [**COMPLETED]
+--------------------------------
+TAGLINE: Alpha-spin2. Priority fixes from alpha-spin1 release
+
+Backlog:
+- <empty>
+
+Done:
+- Add separate install target for systemd service file
+- Password question was note ended with "\r\n" and hence didn't expect
+  user input!
+
+Planned for v0.6.3 [**COMPLETED]
+--------------------------------
+TAGLINE: Alpha-spin3. User feedback indicates that downloading from
+         device memory is high priority. Move that function back for
+         1.0.0 (was 1.2.0)
+
+Backlog:
+- <empty>
+
+Done:
+- Add "getrec" command to get recorded positions in device memory
+  and store in DB
+- Modify "g7sh" to print partial results back to user to make it
+  possible to give user feedback while running long-time commands.
+- Export file should have proper file suffix instead of generic
+- Add event id to CSV export
+- Add Haversin method for calculating distance between GPS points (WGS-84)
+- Better handling of repeated messages in logfile
+- Add "dist" command to calculate distance traveled for a set of
+  locations.
+
+
+
+Planned for v0.7.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Beta release (Hard String and functionality freeze for 1.0.0)
+Backlog:
+- <empty>
+
+Done:
+- Add "get locg" command to get the current location as a Google map string
+- Also show detailed help for binary commands preferably without crashing ...
+- Faster detection of daemon disconnect in shell
+- Modify date/time format to stop GMail from automatically 
+  (but wrongly) believe it is a phone number and wrap it in a "tel" link.
+- Add detailed help for db commands
+- Tidy up documentation, spelling, grammar, structure. Proof reading manual.
+
+
+
+Planned for v0.8.0 [**COMPLETED]
+--------------------------------
+TAGLINE: Release candidate. Correct priority findings from beta.
+
+Backlog:
+- <empty>
+
+Done:
+- Allow for time specification as well when selecting dataset from DB
+- Improve filename extension and path handling for export command
+- Add progress feedback during import of rec (dlrec) data since that can 
+  take a bit of time.
+- Use the async version of readline in shell to be able to detect server 
+  disconnect immediately.
+- Tune SQL INSERT speed for sqlite3 for faster handling of large bulk imports 
+  from device memory (10x speed increase!)
+
+
+
+Planned for v0.9.0 [**COMPLETED] 
+--------------------------------
+TAGLINE: Release candidate II 
+
+Backlog:
+- <empty>
+
+Done:
+- More DB tuning for maximum speed for bulk import of locations from
+  device memory. Remove progress feedback.
+- Fix problem of entering empty line in g7sh
+- Add command "get nrec" = Number of recorded locations in device memory
+- Verification on real device for a minimum of two weeks of real usage.
+
+
+
+Planned for v1.0.0 [**COMPLETED] 
+--------------------------------
+TAGLINE: First public release
+
+Backlog:
+- <empty>
+
+Done:
+- Detect and use real GNU readline library when building for OSX
+- Handle an empty DB more gracefully in DB commands
+- Create OpenSuSE RPM Package
+- User feedback indicates need for progress bar during downloading of large
+  data sets from device memory. Added.
+
