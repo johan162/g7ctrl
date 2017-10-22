@@ -77,7 +77,10 @@ XSL_FILES = xsl_stylesheets/xmldepend.xsl \
     xsl_stylesheets/images/warning-small.png \
     xsl_stylesheets/images/warning.svg
 
-XSL_DIRECTORIES = xsl_stylesheets/images/ xsl_stylesheets
+XSL_DIRECTORIES = xsl_stylesheets/images xsl_stylesheets
+
+EVENT_FILES = 0_action.sh.template 2_action.sh.template 40_action.sh.template tracker_conn.sh.template \
+100_action.sh.template 34_action.sh.template 48_action.sh.template 1_action.sh.template 37_action.sh.template 4_action.sh.template
 
 
 CLEANFILES = *~
@@ -87,8 +90,8 @@ EXTRA_DIST = $(XML_FILES) out src-stat.awk ${CSS_FILES} ${IMAGE_FILES} ${XSL_FIL
 # Hooks to allow us to do the standard "make html" and "make pdf"
 # 
 out: all
-html-local: out/html/index.html
-pdf-local: out/pdf/Manual-A4-duplex.pdf	
+html-local:  out/html/index.html
+pdf-local:  out/pdf/Manual-A4-duplex.pdf	
 
 #
 # We can only build the text version of the manual if the "links" text browser
@@ -110,125 +113,128 @@ endif
 
 if have_xsltproc
 
+#.PHONY: setup_files
+
+# 
+# The copying of files is necessary if the build doesn't take place in the original source but
+# in a separate build directory. In that case we must copy the files necessary to build the docs
+# to that dirctory and also any files included in the docs.
+# This is necessary since the Docbook files reference all inclusion and source by relative paths
+# and we must mimic the same structure as in the original source if we rebuild in a separate
+# directory.
 #
-# This gets complicated since we need to remove the extra copied files
-# ourself in case of a builddir != srcdir buil, i.e. a staged build.
-#
+setup-files: 
+	[ -d "out/html" ] || mkdir -p "out/html" ; \
+	for f in $(IMAGE_FILES) ; do               \
+	    [ -e "$(builddir)/out/html/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/out/html/$$f" ;  \
+	done ;		\
+	if [ x"$(builddir)" != x"$(srcdir)" ] ; then		\
+		[ -d "$(builddir)/../../src/etc/event-scripts" ] || mkdir "$(builddir)/../../src/etc/event-scripts" ; \
+		[ -e "$(builddir)/../../src/etc/g7ctrl.conf.template.in" ] || cp "$(srcdir)/../../src/etc/g7ctrl.conf.template.in" "$(builddir)/../../src/etc/g7ctrl.conf.template.in" ; \
+		[ -e "$(builddir)/../../NEWS" ] || cp  "$(srcdir)/../../NEWS" "$(builddir)/../../NEWS"	;	 \
+		[ -e "$(builddir)/../../TODO" ] || cp  "$(srcdir)/../../TODO" "$(builddir)/../../TODO"	;	 \
+		for f in $(EVENT_FILES) ; do					\
+		    [ -e "$(builddir)/../../src/etc/event-scripts/$$f" ] || cp "$(srcdir)/../../src/etc/event-scripts/$$f" "$(builddir)/../../src/etc/event-scripts/$$f" ;\
+		done ;								\
+		for f in $(XML_FILES) ; do					\
+		    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;\
+		done ;								\
+		for d in $(CSS_DIRECTORIES) ; do                            	\
+		    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   	\
+		done ;                                                      	\
+		for f in $(CSS_FILES) ; do                                  	\
+		    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;  \
+		done ;                                                      	\
+		for d in $(DBDOC_DIRECTORIES) ; do                          	\
+		    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   	\
+		done ;                                                      	\
+		for f in $(DBDOC_FILES) ; do                                	\
+		    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;  \
+		done ;							    	\
+		for f in $(IMAGE_FILES) ; do                                	\
+		    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;    \
+		done ;	\
+		for d in $(XSL_DIRECTORIES) ; do                          	\
+		    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   	\
+		done ;                                                      	\
+		for f in $(XSL_FILES) ; do                                	\
+		    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;  \
+		done ;		\
+        fi
+	@touch setup-files
+
+
 distclean-local: 
-	set -e; if [ x"$(builddir)" != x"$(srcdir)" ] ; then    \
-	for f in $(CSS_FILES) ; do                         	\
-	    rm -f "$(builddir)/$$f" ;                      	\
-	done ;                                             	\
-	for f in $(XSL_FILES) ; do                         	\
-	    rm -f "$(builddir)/$$f" ;                      	\
-	done ;                                             	\
-	for f in $(IMAGE_FILES) ; do                       	\
-	    rm -f "$(builddir)/$$f" ;                      	\
-	done ;                                              	\
-	for f in $(DBDOC_FILES) ; do                       	\
-	    rm -f "$(builddir)/$$f" ;                      	\
-	done ;                                             	\
-	for d in $(CSS_DIRECTORIES) ; do                   	\
-	    if [ -d "$(builddir)/$$d" ] ; then rmdir "$(builddir)/$$d"; fi;    \
-	done ;						   	\
-	for d in $(DBDOC_DIRECTORIES) ; do                 	\
-	    if [ -d "$(builddir)/$$d" ] ; then rmdir "$(builddir)/$$d"; fi ;   \
-	done ; 						   	\
-	for d in $(XSL_DIRECTORIES) ; do                   	\
-	    if [ -d "$(builddir)/$$d" ] ; then rmdir "$(builddir)/$$d"; fi ;   \
-	done ;						   	\
+	set -e; 
+	rm -f "setup-files" ; \
+	if [ x"$(builddir)" != x"$(srcdir)" ] ; then	\
+		rm -f "$(builddir)/../../NEWS"  	;	\
+		rm -f "$(builddir)/../../TODO"  	;	\
+		rm -f "$(builddir)/../../src/etc/g7ctrl.conf.template.in" ; \
+		for f in $(EVENT_FILES) ; do                         	\
+		    rm -f "$(builddir)/../../src/etc/event-scripts/$$f" ;    \
+		done ;	\
+		[ -d "$(builddir)/../../src/etc/event-scripts" ] || rmdir "$(builddir)/../../src/etc/event-scripts";     \
+		for f in $(XML_FILES) ; do                         	\
+		    rm -f "$(builddir)/$$f" ;                      	\
+		done ;							\
+		for f in $(CSS_FILES) ; do                         	\
+		    rm -f "$(builddir)/$$f" ;                      	\
+		done ;                                             	\
+		for f in $(XSL_FILES) ; do                         	\
+		    rm -f "$(builddir)/$$f" ;                      	\
+		done ;                                             	\
+		for f in $(IMAGE_FILES) ; do                       	\
+		    rm -f "$(builddir)/$$f" ;                      	\
+		done ;                                              	\
+		for f in $(DBDOC_FILES) ; do                       	\
+		    rm -f "$(builddir)/$$f" ;                      	\
+		done ;                                             	\
+		for d in $(CSS_DIRECTORIES) ; do                   	\
+		    [ -d "$(builddir)/$$d" ] || rmdir "$(builddir)/$$d";     \
+		done ;						   	\
+		for d in $(DBDOC_DIRECTORIES) ; do                 	\
+		    [ -d "$(builddir)/$$d" ] || rmdir "$(builddir)/$$d";    \
+		done ; 						   	\
+		for d in $(XSL_DIRECTORIES) ; do                   	\
+		    [ -d "$(builddir)/$$d" ] || rmdir "$(builddir)/$$d";    \
+		done ;						   	\
         fi                        
 
 
 table-src-stats.xml:
 	${CLOC} --autoconf --quiet --progress-rate=0 --force-lang=make,in \
 	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
-	../../src/ ../. | ${GAWK} --file=$(srcdir)/src-stat.awk > table-src-stats.xml
-	
+	../../src/ ../. | ${GAWK} --file=$(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
+
 #
-# Again, this get overly complicated just because of the need to add the
-# files necessary for the build. The extra tests for existence is needed
-# since both the PDF and HTML versions need these files and if the other
-# target already has created these files there is no need to do it again.
 #
-out/html/index.html: $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
-	rm -rf out/html
-	mkdir -p out/html/img	
-	set -e; if [ x"$(builddir)" != x"$(srcdir)" ] ; then        	\
-	for d in $(CSS_DIRECTORIES) ; do                            	\
-	    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   	\
-	done ;                                                      	\
-	for f in $(CSS_FILES) ; do                                  	\
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;                                                      	\
-	for d in $(DBDOC_DIRECTORIES) ; do                          	\
-	    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   	\
-	done ;                                                      	\
-	for f in $(DBDOC_FILES) ; do                                	\
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;							    	\
-	for f in $(IMAGE_FILES) ; do                                	\
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;							    	\
-        fi
-	${XSLTPROC} --nonet --xinclude --output out/html/index.html xsl_stylesheets/html.xsl $<
-	cp css_stylesheets/img/*.png out/html/img
-	cp css_stylesheets/*.css out/html
-	for f in $(IMAGE_FILES) ; do \
-	    cp "$(srcdir)/$$f" "out/html" ; \
-	done ;
+out/html/index.html: setup-files $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
+	set -e; 
+	${XSLTPROC} --nonet --xinclude --output out/html/index.html xsl_stylesheets/html.xsl Manual.xml
 
 if have_links
 out/txt/Manual.txt: out/html/index.html
 	rm -rf out/txt
 	mkdir -p out/txt 
-	links -width 100 -dump out/html/index.html > out/txt/Manual.txt
+	links -width 100 -dump $(builddir)/out/html/index.html > $(builddir)/out/txt/Manual.txt
 endif
 
 clean-local:
 	-rm -rf out
 	-rm -f table-src-stats.xml
+	-rm -f setup-files
 
 if have_javafop
 
-#
-# Again, this get overly complicated just because of the need to add the
-# files necessary for the build. The extra tests for existence is needed
-# since both the PDF and HTML versions need these files and if the other
-# target already has created these files there is no need to do it again.
-#
-out/pdf/Manual-A4-duplex.pdf: $(XML_FILES) xsl_stylesheets/fo.xsl xsl_stylesheets/common.xsl css_stylesheets/article.css ../../TODO
-	rm -rf out/pdf
-	mkdir -p out/pdf
-	set -e; if [ x"$(builddir)" != x"$(srcdir)" ] ; then            \
-	for d in $(XSL_DIRECTORIES) ; do                            \
-	    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   \
-	done ;                                                      \
-	for f in $(XSL_FILES) ; do                                  \
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;							\
-	for d in $(CSS_DIRECTORIES) ; do                            \
-	    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   \
-	done ;                                                      \
-	for f in $(CSS_FILES) ; do                                  \
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;                                                      \
-	for d in $(DBDOC_DIRECTORIES) ; do                          \
-	    [ -d "$(builddir)/$$d" ] || mkdir -p "$(builddir)/$$d" ;   \
-	done ;                                                      \
-	for f in $(DBDOC_FILES) ; do                                \
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;							\
-	for f in $(IMAGE_FILES) ; do                                \
-	    [ -e "$(builddir)/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/$$f" ;                  \
-	done ;							    \
-	fi	
-	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl $<
-	- ${FOP} -c fop.cfg -q out/pdf/Manual.fo $@  2>&1 # | grep -v "LoggingEvent" | grep -v "Rendered"  | grep -v "processEvent" | grep -v "WARNING:"| grep -v "INFO:"
-#rm out/pdf/Manual.fo
-	@echo " ================================================================================================"
-	@echo " == INFORMATION: It is safe to ignore warnings about paragraph overflows and font substitution =="
-	@echo " ================================================================================================"
+out/pdf/Manual-A4-duplex.pdf: setup-files $(XML_FILES) xsl_stylesheets/fo.xsl xsl_stylesheets/common.xsl css_stylesheets/article.css ../../TODO
+	set -e; 
+	[ -d "out/pdf" ] || mkdir -p "out/pdf" ; \
+	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl Manual.xml
+	${FOP} -c $(srcdir)/fop.cfg -q out/pdf/Manual.fo $@  2>&1 | grep -v "\[INFO\]"
+	@echo "--------------------------------------------------------------------------------------------"
+	@echo "--- It is safe to ignore warnings about fonts and exceeding available area.              ---"
+	@echo "--------------------------------------------------------------------------------------------"
 
 else
 
@@ -246,31 +252,28 @@ out/txt/Manual.txt:
 	touch $@
 
 endif
-  
-
-out/html/pdf_report_pg1.png:
-	[ -d "out/html" ] ||  mkdir -p out/html
-	[ -e "out/html/pdf_report_pg1.png" ] || cp pdf_report_pg1.png out/html
-
-out/html/pdf_report_pg2.png:
-	[ -d "out/html" ] ||  mkdir -p out/html
-	[ -e "out/html/pdf_report_pg2.png" ] || cp pdf_report_pg2.png out/html
-
-out/html/gm7_tracker_small.jpg:
-	[ -d "out/html" ] ||  mkdir -p out/html
-	[ -e "out/html/gm7_tracker_small.jpg" ] || cp gm7_tracker_small.jpg out/html
-
-out/html/gm7_tracker_tall.jpg:
-	[ -d "out/html" ] || mkdir -p out/html
-	[ -e "out/html/gm7_tracker_tall.jpg" ] || cp gm7_tracker_tall.jpg out/html
-
-out/html/event_mail_with_minimap_large.png:
-	[ -d "out/html" ] || mkdir -p out/html
-	[ -e "out/html/event_mail_with_minimap_large.png" ] || cp event_mail_with_minimap_large.png out/html
 
 
+# Since we have added the variable "dist_stdpackagedochtml_DATA" we need to tell make how to 
+# resolved the dependent files. We need this comlication since we want to include a prebuilt
+# version of the documenttation in case the end user does not have a complete Docbook setup.
+# We probably should be thinking of having a separate package for the documentation but
+# since we include some config files that are taken directly from the source tree it 
+# still makes sense to have them in the same tree.
+
+out/html/pdf_report_pg1.png: setup-files 
+
+out/html/pdf_report_pg2.png: setup-files 
+
+out/html/gm7_tracker_small.jpg: setup-files 
+
+out/html/gm7_tracker_tall.jpg: setup-files 
+
+out/html/event_mail_with_minimap_large.png: setup-files 
+
+
+# We ask make to include these files in the distribution
 dist_stdpackagedoc_DATA = out/pdf/Manual-A4-duplex.pdf
-
 dist_stdpackagedochtml_DATA = out/html/index.html css_stylesheets/article.css \
     out/html/gm7_tracker_small.jpg out/html/gm7_tracker_tall.jpg out/html/event_mail_with_minimap_large.png \
     out/html/pdf_report_pg1.png out/html/pdf_report_pg2.png 

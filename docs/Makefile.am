@@ -24,4 +24,3 @@ SUBDIRS = . manpages manual
 
 EXTRA_DIST = README 
 
-

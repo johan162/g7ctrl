@@ -4,7 +4,7 @@
 # ===============================================================================
 AC_PREREQ([2.69])
 AC_INIT([g7ctrl],[3.4.2],[johan162@gmail.com])
-AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2015 (johan162@gmail.com)])
+AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2017 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([dist-xz silent-rules])
@@ -43,10 +43,6 @@ docs/manual/xsl_stylesheets/website.xsl
 docs/manual/xsl_stylesheets/common.xsl
 ])
 
-
-if test ! x$SYSTEM_NAME = xDarwin; then
-    export PATH="/usr/local/bin:${PATH}"
-fi
 
 # ===============================================================================
 # Set default sysconfdir to "/etc" in case prefix is not set by user
@@ -167,7 +163,7 @@ if test ! x$SYSTEM_NAME = xDarwin; then
     AC_DEFINE_UNQUOTED(SYSTEMD_INSTDIR,"$with_systemdsystemunitdir",[Where to install systemd service file])
     AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
 else
-    AM_CONDITIONAL(HAVE_SYSTEMD,0)
+    AM_CONDITIONAL(HAVE_SYSTEMD,[test 0 = 1] )
 fi
 
 # ===============================================================================
@@ -417,6 +413,8 @@ AC_OUTPUT
 # ===============================================================================
 # Finally give some information to the user about the configuration setup
 # ===============================================================================
+
+
 AC_MSG_NOTICE([--------------------------------------------------------------------------------])
 AC_MSG_NOTICE([INSTALLATION SUMMARY])
 

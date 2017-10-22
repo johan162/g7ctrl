@@ -29,13 +29,13 @@
                         exported.</para>
                 </listitem>
                 <listitem>
-                    <para xlink:href=""><acronym>XML</acronym> - Internal format which is a
+                    <para> <acronym>XML</acronym> - Internal format which is a
                         serialization of the DB in <acronym>XML</acronym>. This format has the
                         advantage of including all information sent back by the tracker which the
                         other <acronym>XML</acronym> based format does not have support for. A
                         detailed description of the grammar (in <acronym>RNG</acronym> format) for
-                        the <acronym>XML</acronym> format used is available in <xref
-                            xlink:href="#section.internal-export-format"/>.</para>
+                        the <acronym>XML</acronym> format used is available in 
+                        <xref xlink:href="#section.internal-export-format"/>.</para>
                 </listitem>
                 <listitem>
                     <para><acronym>JSON</acronym> - JavaScript Object Notation. A format suitable

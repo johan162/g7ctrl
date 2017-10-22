@@ -49,6 +49,7 @@
 int
 replace_dict_in_buf(dict_t dict, char *buffer, size_t maxlen) {
 
+    // The worst possible size needed
     size_t const N = strnlen(buffer,_MAX_REPLACE_BUFFER_SIZE) + MAX_DICTIONARY_VAL_SIZE * dict->idx;
     if( _MAX_REPLACE_BUFFER_SIZE <= N ) {
         return -1;
