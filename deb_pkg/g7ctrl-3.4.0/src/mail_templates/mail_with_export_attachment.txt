@@ -1,8 +1,0 @@
-   Dear user,
-
-   Please find included a compressed version of the database exported in [FORMAT]
-   format as requested.
-   
-
-   Best regards,
-   Your friendly GM7 daemon (Ver: [DAEMONVERSION])

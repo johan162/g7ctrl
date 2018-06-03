@@ -1,4 +1,0 @@
-#Turn off recording to device memory.
-#This stops the recording of device position to memory previously started
-#by rec_on preset.
-rec(0,0,0,0,1,15)

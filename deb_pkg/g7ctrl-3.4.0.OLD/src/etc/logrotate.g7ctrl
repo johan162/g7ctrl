@@ -1,8 +1,0 @@
-/var/log/g7ctrl/g7ctrl.log {
-        size 500k
-        copytruncate
-        dateext        
-        compress
-        rotate 4
-        missingok
-}

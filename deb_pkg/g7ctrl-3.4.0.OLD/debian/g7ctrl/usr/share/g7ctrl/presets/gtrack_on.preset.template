@@ -1,6 +1,0 @@
-#Enable GPRS tracking
-#This enable GPRS tracking back to a sever on port 3400
-#Using Telenor APN (internet.telenor.se)
-#NOTE: All keywords within [] must be adjusted
-comm(4,"","",internet.telenor.se,"","",[SERVER_IP],3400,[KEEPALIVE_TIME],"")
-track(1,[TRACKTIME_SEC],0,0,1,4,15)

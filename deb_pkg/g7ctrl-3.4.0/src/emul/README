@@ -1,3 +1,0 @@
-This directory contains a (very) simple GM7 device emulator that can be setup to send typical
-events back to a server. This is used to debug the daemon without having to setup a real device
-which costs money when it is using up its SIM card allowance.

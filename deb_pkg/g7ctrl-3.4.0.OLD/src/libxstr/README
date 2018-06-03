@@ -1,7 +1,0 @@
-README - libxstr
-
-This library contains safe version of a number of common string routines together 
-with multi-byte versions that safely handle UTF-8 characters.
-
-In addition it contains a module for a string based associative array with strings
-as keys and vales.
