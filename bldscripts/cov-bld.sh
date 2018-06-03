@@ -1,6 +1,6 @@
 #!/bin/sh
 # Create a coverity build to be submitted
-PATH=$PATH:/opt/coverity/cov-analysis-linux64-7.7.0.4/bin
+#PATH=$PATH:/opt/cov-analysis-linux64-2017.07/bin
 [ -d cov-int ] && rm -r cov-int
 make clean
 if test "$?" != 0; then

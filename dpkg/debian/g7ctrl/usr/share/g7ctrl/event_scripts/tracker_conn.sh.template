@@ -1,0 +1,54 @@
+#!/bin/sh
+# 
+# File:   tracker_conn.sh.template
+# Desc:   This script gets called (if enabled) when a new tracker connection
+#         is detected.
+#         There are two argument to this script:
+#         -d deviceid    Device Id
+#         -n nick        Nickname (deviceid if no nickname is defined)
+#
+# SVN:    $Id$
+#
+# Note: This is just a TEMPLATE that can be modified to do
+# specific actions when event is received.
+#-----------------------------------------------------------
+
+
+#-----------------------------------------------------------
+# Get options
+# Note: The daemon will supply arguments to the script
+#-----------------------------------------------------------
+
+deviceid=
+nick=
+while getopts d:n: o
+do  case "$o" in
+    d)      deviceid="$OPTARG"
+    	    ;;
+    n)      nick="$OPTARG"
+	    ;;
+    [?])    printf >&2 "Usage; $0 -d deviceid -n nick\n"
+            exit 1
+            ;;
+    esac
+done
+
+if test -z "$deviceid" ; then
+    printf >&2 "Usage; $0 -d deviceid -n nick\n"
+    exit 1
+fi
+
+#-----------------------------------------------------------
+# Here should the real actions happen
+#-----------------------------------------------------------
+
+# Your action ....
+#  echo "deviceid=$deviceid, nick=$nick\n" 
+
+# Normal exit from the script
+exit 0
+
+
+
+
+

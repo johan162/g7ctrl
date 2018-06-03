@@ -3,8 +3,8 @@
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.4.2],[johan162@gmail.com])
-AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2017 (johan162@gmail.com)])
+AC_INIT([g7ctrl],[3.4.5],[johan162@gmail.com])
+AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2018 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([dist-xz silent-rules])
@@ -27,7 +27,6 @@ src/emul/Makefile
 src/etc/g7ctrl.conf.template
 src/etc/deb.init.d
 src/etc/deb.init.conf
-src/etc/suse.init.d
 src/etc/ubuntu.init.d
 src/etc/g7ctrl.service
 src/etc/Makefile
@@ -336,8 +335,9 @@ AC_SUBST(XML_CATALOG)
 
 # ===============================================================================
 # MACRO AX_CHECK_DEBINIFILES
-# Determine if the system uses Debian style ini files. This will control which
-# ini files will be installed when make install is executed
+# Determine if the system uses Debian style ini files. This is the only
+# suported start-up scripts suported (SuSE specific scripts was removed
+# at v3.4.2)
 # ===============================================================================
 AC_DEFUN([AX_CHECK_DEBINIFILES],[
 AC_MSG_CHECKING([If system uses debian style init.d])
@@ -345,8 +345,8 @@ if test ! -f /etc/rc.status; then
     AC_MSG_RESULT([yes])
 else
     AC_MSG_RESULT([no])
+    AC_MSG_ERROR([Systems not using Debian style init files are no longer supported (e.g. SuSE)])
 fi
-AM_CONDITIONAL(have_debian_initd, test ! -f /etc/rc.status)
 ])
 
 # ===============================================================================

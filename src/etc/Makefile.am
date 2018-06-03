@@ -1,11 +1,11 @@
 # ===============================================================================
-# $Id: Makefile.am 1130 2015-10-25 12:37:16Z ljp $
+# $Id: Makefile.am 1226 2018-03-12 06:55:50Z ljp $
 # Automake build script to $(INSTALL) system management shutdown/startup scripts
 #
 # ===============================================================================
 
 SUBDIRS = .
-EXTRA_DIST = deb.init.d.in suse.init.d.in deb.init.conf.in g7ctrl.service.in README g7ctrl.conf.template.in event-scripts presets logrotate.g7ctrl
+EXTRA_DIST = deb.init.d.in deb.init.conf.in g7ctrl.service.in README g7ctrl.conf.template.in event-scripts presets logrotate.g7ctrl
 
 presetsdir=${prefix}/share/@PACKAGE@/presets
 
@@ -28,8 +28,8 @@ logrotatedir=$(sysconfdir)/logrotate.d
 logrotate_DATA=logrotate.g7ctrl
 endif
 
-if have_debian_initd
-
+# The configure script have already determined that we are running on a Debian based
+# setup with init.d so here we only need to see if it is based on upstart or not
 if have_upstart_init
 
 install-data-local:
@@ -47,17 +47,6 @@ else
 install-data-local:
 	[ -d ${DESTDIR}$(sysconfdir)/init.d ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init.d
 	$(INSTALL) -m 644  deb.init.d ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-
-uninstall-local:
-	rm -rf ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-
-endif
-
-else
-
-install-data-local:
-	[ -d ${DESTDIR}$(sysconfdir)/init.d ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init.d
-	$(INSTALL) -m 755  suse.init.d ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
 
 uninstall-local:
 	rm -rf ${DESTDIR}$(sysconfdir)/init.d/g7ctrl

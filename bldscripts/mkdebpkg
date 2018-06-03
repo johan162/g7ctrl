@@ -1,6 +1,7 @@
 #!/bin/sh
 #Setup srtucture to createa a debian package
 
+lsb=xenial
 fmt=gz
 basename=g7ctrl
 builddir=deb_pkg
@@ -56,8 +57,11 @@ fi
 
 tar xf ${basename}_$ver.orig.tar.$fmt
 cp -r ../dpkg/debian ${basename}-$ver
-cd ${basename}-$ver
-
+cd ${basename}-$ver/debian
+sed -i "s/UNRELEASED/${lsb}/" changelog
+sed -i "s/PACKAGE_VERSION/${ver}-${rver}/" changelog
+echo "${basename}_${ver}-${rver}_amd64.deb misc optional" > files
+cd ..
 
 if [ x${upload} = x"true" ]; then
     debuild -S 

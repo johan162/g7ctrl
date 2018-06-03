@@ -19,7 +19,7 @@ case "$1" in
 	# add g7ctrl system user (requires adduser >= 3.34)
         # don't muck around with this unless you KNOW what you're doing
         echo "Creating/updating g7ctrl user account..."
-        adduser --system --home /var/run/g7ctrl --group \
+        adduser --system --no-create-home --home /nonexistent --group \
                 --gecos "G7CTRL system user" --shell /bin/false \
                 --quiet --disabled-password g7ctrl || {
           # adduser failed. Why?
@@ -32,18 +32,32 @@ case "$1" in
           exit 1
         }    
 
+    if [ -x /etc/init.d/g7ctrl ]; then
+        service g7ctrl stop
+        pkill g7ctrl || true
+        if pgrep g7ctrl > /dev/null; then sleep 3; pkill -9 g7ctrl || true; fi
+        if pgrep g7ctrl > /dev/null; then
+            echo "Old g7ctrl daemon should hava stopped but did not. Please kill manually before installation can proceed"
+            exit 1
+        fi
+        rm -f /var/run/g7ctrl.pid
+        update-rc.d -f g7ctrl remove
+    fi
+
+
     ;;
 
     upgrade)
     # Stop and remove any old daemon
     if [ -x /etc/init.d/g7ctrl ]; then
+        service g7ctrl stop
         pkill g7ctrl || true
-        if pgrep g7ctrl >/dev/null; then sleep 3; pkill -9 g7ctrl || true; fi
+        if pgrep g7ctrl > /dev/null; then sleep 3; pkill -9 g7ctrl || true; fi
         if pgrep g7ctrl > /dev/null; then
             echo "Old g7ctrl daemon should hava stopped but did not. Please kill manually before installation can proceed"
             exit 1
         fi
-        rm -fR /etc/init.d/g7ctrl
+        rm -f /var/run/g7ctrl.pid
         update-rc.d -f g7ctrl remove
     fi
     ;;

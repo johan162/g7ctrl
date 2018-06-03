@@ -21,11 +21,17 @@ set -e
 case "$1" in
     configure)
 
+    if [ -e /etc/g7ctrl/g7ctrl.conf ]; then
+
+        cp /etc/g7ctrl/g7ctrl.conf /etc/g7ctrl/g7ctrl.conf.OLD
+
+    fi
+
 	# setup a basic conf file to be able to start the daemon
 	cp /etc/g7ctrl/g7ctrl.conf.template /etc/g7ctrl/g7ctrl.conf
 
-        # Increase the default verbosity level
-        sed -i "s/#verbose_log=1/verbose_log=2/" /etc/g7ctrl/g7ctrl.conf
+    # Increase the default verbosity level
+    sed -i "s/#verbose_log=1/verbose_log=2/" /etc/g7ctrl/g7ctrl.conf
 
 	# Start the deamon
 	service g7ctrl start

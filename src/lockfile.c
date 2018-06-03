@@ -78,7 +78,7 @@ delete_lockfile(void) {
  *                      number represents the file handle of the lockfile
  */
 int
-tryopen_pidfile(const char *pidFile) {
+tryopen_and_writepid(const char *pidFile) {
     const mode_t fmode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
     int fd;
 
@@ -123,57 +123,36 @@ void
 get_lockfile(void) {
 
     // The PID file could have been already specified by the user as a command
-    // line argument. In that case just create the lockfile.
-    // If not specified by the user the default location will be /var/run/PACKAGE/PACKAGE.pid
-    // this assumes that this function is called while still running as root
+    // line argument. In that case just create the specified lockfile.
+    // If not specified by the user the default location will be /var/run/PACKAGE.pid
+    // This also implies that the daemon is started as root. If the daemon has 
+    // later been configured to run as another non-priviliged user this also
+    // implies that the daemon cannot remove its own lockfile since it will
+    // not have the necessary priviliges.
+    // However, this is normally handled by the initd.d scripts which will
+    // always be run as root and will do the necessart cleanup.
+    //
+    // Changes: Mar 2018
+    // To better suit the Debian/Ubunut startup scripts we always create the
+    // lockfile directly under /var/run and not as previously create a subdirectory
     if (!*pidfile) {
 
         struct passwd *pwe = getpwuid(getuid());
 
         if (0 == strcmp(pwe->pw_name, "root")) {
 
-            char dirbuff[512];
-            struct stat dstat;
-            const mode_t mode = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-            snprintf(dirbuff, sizeof (dirbuff), "/var/run/%s", PACKAGE);
-            _vsyslogf(LOG_DEBUG, "Checking directory for lockfile '%s'", dirbuff);
-            if (-1 == stat(dirbuff, &dstat)) {
-                if (-1 == mkdir(dirbuff, mode)) {
-                    _vsyslogf(LOG_CRIT, "Cannot create PID directory %s (%d : %s).",
-                            dirbuff, errno, strerror(errno));
-                    exit(EXIT_FAILURE);
-                } else {
-                    _vsyslogf(LOG_DEBUG, "Created lockfile directory '%s'", dirbuff);
-                }
-            }
-
-            // We will eventually not run as root and hence must adjust the permissions
-            // on the PID directory so that we later on can remove the PID file
-            errno = 0;
-            pwe = getpwnam(run_as_user);
-            if (pwe == NULL) {
-                _vsyslogf(LOG_CRIT, "Specified user to run as, '%s', does not exist.", run_as_user);
-                exit(EXIT_FAILURE);
-            }
-
-            // Now change owner of the directory to the user running the daemon
-            if (-1 == chown(dirbuff, pwe->pw_uid, pwe->pw_gid)) {
-                _vsyslogf(LOG_CRIT, "Cannot change owner for PID directory %s (%d : %s).", dirbuff, errno, strerror(errno));
-                exit(EXIT_FAILURE);
-            }
-
+            snprintf(pidfile, PIDFILE_LEN - 1, "/var/run/%s.pid", PACKAGE);
+            
         } else {
             _vsyslogf(LOG_CRIT, "A PID file must be specified as argument when not started as root");
             fprintf(stderr, "No PID file specified. Aborting.\n");
             exit(EXIT_FAILURE);
         }
 
-        snprintf(pidfile, PIDFILE_LEN - 1, "/var/run/%s/%s.pid", PACKAGE, PACKAGE);
     }
 
-
     // The file handle is returned if the call is successful
-    int fd = tryopen_pidfile(pidfile);
+    int fd = tryopen_and_writepid(pidfile);
     if (0 > fd) {
         if (-2 == fd) {
             _vsyslogf(LOG_CRIT, "Daemon already running. Aborting.");
@@ -185,6 +164,7 @@ get_lockfile(void) {
         _exit(EXIT_FAILURE);
     }
     close(fd);
+    
     _vsyslogf(LOG_DEBUG, "Created lockfile=\"%s\"", pidfile);
 }
 

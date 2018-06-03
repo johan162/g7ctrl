@@ -1,0 +1,16 @@
+Package: g7ctrl
+Version: 3.4.2-0
+Architecture: amd64
+Maintainer: Johan Persson <johan162@gmail.com>
+Installed-Size: 2836
+Depends: adduser, libc6 (>= 2.17), libcurl3 (>= 7.16.2), libhpdf-2.2.1, libpcre3, libreadline6 (>= 6.0), libsqlite3-0 (>= 3.5.9), libxml2 (>= 2.7.4)
+Section: misc
+Priority: optional
+Description: Control daemon for the GM7 GPS tracker
+ The package contains a control daemon for the GM7 GPS tracker.
+ The daemon can be used to control the tracker and also receive
+ position updates from the tracker and store positions in a database.
+ The daemon can also notify user by sending mail on specified events.
+ In addition to the daemon the package also contains a basic command
+ shell that can be used to control the daemon and in extension
+ connected  trackers.

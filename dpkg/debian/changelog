@@ -1,7 +1,5 @@
-g7ctrl (3.4.0-1) trusty; urgency=high
+g7ctrl (PACKAGE_VERSION) UNRELEASED; urgency=medium
 
-  * Make it possible to adjust geolocation cache size 
-  * Minor layout improvements in PDF report
-  * Fixed a bug when saving cache files in certain cases
+  * Initial release of PACKAGE_VERSION series. 
 
- -- Johan Persson <johan162@gmail.com>  Wed, 4 May 2016 00:22:35 +0100
+ -- Johan Persson <johan162@gmail.com>  Tue, 13 Mar 2018 22:47:43 +0100

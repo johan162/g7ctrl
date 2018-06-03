@@ -1,1 +1,17 @@
-Folder to contain the Debian package control scripts used to create the *deb packages.
+Folder to contain the Debian package control scripts used to create 
+the *deb packages.
+
+Instruction
+- Update debian/changelog with adequate information
+- Do a testrun by moving to main source dir and execute
+
+  ./bldscripts/mkdebpkg -v<version> -r<release> -n
+
+- When everything works push up a relase with
+
+  ./bldscripts/mkdebpkg -v<version> -r<release> -u
+
+
+NOTE: Needs PGP keys in ~/.gnupg
+
+

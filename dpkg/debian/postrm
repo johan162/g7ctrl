@@ -22,16 +22,22 @@ set -e
 case "$1" in
     purge)
     rm -rf /var/log/g7ctrl
+    rm -rf /var/lib/g7ctrl
     rm -rf /etc/g7ctrl
+    rm -rf /usr/share/g7ctrl
+    deluser g7ctrl
     ;;
 
     remove)
+    rm -rf /usr/share/g7ctrl
+    rm -rf /var/log/g7ctrl
+    rm -rf /etc/g7ctrl
     rm -rf /var/lib/g7ctrl
     deluser g7ctrl
     ;;
 
 
-    upgarde|failed-upgrade|abort-install|abort-upgrade|disappear)
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
 
     *)
