@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 # Utility script to do a standard build
 bldscripts/stdconfig.sh
 if test "$?" = 0; then
