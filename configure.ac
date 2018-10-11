@@ -33,13 +33,6 @@ src/etc/Makefile
 docs/Makefile
 docs/manpages/Makefile
 docs/manual/Makefile
-docs/manual/xsl_stylesheets/fo.xsl
-docs/manual/xsl_stylesheets/chunk.xsl
-docs/manual/xsl_stylesheets/epub.xsl
-docs/manual/xsl_stylesheets/html.fancycmd.xsl
-docs/manual/xsl_stylesheets/html.xsl
-docs/manual/xsl_stylesheets/website.xsl
-docs/manual/xsl_stylesheets/common.xsl
 ])
 
 
