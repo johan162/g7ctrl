@@ -3,7 +3,7 @@
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.4.5],[johan162@gmail.com])
+AC_INIT([g7ctrl],[3.4.6],[johan162@gmail.com])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2018 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
