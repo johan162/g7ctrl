@@ -1,20 +1,20 @@
-CLEANFILES = g7ctrl.fo g7sh.fo *~
+CLEANFILES = g7ctrl.fo g7sh.fo g7ctrl.1 g7ctrl.1.html g7ctrl.1.pdf g7sh.1 g7sh.1.html g7sh.1.pdf *~
 man_MANS = g7ctrl.1 g7sh.1
 EXTRA_DIST = g7ctrl.1 g7ctrl.1.xml g7ctrl.1.html g7ctrl.1.pdf g7sh.1 g7sh.1.xml g7sh.1.html g7sh.1.pdf
 
 if have_xsltproc
 
 g7ctrl.1.html: g7ctrl.1.xml
-	${XSLTPROC} --output g7ctrl.1.html ${DOCBOOK_XSL}/html/docbook.xsl $<
+	${XSLTPROC} --output g7ctrl.1.html @LOCAL_DOCBOOK_XSL_DIR@html/docbook.xsl $<
 
 g7ctrl.1: g7ctrl.1.xml
-	${XSLTPROC} ${DOCBOOK_XSL}/manpages/docbook.xsl $<
+	${XSLTPROC} @LOCAL_DOCBOOK_XSL_DIR@manpages/docbook.xsl $<
 
 g7sh.1.html: g7sh.1.xml
-	${XSLTPROC} --output g7sh.1.html ${DOCBOOK_XSL}/html/docbook.xsl $<
+	${XSLTPROC} --output g7sh.1.html @LOCAL_DOCBOOK_XSL_DIR@html/docbook.xsl $<
 
 g7sh.1: g7sh.1.xml
-	${XSLTPROC} ${DOCBOOK_XSL}/manpages/docbook.xsl $<
+	${XSLTPROC} @LOCAL_DOCBOOK_XSL_DIR@manpages/docbook.xsl $<
 
 if have_javafop
 
@@ -24,7 +24,7 @@ g7ctrl.1.pdf: g7ctrl.1.xml
 		--stringparam body.start.indent 0pt \
 		--stringparam title.margin.left 0pt \
 		--stringparam variablelist.as.blocks 1 \
-		${DOCBOOK_XSL}/fo/docbook.xsl $<
+		@LOCAL_DOCBOOK_XSL_DIR@fo/docbook.xsl $<
 	fop g7ctrl.fo $@
 
 g7sh.1.pdf: g7sh.1.xml
@@ -33,7 +33,7 @@ g7sh.1.pdf: g7sh.1.xml
 		--stringparam body.start.indent 0pt \
 		--stringparam title.margin.left 0pt \
 		--stringparam variablelist.as.blocks 1 \
-		${DOCBOOK_XSL}/fo/docbook.xsl $<
+		@LOCAL_DOCBOOK_XSL_DIR@fo/docbook.xsl $<
 	fop g7sh.fo $@
 
 all: g7ctrl.1 g7ctrl.1.html g7ctrl.1.pdf g7sh.1 g7sh.1.html g7sh.1.pdf

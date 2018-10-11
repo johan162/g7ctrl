@@ -286,6 +286,7 @@ AC_CHECK_FUNCS([atexit bzero floor getcwd memset mkdir rmdir select socket strch
 # ===============================================================================
 AC_DEFUN([AX_CHECK_XSLDOCBOOK],[
 AC_CHECK_PROG(XSLTPROC,xsltproc,xsltproc,)
+AC_CHECK_PROG(XMLCATALOG,xmlcatalog,xmlcatalog,)
 AC_CHECK_PROG(XML2CONFIG,xml2-config,xml2-config,)
 # AC_PATH_PROG (variable, prog-to-check-for, [value-if-not-found], [path])
 
@@ -298,11 +299,10 @@ for i in /etc/xml/catalog /usr/local/etc/xml/catalog do
             break;
         fi
     done
-AC_MSG_NOTICE([ Using XML Catalog in ${XML_CATALOG_FILES} ])
 
 XSLTPROC_WORKS=no
-if test  "$XSLTPROC" -a "$XML2CONFIG" ; then
-    AC_MSG_CHECKING([ for working docbook 5 is installation])
+if test  "$XSLTPROC" -a "$XML2CONFIG" -a "$XMLCATALOG"; then
+    AC_MSG_CHECKING([ for working docbook 5 ])
     DOCBOOK_XSL_SCHEMA="http://docbook.sourceforge.net/release/xsl-ns/current/html/docbook.xsl"
     $XSLTPROC --nonet $DOCBOOK_XSL_SCHEMA  << END
 <?xml version="1.0" encoding="UTF-8"?>
@@ -330,7 +330,8 @@ AC_CHECK_PROG(JAVAFOP,fop,yes,no)
 AC_PATH_PROG(FOP,fop,fop,)
 AM_CONDITIONAL(have_javafop, test "$JAVAFOP" = "yes")
 
-AC_SUBST(XML_CATALOG)
+LOCAL_DOCBOOK_XSL_DIR=`xmlcatalog $XML_CATALOG_FILES http://docbook.sourceforge.net/release/xsl-ns/current/`
+AC_SUBST(LOCAL_DOCBOOK_XSL_DIR)
 ])
 
 # ===============================================================================
@@ -450,6 +451,7 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
     else
         AC_MSG_NOTICE([  - Working Docbook5 setup detected. Will rebuild documentation. ])
         AC_MSG_NOTICE([  - Using XML catalog \"${XML_CATALOG_FILES}\" ])
+	AC_MSG_NOTICE([  - Docbook resolves to \"${LOCAL_DOCBOOK_XSL_DIR}\" ])
         AC_MSG_NOTICE([  - fop executable: ${FOP} ])
         AC_MSG_NOTICE([    In case of errors rebuilding PDF regarding missing hyphenation])
         AC_MSG_NOTICE([    please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html ])
