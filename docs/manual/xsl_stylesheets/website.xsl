@@ -10,7 +10,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:d="http://docbook.org/ns/docbook"
     version="1.0">
-    <!--<xsl:import href="@DOCBOOK_XSL@/website/chunk-website.xsl"/>-->
     <xsl:import href="http://docbook.sourceforge.net/release/xsl-ns/current/website/chunk-website.xsl"/>
     <xsl:import href="common.xsl"/>    
     

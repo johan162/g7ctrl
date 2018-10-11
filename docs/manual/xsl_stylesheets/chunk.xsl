@@ -11,7 +11,6 @@
     xmlns:d="http://docbook.org/ns/docbook"
     version="1.0">
     <xsl:import href="http://docbook.sourceforge.net/release/xsl-ns/current/html/chunkfast.xsl"/>
-    <!--<xsl:import href="@DOCBOOK_XSL@/html/chunkfast.xsl"/>-->
     <xsl:import href="common.xsl"/>    
     
     <xsl:param name="chunker.output.encoding" select="'UTF-8'" />

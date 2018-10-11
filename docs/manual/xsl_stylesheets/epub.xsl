@@ -13,7 +13,6 @@
     xmlns:d="http://docbook.org/ns/docbook"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     version="1.0">
-    <!--<xsl:import href="@DOCBOOK_XSL@/epub/docbook.xsl"/>-->
     <xsl:import href="http://docbook.sourceforge.net/release/xsl-ns/current/epub/docbook.xsl"/>
     <xsl:import href="common.xsl"/>
 
