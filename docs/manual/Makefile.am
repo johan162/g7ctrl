@@ -75,7 +75,16 @@ XSL_FILES = xsl_stylesheets/xmldepend.xsl \
     xsl_stylesheets/images/tip.svg \
     xsl_stylesheets/images/warning.png \
     xsl_stylesheets/images/warning-small.png \
-    xsl_stylesheets/images/warning.svg
+    xsl_stylesheets/images/warning.svg \
+    xsl_stylesheets/chunk.xsl  \
+    xsl_stylesheets/common.xsl  \
+    xsl_stylesheets/epub.xsl  \
+    xsl_stylesheets/fo.xsl  \
+    xsl_stylesheets/html.fancycmd.xsl  \
+    xsl_stylesheets/html.xsl  \
+    xsl_stylesheets/website.xsl  \
+    xsl_stylesheets/xmldepend.xsl  
+
 
 XSL_DIRECTORIES = xsl_stylesheets/images xsl_stylesheets
 
@@ -207,8 +216,8 @@ table-src-stats.xml:
 	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
 	../../src/ ../. | ${GAWK} --file=$(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
 
-#
-#
+
+
 out/html/index.html: setup-files $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
 	set -e; 
 	${XSLTPROC} --nonet --xinclude --output out/html/index.html xsl_stylesheets/html.xsl Manual.xml
@@ -255,8 +264,8 @@ endif
 
 
 # Since we have added the variable "dist_stdpackagedochtml_DATA" we need to tell make how to 
-# resolved the dependent files. We need this comlication since we want to include a prebuilt
-# version of the documenttation in case the end user does not have a complete Docbook setup.
+# resolve the dependent files. We need this complication since we want to include a pre-built
+# version of the documentation in case the end user does not have a complete Docbook setup.
 # We probably should be thinking of having a separate package for the documentation but
 # since we include some config files that are taken directly from the source tree it 
 # still makes sense to have them in the same tree.
