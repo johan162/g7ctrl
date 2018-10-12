@@ -58,10 +58,13 @@
 #include <sys/param.h>
 
 // Readline library (must be compiled with -lreadline)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wstrict-prototypes"
 #include <readline/readline.h>
 #pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 #include <readline/history.h>
 
 // Local header files
