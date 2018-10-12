@@ -976,6 +976,7 @@ get_datetime(char *res, int sec) {
 
 
 #ifdef __APPLE__
+#ifndef HAVE_CLOCK_GETTIME
 #include <sys/time.h>
 // MacOS X has a monotonic clock, but it's not POSIX. 
 #include <mach/mach_time.h>
@@ -1012,6 +1013,7 @@ int clock_gettime(int clock_id, struct timespec *ts) {
             return -1;
     }
 } 
+#endif
 #endif
 
 

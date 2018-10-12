@@ -58,7 +58,10 @@
 #include <sys/param.h>
 
 // Readline library (must be compiled with -lreadline)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #include <readline/readline.h>
+#pragma clang diagnostic pop
 #include <readline/history.h>
 
 // Local header files

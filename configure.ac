@@ -266,7 +266,7 @@ AC_TYPE_SIZE_T
 # ===============================================================================
 # Check for some standard functions that are used by the daemon
 # ===============================================================================
-AC_CHECK_FUNCS([atexit bzero floor getcwd memset mkdir rmdir select socket strchr strnlen strdup strerror])
+AC_CHECK_FUNCS([atexit bzero floor getcwd memset mkdir rmdir select socket strchr strnlen strdup strerror clock_gettime])
 
 
 # ===============================================================================
