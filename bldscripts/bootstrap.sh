@@ -1,4 +1,3 @@
-
 #!/bin/sh
 # ------------------------------------------------------------------------------------------------------------
 # Boostrap script for Ubuntu/Debian/Linux Mint. Only needs to run once after
