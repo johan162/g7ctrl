@@ -51,13 +51,12 @@ in the distribution of this package) will be installed.
 2.3 Automatic bootstrapping
 
 In order to make it really simple to build the daemon the package includes 
-two bootstrap scripts. "bootstrap.sh" and "bootstrap-deb.sh" in the "bldscripts/"
-directory. These are intended to be run just after the package has been downloaded.
-These scripts will try to installed all necessary pre-requisite (including DocBook5) 
+a bootstrap script, "bootstrap.sh" in the "bldscripts/"
+directory. It is intended to be run just after the package has been downloaded.
+It will will try to install all necessary pre-requisite (including DocBook5) 
 in order to create a full build environment.
 
-- "bootstrap.sh" Is intended for OpenSuSE and has been tested on v12.3 as well as 13.1
-- "bootstrap-deb.sh" Is intended for Debian based distributions such as Linux Mint, 
+- "bootstrap.sh" Is intended for Debian based distributions such as Linux Mint, 
    Elementary, Ubuntu. 
 
 
