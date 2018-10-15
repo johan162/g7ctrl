@@ -14,6 +14,7 @@
 *.out
 
 # Autoconf/Automake and build files
+INSTALL
 Makefile.in
 Makefile
 config.h.in
@@ -38,9 +39,11 @@ nbproject
 # Intermediate DocBook files
 *.fo
 
-# Files not tracked (built fron sources)
+# Files not tracked (built from sources)
 docs/manual/out
 docs/manual/out/html
+docs/manual/setup-files
+docs/manual/table-src-stats.xml
 docs/manpages/g7ctrl.1
 docs/manpages/g7ctrl.1.html
 docs/manpages/g7ctrl.1.pdf
@@ -53,15 +56,6 @@ src/buildnumber.txt
 src/shell/buildnumber.txt
 src/configmake.h
 
-
-# Created XSL files (from .in)
-chunk.xsl
-common.xsl
-epub.xsl
-fo.xsl
-html.fancycmd.xsl
-html.xsl
-website.xsl
 
 # Misc created files (from .in)
 deb.init.conf
