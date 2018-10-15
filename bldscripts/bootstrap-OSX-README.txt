@@ -25,6 +25,9 @@ brew install readline
 brew install pcre
 brew install sqlite
 brew install libusb
+brew install xz
+
+Note: the "xz" dependency is ony necessary to make a full release.
 
 To re-build the documentation (written in an XML dialect called
 Docbook) the following additional libraries and utilities must be installed
@@ -35,6 +38,7 @@ brew install docbook-xsl
 brew install fop
 brew install gawk
 brew install cloc
+
 
 You will also need to add/set the following environment variables (e.g. in your
 .bashrc or .bash_profile)
