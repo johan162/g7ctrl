@@ -48,7 +48,7 @@ AS_IF([ test "$prefix" = NONE],
 
 
 # ===============================================================================
-# Setup default directory defines for the daemon. These are generated into the 
+# Setup default directory defines for the daemon. These are generated into the
 # "src/config.h" file.
 # ===============================================================================
 AS_IF([ test "$prefix" = NONE],
@@ -56,7 +56,7 @@ AS_IF([ test "$prefix" = NONE],
   [AC_DEFINE_UNQUOTED(DEFAULT_DATA_DIR,"$prefix/share/$PACKAGE",[Default data directory for all assets])] )
 
 # ===============================================================================
-# We add the AC_SUBST definition to be able to print the paths at the end of 
+# We add the AC_SUBST definition to be able to print the paths at the end of
 # running configure
 # ===============================================================================
 AS_IF([ test "$prefix" = NONE],
@@ -67,7 +67,7 @@ AS_IF([ test "$prefix" = NONE],
 # ===============================================================================
 # If the final installation target is NONE or the usual "/usr" or "/usr/local"
 # the the DB_DIR will be "/var/lib/@PACKAGE" as stipulated by LSB.
-# For any other prefixes we assume that this is a stage build and really use the 
+# For any other prefixes we assume that this is a stage build and really use the
 # given prefix to control the final destination of DB_DIR
 # ===============================================================================
 AS_IF([ test "$prefix" = NONE],
@@ -130,13 +130,13 @@ if test x$SYSTEM_NAME = xDarwin; then
     AC_SUBST(DEFAULT_STTY_DEVICE,1411)
 else
     AC_DEFINE(IS_OSX,0,[True if system type is Apple OSX])
-    AC_SUBST(DEFAULT_STTY_DEVICE,0)   
+    AC_SUBST(DEFAULT_STTY_DEVICE,0)
 fi
 
  AM_CONDITIONAL(is_osx,[test x$SYSTEM_NAME = xDarwin])
 
 # ===============================================================================
-# Setup directory for systemd service file 
+# Setup directory for systemd service file
 #
 # Optional ARGS
 # --with-systemdsystemunitdir  Specify directory for systemd service script
@@ -159,7 +159,7 @@ else
 fi
 
 # ===============================================================================
-# Setup directory for package documentation 
+# Setup directory for package documentation
 # ===============================================================================
 AS_IF([ test "$prefix" = NONE],
   [AC_SUBST([stdpackagedocdir], [${DESTDIR}/usr/share/doc/packages/${PACKAGE}])],
@@ -171,7 +171,7 @@ AC_SUBST([stdpackagedochtmlimgdir],[$stdpackagedocdir/manual/img])
 # ===============================================================================
 # On some systems (e.g. OSX) inotify() does not exist
 # We also use this as a "meta test" as whether the linker supports the --defsym
-# argument or not but we define it as a separate automake variable in case we 
+# argument or not but we define it as a separate automake variable in case we
 # in the future finds a better way to test for this
 # ===============================================================================
 AM_CONDITIONAL(has_inotify, test -f /usr/include/sys/inotify.h -o -f /usr/include/linux/inotify.h)
@@ -191,7 +191,7 @@ if test x$SYSTEM_NAME = xDarwin; then
     else
         AC_MSG_RESULT([yes])
         OSX_GNU_READLINE=yes
-    fi    
+    fi
 else
     AC_MSG_RESULT([Not OSX])
 fi
@@ -299,9 +299,9 @@ if test  "$XSLTPROC" -a "$XML2CONFIG" -a "$XMLCATALOG"; then
     DOCBOOK_XSL_SCHEMA="http://docbook.sourceforge.net/release/xsl-ns/current/html/docbook.xsl"
     $XSLTPROC --nonet $DOCBOOK_XSL_SCHEMA  << END
 <?xml version="1.0" encoding="UTF-8"?>
-<article xmlns="http://docbook.org/ns/docbook" 
+<article xmlns="http://docbook.org/ns/docbook"
         xmlns:xi="http://www.w3.org/2001/XInclude"
-        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xmlns:xlink="http://www.w3.org/1999/xlink"
         version="5.0"
         >
 </article>
@@ -385,17 +385,28 @@ AM_CONDITIONAL(have_logrotate, test -d /etc/logrotate.d/)
 # ===============================================================================
 # Run all previous defined macros
 # ===============================================================================
-AX_CHECK_DEBINIFILES 
+AX_CHECK_DEBINIFILES
 AX_CHECK_UPSTARTINIT
 AX_CHECK_XSLDOCBOOK
 AX_GEN_PWD
 AX_OSX_READLINE
 
-# ======================
-# ======================
+# ===============================================================================
+# Check what version of awk the system have
+# ===============================================================================
+AC_CHECK_PROG(HAVE_MAWK,mawk,yes,no)
+AM_CONDITIONAL(have_mawk, test "$HAVE_MAWK" = "yes")
+AC_PATH_PROG(MAWK,mawk,mawk,)
+
 AC_CHECK_PROG(HAVE_GAWK,gawk,yes,no)
+AM_CONDITIONAL(have_gawk, test "$HAVE_GAWK" = "yes")
 AC_PATH_PROG(GAWK,gawk,gawk,)
+
+# ===============================================================================
+# We need cloc to regenerate source stats in the manual
+# ===============================================================================
 AC_CHECK_PROG(HAVE_CLOC,cloc,yes,no)
+AM_CONDITIONAL(have_cloc, test "$HAVE_CLOC" = "yes")
 AC_PATH_PROG(CLOC,cloc,cloc,)
 
 # ===============================================================================
@@ -462,4 +473,3 @@ else
 fi
 
 AC_MSG_NOTICE([--------------------------------------------------------------------------------])
-

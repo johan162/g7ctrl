@@ -211,12 +211,22 @@ distclean-local:
         fi
 
 
+if have_gawk
 table-src-stats.xml:
 	${CLOC} --autoconf --quiet --progress-rate=0 --force-lang=make,in \
 	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
-	../../src/ ../. | ${GAWK} --file=$(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
-
-
+	../../src/ ../. | ${GAWK} -f $(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
+else
+if have_mawk
+table-src-stats.xml:
+	${CLOC} --autoconf --quiet --progress-rate=0 --force-lang=make,in \
+	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
+	../../src/ ../. | ${MAWK} -f $(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
+else
+table-src-stats.xml:
+	touch $@
+endif
+endif
 
 out/html/index.html: setup-files $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
 	set -e;
