@@ -3,7 +3,7 @@
 # Written by Johan Persson <johan162@gmail.com>
 # Copyright 2013-2015
 #
-# See ../COPYING for licensing terms. 
+# See ../COPYING for licensing terms.
 
 #-----------------------------------------------------------------------------------
 # A note on the added complexity in this makefile
@@ -23,14 +23,14 @@
 # be understood by make in this instance.
 #-----------------------------------------------------------------------------------
 
-# 
+#
 # These files are listed here to be added to EXTRA_DIST and so that they can be copied over
 # properly for builddir != srcdir builds.
 XML_FILES = Manual.xml CommandReference.xml ControllingDevice.xml Introduction.xml \
     ReceivingData.xml Technical.xml ConfiguringDaemon.xml ExportingDB.xml References.xml \
     TheCommandShell.xml ConnectingDevice.xml Installing.xml Preface.xml RunningTheDaemon.xml \
     TroubleShooting.xml TheCommandShell.xml ReleaseHistory.xml Backlog.xml \
-    NEWS.xml table-src-stats.xml 
+    NEWS.xml table-src-stats.xml
 
 CSS_FILES = css_stylesheets/article.css \
     css_stylesheets/article.css css_stylesheets/article-fancyterm.css \
@@ -54,7 +54,7 @@ CSS_DIRECTORIES = css_stylesheets/img css_stylesheets
 IMAGE_FILES = gm7_tracker_small.jpg gm7_tracker_tall.jpg event_mail_with_minimap_large.png \
  pdf_report_pg1.png  pdf_report_pg2.png fop.cfg
 
-# Documentation for the database that should be included in the distribution 
+# Documentation for the database that should be included in the distribution
 DBDOC_FILES = dbdoc/export_db.rng dbdoc/README dbdoc/db_schema.sql \
     dbdoc/export_db-rng-grammar.png
 
@@ -83,7 +83,7 @@ XSL_FILES = xsl_stylesheets/xmldepend.xsl \
     xsl_stylesheets/html.fancycmd.xsl  \
     xsl_stylesheets/html.xsl  \
     xsl_stylesheets/website.xsl  \
-    xsl_stylesheets/xmldepend.xsl  
+    xsl_stylesheets/xmldepend.xsl
 
 
 XSL_DIRECTORIES = xsl_stylesheets/images xsl_stylesheets
@@ -97,10 +97,10 @@ EXTRA_DIST = $(XML_FILES) out src-stat.awk ${CSS_FILES} ${IMAGE_FILES} ${XSL_FIL
 
 #
 # Hooks to allow us to do the standard "make html" and "make pdf"
-# 
+#
 out: all
 html-local:  out/html/index.html
-pdf-local:  out/pdf/Manual-A4-duplex.pdf	
+pdf-local:  out/pdf/Manual-A4-duplex.pdf
 
 #
 # We can only build the text version of the manual if the "links" text browser
@@ -124,7 +124,7 @@ if have_xsltproc
 
 #.PHONY: setup_files
 
-# 
+#
 # The copying of files is necessary if the build doesn't take place in the original source but
 # in a separate build directory. In that case we must copy the files necessary to build the docs
 # to that dirctory and also any files included in the docs.
@@ -132,7 +132,7 @@ if have_xsltproc
 # and we must mimic the same structure as in the original source if we rebuild in a separate
 # directory.
 #
-setup-files: 
+setup-files:
 	[ -d "out/html" ] || mkdir -p "out/html" ; \
 	for f in $(IMAGE_FILES) ; do               \
 	    [ -e "$(builddir)/out/html/$$f" ] || cp "$(srcdir)/$$f" "$(builddir)/out/html/$$f" ;  \
@@ -173,8 +173,8 @@ setup-files:
 	@touch setup-files
 
 
-distclean-local: 
-	set -e; 
+distclean-local:
+	set -e;
 	rm -f "setup-files" ; \
 	if [ x"$(builddir)" != x"$(srcdir)" ] ; then	\
 		rm -f "$(builddir)/../../NEWS"  	;	\
@@ -208,7 +208,7 @@ distclean-local:
 		for d in $(XSL_DIRECTORIES) ; do                   	\
 		    [ -d "$(builddir)/$$d" ] || rmdir "$(builddir)/$$d";    \
 		done ;						   	\
-        fi                        
+        fi
 
 
 table-src-stats.xml:
@@ -219,13 +219,13 @@ table-src-stats.xml:
 
 
 out/html/index.html: setup-files $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
-	set -e; 
+	set -e;
 	${XSLTPROC} --nonet --xinclude --output out/html/index.html xsl_stylesheets/html.xsl Manual.xml
 
 if have_links
 out/txt/Manual.txt: out/html/index.html
 	rm -rf out/txt
-	mkdir -p out/txt 
+	mkdir -p out/txt
 	links -width 100 -dump $(builddir)/out/html/index.html > $(builddir)/out/txt/Manual.txt
 endif
 
@@ -237,7 +237,7 @@ clean-local:
 if have_javafop
 
 out/pdf/Manual-A4-duplex.pdf: setup-files $(XML_FILES) xsl_stylesheets/fo.xsl xsl_stylesheets/common.xsl css_stylesheets/article.css ../../TODO
-	set -e; 
+	set -e;
 	[ -d "out/pdf" ] || mkdir -p "out/pdf" ; \
 	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl Manual.xml
 	${FOP} -c $(srcdir)/fop.cfg -q out/pdf/Manual.fo $@  2>&1 | grep -v "\[INFO\]"
@@ -263,30 +263,32 @@ out/txt/Manual.txt:
 setup-files:
 	touch $@
 
+distclean-local:
+		rm -f setup-files
+
 endif
 
 
-# Since we have added the variable "dist_stdpackagedochtml_DATA" we need to tell make how to 
+# Since we have added the variable "dist_stdpackagedochtml_DATA" we need to tell make how to
 # resolve the dependent files. We need this complication since we want to include a pre-built
 # version of the documentation in case the end user does not have a complete Docbook setup.
 # We probably should be thinking of having a separate package for the documentation but
-# since we include some config files that are taken directly from the source tree it 
+# since we include some config files that are taken directly from the source tree it
 # still makes sense to have them in the same tree.
 
-out/html/pdf_report_pg1.png: setup-files 
+out/html/pdf_report_pg1.png: setup-files
 
-out/html/pdf_report_pg2.png: setup-files 
+out/html/pdf_report_pg2.png: setup-files
 
-out/html/gm7_tracker_small.jpg: setup-files 
+out/html/gm7_tracker_small.jpg: setup-files
 
-out/html/gm7_tracker_tall.jpg: setup-files 
+out/html/gm7_tracker_tall.jpg: setup-files
 
-out/html/event_mail_with_minimap_large.png: setup-files 
+out/html/event_mail_with_minimap_large.png: setup-files
 
 
 # We ask make to include these files in the distribution
 dist_stdpackagedoc_DATA = out/pdf/Manual-A4-duplex.pdf
 dist_stdpackagedochtml_DATA = out/html/index.html css_stylesheets/article.css \
     out/html/gm7_tracker_small.jpg out/html/gm7_tracker_tall.jpg out/html/event_mail_with_minimap_large.png \
-    out/html/pdf_report_pg1.png out/html/pdf_report_pg2.png 
-
+    out/html/pdf_report_pg1.png out/html/pdf_report_pg2.png
