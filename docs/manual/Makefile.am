@@ -260,6 +260,9 @@ out/html/index.html:
 out/txt/Manual.txt:
 	touch $@
 
+setup-files:
+	touch $@
+
 endif
 
 
