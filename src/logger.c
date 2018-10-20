@@ -347,15 +347,22 @@ setup_logger(char *packageName) {
 
     } else {
 
-        // Check that the logfile can be written
-        mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-        int fd = open(logfile_name, O_APPEND | O_CREAT | O_WRONLY, mode);
-        if (fd < 0) {
-            fprintf(stderr, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
-            syslog(LOG_ERR, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
-            exit(EXIT_FAILURE);
+        // Check that the logfile can be written unless its the
+        // reserved name "stdout" which will just write the log to,
+        // you guessed it - stdout
+        
+        if (strcmp(logfile_name, "stdout") != 0) {
+        
+            mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+            int fd = open(logfile_name, O_APPEND | O_CREAT | O_WRONLY, mode);
+            if (fd < 0) {
+                fprintf(stderr, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
+                syslog(LOG_ERR, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
+                exit(EXIT_FAILURE);
+            }
+            close(fd);
+        
         }
-        close(fd);
     }
     return 0;
 }
