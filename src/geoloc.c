@@ -225,6 +225,7 @@ get_geocode_url(char *lat, char *lon) {
         snprintf(url, sizeof (url),
                 "https://maps.googleapis.com/maps/api/geocode/xml?latlng=%s,%s&location_type=ROOFTOP&key=%s",
                 lat, lon, google_api_key);
+        logmsg(LOG_DEBUG,"G Reverse lookup: %s",url);
 
     } else {
         // Anonymous lookup. WIthout a key we are not allowed to set location_type
@@ -526,6 +527,8 @@ _lookup_address_from_latlon(char *lat, char *lon, char *address, size_t maxlen) 
 
     /* We must limit the rate of API calls */
     geocode_rate_limit();
+    
+    logmsg(LOG_ERR, "Calling Google API for address lookup" );
     res = curl_easy_perform(curl_handle);
 
     int rc = 0;
@@ -612,6 +615,8 @@ _get_minimap_from_latlon(const char *lat, const char *lon, unsigned short zoom, 
 
     /* We must limit the rate of API calls */
     staticmap_rate_limit();
+    
+    logmsg(LOG_ERR, "Calling Google API for static map lookup" );
     res = curl_easy_perform(curl_handle);
 
     int rc = 0;

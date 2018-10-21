@@ -87,9 +87,9 @@ update_cache_stat(enum geo_cache_t geo_cache, _Bool hit, size_t idx) {
     if (hit)
         cache_stats[geo_cache].cache_hits++;
     
-    logmsg(LOG_DEBUG,"Updating %s Cache [lookups=%u, hit=%d, idx=%zu]",
+    logmsg(LOG_DEBUG,"Updating %s Cache Stats [lookups=%u, hits=%d, idx=%zu]",
             geo_cache==GEOCACHE_ADDR?"Address":"Minimap",
-            cache_stats[geo_cache].cache_tot_calls, hit?1:0,idx);    
+            cache_stats[geo_cache].cache_tot_calls, cache_stats[geo_cache].cache_hits, idx);    
 }
 
 /**
@@ -739,7 +739,7 @@ int
 update_minimap_cache(const char *lat, const char *lon, unsigned zoom, unsigned width, unsigned height, size_t imgdatasize, char *imgdata) {
     assert(isInit);
 
-    logmsg(LOG_DEBUG, "Updating minimap geocache [idx=%zu] (%s,%s) [%d,%dx%d]", minimap_cache_idx, lat, lon, zoom, width, height);
+    logmsg(LOG_DEBUG, "Updating minimap geo-cache [idx=%zu] (%s,%s) [%d,%dx%d]", minimap_cache_idx, lat, lon, zoom, width, height);
 
     if( lat==NULL || strlen(lat) < 6 || lon==NULL || strlen(lon) < 6 ) {
         logmsg(LOG_ERR,"Invalid arguments to update_minimap_cache() lat or lon has two few digits");
@@ -826,7 +826,7 @@ update_address_cache(char *lat, char *lon, char *addr) {
 
     assert(isInit);
 
-    logmsg(LOG_DEBUG, "Updating address geocache [idx=%zu] (%s,%s) -> \"%s\"", address_cache_idx, lat, lon, addr);
+    logmsg(LOG_DEBUG, "Updating address geo-cache [idx=%zu] (%s,%s) -> \"%s\"", address_cache_idx, lat, lon, addr);
     const double dLat = atof(lat);
     const double dLon = atof(lon);
 
@@ -855,7 +855,7 @@ update_address_cache(char *lat, char *lon, char *addr) {
     address_cache_idx++;
 
     if (address_cache_idx >= geocache_address_size) {
-        logmsg(LOG_DEBUG, "Wrapping address geocache index at end [idx=%zu]", address_cache_idx);
+        logmsg(LOG_DEBUG, "Wrapping address geo-cache index at end [idx=%zu]", address_cache_idx);
         address_cache_idx = 0;
     } else {
         if( address_cache_num < geocache_address_size )
