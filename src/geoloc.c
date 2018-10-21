@@ -200,12 +200,17 @@ send_mail_quotalimit(void) {
         char subjectbuff[512];
         snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_LOCRATEEXCEEDED, mail_subject_prefix);
 
-        if (-1 == send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, "mail_quotalimit",
-                rkeys, NULL, 0, NULL)) {
-            logmsg(LOG_ERR, "Failed to send mail using template \"mail_quotalimit\"");
-        }
-        logmsg(LOG_INFO, "Sent mail on Google quota limit to \"%s\"", send_mailaddress);
+        int rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress, "mail_quotalimit",
+                rkeys, NULL, 0, NULL);
         free_dict(rkeys);
+        if (-1 == rc ) {
+            logmsg(LOG_ERR, "Failed to send mail using template \"mail_quotalimit\"");
+        } else if ( -99 == rc ) {
+            logmsg(LOG_ERR, "Mail not enabled in configuration file");
+        } else {
+            logmsg(LOG_INFO, "Sent mail on Google quota limit to \"%s\"", send_mailaddress);
+        }
+        
     }
 }
 

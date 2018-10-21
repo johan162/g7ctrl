@@ -539,6 +539,8 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
             }
 
         } else {
+            // rc = -1 => Error
+            // rc = -99 => Mail disabled in the configuration
             rc = send_mail_template(subjectbuff, daemon_email_from, send_mailaddress,
                     "mail_event",
                     dict, NULL, 0, NULL);
@@ -546,7 +548,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
         
         if (-1 == rc) {
             logmsg(LOG_ERR, "Failed to send mail using template \"mail_event\"");
-        } else {
+        } else if ( 0 == rc ) {
             logmsg(LOG_INFO, "Sent mail for event \"%s\" to \"%s\"", eventCmd, send_mailaddress);
         }        
         

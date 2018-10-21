@@ -1084,6 +1084,10 @@ mail_lastloc(struct client_info *cli_info) {
             _writef(sockd, "[ERR] Could not send mail.");
             free_dict(rkeys);
             return -1;
+        } else if ( -99 == rc ) {
+            logmsg(LOG_ERR, "Mail function not enabled in configuration file");
+            free_dict(rkeys);
+            return -1;
         }
 
         _writef(sockd, "Mail with location sent to \"%s\"", send_mailaddress);

@@ -163,7 +163,7 @@ send_mail_template(char *subject, char *from, char *to,
 
     if (!enable_mail) {
         logmsg(LOG_DEBUG, "Mailhandling disabled in configuration. No mail will be sent.");
-        return 0;
+        return -99;
     }
 
     char *buffer = NULL, *buffer2 = NULL;

@@ -720,8 +720,12 @@ mail_as_attachment(struct client_info *cli_info, char *exportFormat) {
         logmsg(LOG_ERR, "Cannot send mail with compressed GPX file ( %d : %s )", errno, strerror(errno));
         free_dict(rkeys);
         return -1;
+    } else if ( -99 == rc ) {
+        logmsg(LOG_ERR, "Mail function not enabled in configuration file");
+        free_dict(rkeys);
+        return -1;        
     }
-
+    
     if (-1 == unlink(tmpExportFile)) {
         logmsg(LOG_ERR, "Failed to removed temporary export file \"%s\"", tmpExportFile);
         free_dict(rkeys);
