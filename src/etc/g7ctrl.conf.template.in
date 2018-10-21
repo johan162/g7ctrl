@@ -21,7 +21,7 @@
 #
 # -------------------------------------------------------------------------------------------------------
 #
-# Copyright (C) 2013-2016 Johan Persson
+# Copyright (C) 2013-2018 Johan Persson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -249,6 +249,11 @@ client_pwd=@GENERATED_CLIENT_PWD@
 # approximate address in notification mails and stored in the DB
 # This is the default value when the server is started. It can be toggled
 # with the server command ".address"
+#
+# NOTE: In order to use address lookup you MUST provide a Google API key.
+# (further down in the config file). Google no longer allow anonymous use
+# of there services. You can still get the service for free but you need
+# to register. See https://console.cloud.google.com/
 #----------------------------------------------------------------------------
 #use_address_lookup=no
 
@@ -269,9 +274,11 @@ client_pwd=@GENERATED_CLIENT_PWD@
 
 #----------------------------------------------------------------------------
 # OOGLE_API_KEY
-# Optional commercial Google API key used for locations lookups. Without a 
-# commercial key it is still possible to do lookups but the rate (number 
-# of lookups per second) and the absolute number per 24 hours is restricted. 
+#
+# NOTE: In order to use address lookup or minimaps you MUST provide 
+# a Google API key.Google no longer allow anonymous use of there services. 
+# You can still get the service for free but you need
+# to register. See https://console.cloud.google.com/
 #----------------------------------------------------------------------------
 #google_api_key=
 
@@ -423,6 +430,11 @@ client_pwd=@GENERATED_CLIENT_PWD@
 # INCLUDE_MINIMAP boolean
 # Include a small static map in the event mail. This will include both
 # an overview map and a detailed map centered at the current location.
+#
+# NOTE: In order to include static maps you MUST provide a Google API key.
+# (fin this config file). Google no longer allow anonymous use
+# of there services. You can still get the service for free but you need
+# to register. See https://console.cloud.google.com/
 #----------------------------------------------------------------------------
 #include_minimap=no
 
