@@ -2,7 +2,8 @@
 Description=GM7 Service Daemon
 
 [Service]
-ExecStart=@prefix@/bin/@PACKAGE_NAME@ -dn
+Type=simple
+ExecStart=@prefix@/bin/@PACKAGE_NAME@
 
 [Install]
 WantedBy=multi-user.target
