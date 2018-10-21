@@ -153,9 +153,9 @@ if test ! x$SYSTEM_NAME = xDarwin; then
         AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
     fi
     AC_DEFINE_UNQUOTED(SYSTEMD_INSTDIR,"$with_systemdsystemunitdir",[Where to install systemd service file])
-    AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
+    AM_CONDITIONAL(have_systemd, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
 else
-    AM_CONDITIONAL(HAVE_SYSTEMD,[test 0 = 1] )
+    AM_CONDITIONAL(have_systemd,[test 0 = 1] )
 fi
 
 # ===============================================================================
@@ -330,8 +330,7 @@ AC_SUBST(LOCAL_DOCBOOK_XSL_DIR)
 # ===============================================================================
 # MACRO AX_CHECK_DEBINIFILES
 # Determine if the system uses Debian style ini files. This is the only
-# suported start-up scripts suported (SuSE specific scripts was removed
-# at v3.4.2)
+# suported start-up scripts suported 
 # ===============================================================================
 AC_DEFUN([AX_CHECK_DEBINIFILES],[
 AC_MSG_CHECKING([If system uses debian style init.d])
@@ -343,21 +342,7 @@ else
 fi
 ])
 
-# ===============================================================================
-# MACRO AX_CHECK_UPSTARTINIT
-# Determine if the system uses the newer "Upstart" method to handle init scripts
-# We do this by checking if there is a config file for "dmesg" in that case we
-# can safely assume an Upstart system
-# ===============================================================================
-AC_DEFUN([AX_CHECK_UPSTARTINIT],[
-AC_MSG_CHECKING([If system uses Upstart init scripts])
-if test -f /etc/init/dmesg.conf  -a -f /lib/init/upstart-job; then
-    AC_MSG_RESULT([yes])
-else
-    AC_MSG_RESULT([no])
-fi
-AM_CONDITIONAL(have_upstart_init, test -f /etc/init/dmesg.conf)
-])
+
 
 # ===============================================================================
 # Generate an initial random password (6 characters)
@@ -386,7 +371,6 @@ AM_CONDITIONAL(have_logrotate, test -d /etc/logrotate.d/)
 # Run all previous defined macros
 # ===============================================================================
 AX_CHECK_DEBINIFILES
-AX_CHECK_UPSTARTINIT
 AX_CHECK_XSLDOCBOOK
 AX_GEN_PWD
 AX_OSX_READLINE
