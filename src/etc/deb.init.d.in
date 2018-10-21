@@ -11,8 +11,6 @@
 #                    and allows control of the tracker over a USB (serial) connection.
 ### END INIT INFO
 
-# Author:Johan Persson <johan162@gmail.com>
-# $Id: deb.init.d.in 1232 2018-03-13 22:34:04Z ljp $
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="GPS GM7 Tracker handling daemon"
