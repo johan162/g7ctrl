@@ -393,7 +393,12 @@ chkdirstructure(void) {
 /*
  * All necessary low level household stuff to kick us off as a
  * daemon process, i.e. fork, disconnect from any tty, close
- * the standard file handlers and so on
+ * the standard file handlers and so on.
+ * 
+ * Note: If this program is started from a daemon tool such as
+ * systemd then this program should be started as normal, i.e
+ * WITHOUT the daemon falg. Systemd will take care of properly
+ * handling all daemon setup.
  */
 void startdaemon(void) {
 
@@ -426,18 +431,18 @@ void startdaemon(void) {
 
     // Fork again to ensure we are not a session group leader
     // and hence can never regain a controlling terminal
-//    pid = fork();
-//    if (pid < 0) {
-//        syslog(LOG_ERR, "Cannot do second fork to create daemon.");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    if (pid > 0) {
-//        // Exit parent. Note the use of _exit() rather than exit()
-//        // The exit() performs the atexit() cleanup handler
-//        // which we do not want since that would delete the lockfile
-//        _exit(EXIT_SUCCESS);
-//    }
+    pid = fork();
+    if (pid < 0) {
+        syslog(LOG_ERR, "Cannot do second fork to create daemon.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (pid > 0) {
+        // Exit parent. Note the use of _exit() rather than exit()
+        // The exit() performs the atexit() cleanup handler
+        // which we do not want since that would delete the lockfile
+        _exit(EXIT_SUCCESS);
+    }
 
     // Use root as working directory
     if (chdir("/") < 0) {
@@ -653,13 +658,13 @@ main(int argc, char *argv[]) {
 
     setup_logger(PACKAGE_NAME);
 
+    // Manually start prggram as a daemon NOT RECOMMENDED
+    // Setup lockfile so that we have only one running instance
     if (daemonize) {
         startdaemon();
+        get_lockfile(); 
     }
 
-    // Setup process lockfile so that we have only one running instance
-    // get_lockfile(); 
-  
     // Get the overall settings from the ini-file
     read_inisettings();
 
@@ -755,31 +760,34 @@ main(int argc, char *argv[]) {
 
     logmsg(LOG_INFO, "Received signal %d. Shutting down daemon", received_signal);
     
-    logmsg(LOG_DEBUG, "Saving geocache statistics and cache vectors" );
-    
-    int rc=write_address_geocache();
-    if( 0==rc ) {
-      logmsg(LOG_INFO, "Saved address geocache" );
+    logmsg(LOG_DEBUG, "Trying to save geocache statistics and cache vectors" );
+
+    int rc = write_address_geocache();
+    if (0 == rc) {
+        logmsg(LOG_INFO, "Saved address geocache");
     } else {
-      logmsg(LOG_ERR, "Could NOT save address geocache" );
+        logmsg(LOG_ERR, "Could NOT save address geocache");
     }
 
-    rc=write_minimap_geocache();    
-    if( 0==rc ) {
-      logmsg(LOG_INFO, "Saved minimap geocache" );
+    rc = write_minimap_geocache();
+    if (0 == rc) {
+        logmsg(LOG_INFO, "Saved minimap geocache");
     } else {
-      logmsg(LOG_ERR, "Could NOT save minimap geocache" );
+        logmsg(LOG_ERR, "Could NOT save minimap geocache");
     }
 
-    rc=write_geocache_stat();
-    if( 0==rc ) {
-      logmsg(LOG_INFO, "Saved geocache statistics" );
+    rc = write_geocache_stat();
+    if (0 == rc) {
+        logmsg(LOG_INFO, "Saved geocache statistics");
     } else {
-      logmsg(LOG_ERR, "Could NOT save geocache statistics" );
+        logmsg(LOG_ERR, "Could NOT save geocache statistics");
     }
-    
-    // logmsg(LOG_INFO, "Cleaning up and exit" );    
-    // delete_lockfile();
+
+
+    if (daemonize) {
+        logmsg(LOG_INFO, "Trying to clean up lockfil and exit");
+        delete_lockfile();
+    }
     _exit(EXIT_SUCCESS);
 
 }
