@@ -1537,28 +1537,33 @@ get_googlemap_string(char *lat, char *lon, char *url, size_t maxlen) {
  */
 int
 exec_get_address(struct client_info *cli_info, char *address, const size_t maxaddress)  {
-    char reply[256];
-    if (-1 == send_cmdquery_reply(cli_info, "loc", reply, sizeof (reply))) {
-        logmsg(LOG_ERR, "Internal error cannot execute command 'loc'");
-        return -1;        
-    }    
-    // 3:rd and 4:th fields are the lon & lat so extract them from the device reply
-    struct splitfields flds;
-    int rc = xstrsplitfields(reply, LOC_DELIM, &flds);
-    if (0 == rc) {
-        
-        rc = get_address_from_latlon(flds.fld[3], flds.fld[2], address, maxaddress);
-        if (0 == rc) {
-            logmsg(LOG_DEBUG, "Found address: %s", address);
-        } else {
-            logmsg(LOG_ERR, "Failed to find address");
+    if( use_address_lookup ) {
+        char reply[256];
+        if (-1 == send_cmdquery_reply(cli_info, "loc", reply, sizeof (reply))) {
+            logmsg(LOG_ERR, "Internal error cannot execute command 'loc'");
             return -1;
         }
+        // 3:rd and 4:th fields are the lon & lat so extract them from the device reply
+        struct splitfields flds;
+        int rc = xstrsplitfields(reply, LOC_DELIM, &flds);
+        if (0 == rc) {
+
+            rc = get_address_from_latlon(flds.fld[3], flds.fld[2], address, maxaddress);
+            if (0 == rc) {
+                logmsg(LOG_DEBUG, "Found address: %s", address);
+            } else {
+                logmsg(LOG_ERR, "Failed to find address");
+                return -1;
+            }
+        } else {
+            logmsg(LOG_ERR,"Cannot parse returned device string \"%s\"",reply);
+            return -1;
+        }
+        return 0;
     } else {
-        logmsg(LOG_ERR,"Cannot parse returned device string \"%s\"",reply);
+        logmsg(LOG_ERR,"Address lookup no enabled");
         return -1;
     }
-    return 0;    
 }
 
 /**

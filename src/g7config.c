@@ -265,6 +265,18 @@ read_inisettings_startup(void) {
     INIT_INIINT("startup:cmd_port", tcpip_cmd_port, DEFAULT_CMD_PORT, 1025, 60000);
     INIT_INIINT("startup:geocache_address_size", geocache_address_size, DEFAULT_GEOCACHE_ADDRESS_SIZE, 100, 100000);
     INIT_INIINT("startup:geocache_minimap_size", geocache_minimap_size, DEFAULT_GEOCACHE_MINIMAP_SIZE, 200, 200000);
+    
+    
+    /*---------------------------------------------------------------------------
+     * Google now requires a valid API-key to do any kind of lookup so we read
+     * these configs early on to be able to exit if user has enabled geo lookup
+     * but haven't provided an API key
+     * ----------------------------------------------------------------------------
+     */
+    INIT_INISTR("config:google_api_key", google_api_key, DEFAULT_GOOGLE_API_KEY);
+    INIT_INIBOOL("config:use_address_lookup",use_address_lookup,DEFAULT_USE_ADDRESS_LOOKUP);
+    INIT_INIBOOL("mail:include_minimap",include_minimap,DEFAULT_INCLUDE_MINIMAP);
+    
 }
 
 
@@ -342,11 +354,9 @@ read_inisettings(void) {
     INIT_INIBOOL("config:mail_on_tracker_conn", mail_on_tracker_conn, DEFAULT_MAIL_ON_TRACKER_CONN);
     INIT_INIBOOL("config:script_on_tracker_conn", script_on_tracker_conn, DEFAULT_SCRIPT_ON_TRACKER_CONN);
 
-    INIT_INIBOOL("config:use_address_lookup",use_address_lookup,DEFAULT_USE_ADDRESS_LOOKUP);
     INIT_INIINT("config:address_lookup_proximity",address_lookup_proximity,DEFAULT_ADDRESS_LOOKUP_PROXIMITY,0,200);
     
-    INIT_INISTR("config:google_api_key", google_api_key, DEFAULT_GOOGLE_API_KEY);
-    
+
     /*--------------------------------------------------------------------------
      * Report section
      *-------------------------------------------------------------------------- 
@@ -375,7 +385,6 @@ read_inisettings(void) {
     INIT_INISTR("mail:smtp_pwd", smtp_pwd, "");
     INIT_INIBOOL("mail:force_mail_on_all_events",force_mail_on_all_events,DEFAULT_FORCE_MAIL_ON_EVENT);
     INIT_INIBOOL("mail:use_short_devid",use_short_devid,DEFAULT_USE_SHORT_DEVID);
-    INIT_INIBOOL("mail:include_minimap",include_minimap,DEFAULT_INCLUDE_MINIMAP);
     INIT_INIINT("mail:minimap_overview_zoom", minimap_overview_zoom, DEFAULT_MINIMAP_OVERVIEW_ZOOM, 1, 20);
     INIT_INIINT("mail:minimap_detailed_zoom", minimap_detailed_zoom, DEFAULT_MINIMAP_DETAILED_ZOOM, 1, 25);
     INIT_INIINT("mail:minimap_width", minimap_width, DEFAULT_MINIMAP_WIDTH, 50, 500);

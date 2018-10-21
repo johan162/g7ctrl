@@ -632,6 +632,12 @@ main(int argc, char *argv[]) {
     setup_inifile();
     read_inisettings_startup();
     
+    // Check for misconfigurations
+    if ( strlen(google_api_key) < 15 && (use_address_lookup || include_minimap ) ) {
+        syslog(LOG_CRIT, "Aborting. To use address lookup or minimaps in mail a valid Google API key must be specified.");
+        exit(EXIT_FAILURE);
+    }
+
     // Override settings if they are given on the command line
     if( arg_verbose_log > -1 ) {
         verbose_log = arg_verbose_log;
