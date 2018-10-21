@@ -116,7 +116,7 @@ pthread_mutex_t logger_mutex = PTHREAD_MUTEX_INITIALIZER;
  */
 static const char short_options [] = "d:s:hvi:l:V:p:t:";
 static const struct option long_options [] = {
-    { "daemon", required_argument, NULL, 'd'},
+    { "daemon", no_argument, NULL, 'd'},
     { "stty", required_argument, NULL, 's'},
     { "help", no_argument, NULL, 'h'},
     { "inifile", required_argument, NULL, 'i'},
@@ -183,7 +183,7 @@ parsecmdline(int argc, char **argv) {
 
             case 'h':
                 fprintf(stdout,
-                        "'%s' Copyright 2013-2015 Johan Persson, (johan162@gmail.com) \n"
+                        "'%s' Copyright 2013-2018 Johan Persson, (johan162@gmail.com) \n"
                         "This is free software; see the source for copying conditions.\nThere is NO "
                         "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
                         "%s\n"
@@ -194,7 +194,7 @@ parsecmdline(int argc, char **argv) {
                         " -h,      --help            Print help and exit\n"
                         " -v,      --version         Print version string and exit\n"
                         " -i file, --inifile=file    Use specified file as config file\n"
-                        " -d y/n,  --daemon          Run as daemon\n"
+                        " -d,      --daemon          Run asynchroneus (i.e. background)\n"
                         " -s,      --stty            Specify index of tty device to use\n"
                         " -p,      --cmdport=n       Specify listening TCP/IP port for command\n"
                         " -t,      --trkport=n       Specify listening TCP/IP port for tracker\n"
@@ -254,10 +254,7 @@ parsecmdline(int argc, char **argv) {
                 break;
 
             case 'd':
-                if (optarg != NULL) {
-                    daemonize = *optarg == 'y' ? 1 : 0;
-                } else
-                    daemonize = 1;
+                daemonize = TRUE;
                 break;
 #ifndef __APPLE__
             case 's':
@@ -429,18 +426,18 @@ void startdaemon(void) {
 
     // Fork again to ensure we are not a session group leader
     // and hence can never regain a controlling terminal
-    pid = fork();
-    if (pid < 0) {
-        syslog(LOG_ERR, "Cannot do second fork to create daemon.");
-        exit(EXIT_FAILURE);
-    }
-
-    if (pid > 0) {
-        // Exit parent. Note the use of _exit() rather than exit()
-        // The exit() performs the atexit() cleanup handler
-        // which we do not want since that would delete the lockfile
-        _exit(EXIT_SUCCESS);
-    }
+//    pid = fork();
+//    if (pid < 0) {
+//        syslog(LOG_ERR, "Cannot do second fork to create daemon.");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    if (pid > 0) {
+//        // Exit parent. Note the use of _exit() rather than exit()
+//        // The exit() performs the atexit() cleanup handler
+//        // which we do not want since that would delete the lockfile
+//        _exit(EXIT_SUCCESS);
+//    }
 
     // Use root as working directory
     if (chdir("/") < 0) {
@@ -601,13 +598,7 @@ main(int argc, char *argv[]) {
 
     // Parse and setup commandd line options
     parsecmdline(argc, argv);
-    
-
-    if (-1 == daemonize) {
-        // Default is to make it a daemon
-        daemonize = TRUE;
-    }
-    
+        
     if (0 == strcmp("stdout", logfile_name) && daemonize) {
         syslog(LOG_CRIT, "Aborting. 'stdout' is not a valid logfile when started in daemon mode.");
         exit(EXIT_FAILURE);
@@ -661,7 +652,7 @@ main(int argc, char *argv[]) {
     }
 
     // Setup process lockfile so that we have only one running instance
-    get_lockfile();
+    // get_lockfile(); 
   
     // Get the overall settings from the ini-file
     read_inisettings();
@@ -781,8 +772,8 @@ main(int argc, char *argv[]) {
       logmsg(LOG_ERR, "Could NOT save geocache statistics" );
     }
     
-    logmsg(LOG_INFO, "Cleaning up and exit" );    
-    delete_lockfile();
+    // logmsg(LOG_INFO, "Cleaning up and exit" );    
+    // delete_lockfile();
     _exit(EXIT_SUCCESS);
 
 }
