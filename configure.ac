@@ -3,7 +3,7 @@
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.4.6],[johan162@gmail.com])
+AC_INIT([g7ctrl],[3.5.0-beta1],[johan162@gmail.com])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2018 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
@@ -99,9 +99,6 @@ AC_ARG_ENABLE([simulate],
     [enable_simulate=${enableval}],
     [enable_simulate=no])
 
-#if test "x${enable_simulate}" = xyes; then
-#    AC_DEFINE(DEBUG_SIMULATE,1,[Enable simulated connected device])
-#fi
 AS_IF([ test "x${enable_simulate}" = xyes],
     [AC_DEFINE(DEBUG_SIMULATE,1,[Enable simulated connected device]) ] )
 
@@ -133,7 +130,7 @@ else
     AC_SUBST(DEFAULT_STTY_DEVICE,0)
 fi
 
- AM_CONDITIONAL(is_osx,[test x$SYSTEM_NAME = xDarwin])
+AM_CONDITIONAL(is_osx,[test x$SYSTEM_NAME = xDarwin])
 
 # ===============================================================================
 # Setup directory for systemd service file
