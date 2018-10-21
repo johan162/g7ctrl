@@ -64,7 +64,7 @@
  */
 
 // Should we run as a daemon or nothing
-int daemonize = -1;
+int daemonize = 0;
 
 // Logfile details
 int verbose_log;
