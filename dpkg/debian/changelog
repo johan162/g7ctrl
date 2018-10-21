@@ -1,5 +1,6 @@
-g7ctrl (PACKAGE_VERSION) UNRELEASED; urgency=medium
+g7ctrl (3.4.6-1) xenial; urgency=medium
 
-  * Initial release of PACKAGE_VERSION series. 
+  * Fixes build compatibility on Mojave OS X 
+    
 
- -- Johan Persson <johan162@gmail.com>  Tue, 13 Mar 2018 22:47:43 +0100
+ -- Johan Persson <johan162@gmail.com>  Tue, 16 Oct 2018 22:49:37 +0200
