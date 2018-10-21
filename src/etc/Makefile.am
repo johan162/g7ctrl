@@ -28,32 +28,13 @@ logrotatedir=$(sysconfdir)/logrotate.d
 logrotate_DATA=logrotate.g7ctrl
 endif
 
-# The configure script have already determined that we are running on a Debian based
-# setup with init.d so here we only need to see if it is based on upstart or not
-if have_upstart_init
-
-install-data-local:
-	[ -d ${DESTDIR}$(sysconfdir)/init.d ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init.d
-	[ -d ${DESTDIR}$(sysconfdir)/init ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init
-	$(INSTALL) -m 644  deb.init.conf ${DESTDIR}$(sysconfdir)/init/g7ctrl.conf
-	$(LN_S) -f /lib/init/upstart-job ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-
-uninstall-local:
-	rm -rf ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-	rm -rf ${DESTDIR}$(sysconfdir)/init/g7ctrl.conf
-
+if have_systemd
+systemdsystemunit_DATA = g7ctrl.service
 else
-
 install-data-local:
 	[ -d ${DESTDIR}$(sysconfdir)/init.d ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init.d
 	$(INSTALL) -m 644  deb.init.d ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
 
 uninstall-local:
 	rm -rf ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-
-endif
-
-# Also install scripts for systemd to let user afterwards select how to manage daemon
-if HAVE_SYSTEMD
-    systemdsystemunit_DATA = g7ctrl.service
 endif
