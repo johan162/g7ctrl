@@ -30,11 +30,12 @@ endif
 
 if have_systemd
 systemdsystemunit_DATA = g7ctrl.service
-else
+endif
+
 install-data-local:
 	[ -d ${DESTDIR}$(sysconfdir)/init.d ] || $(INSTALL) -d -m 755 ${DESTDIR}$(sysconfdir)/init.d
 	$(INSTALL) -m 644  deb.init.d ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
 
 uninstall-local:
 	rm -rf ${DESTDIR}$(sysconfdir)/init.d/g7ctrl
-endif
+
