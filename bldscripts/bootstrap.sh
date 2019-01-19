@@ -14,7 +14,9 @@ then
 WORKING_DIR=`pwd`
 
 sudo apt-get -y -qq install autoconf
+sudo apt-get -y -qq install automake
 sudo apt-get -y -qq install libtool
+sudo apt-get -y -qq install libreadline-dev
 sudo apt-get -y -qq install libusb-1.0
 sudo apt-get -y -qq install libpcre3-dev
 sudo apt-get -y -qq install libsqlite3-dev
@@ -31,6 +33,7 @@ sudo apt-get -y -qq install libxml2-dev
 sudo apt-get -y -qq install fop
 sudo apt-get -y -qq install xsltproc
 sudo apt-get -y -qq install cloc
+sudo apt-get -y -qq install links
 
 
 # Setup latest Docbook5 stylesheets manually the package are too old 
@@ -47,12 +50,6 @@ sudo apt-get -y -qq install cloc
 
 # Make dbtoepub command executable to be able to run it
 #sudo chmod +x /usr/share/xml/docbook/stylesheet/nwalsh5/current/epub/bin/dbtoepub
-
-# ------------------------------------------------------------------------------------------------------------
-# These packages are needed for the core build
-# ------------------------------------------------------------------------------------------------------------
-sudo apt-get -y -qq install libreadline-dev
-sudo apt-get -y -qq install automake
 
 # ------------------------------------------------------------------------------------------------------------
 # Finally we can do the initial bootstrap to construct the initial configure
