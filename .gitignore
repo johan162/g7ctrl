@@ -36,6 +36,7 @@ config.log
 config.status
 nbproject
 
+
 # Intermediate DocBook files
 *.fo
 
@@ -66,3 +67,4 @@ suse.init.d
 ubuntu.init.d
 
 /build/
+.vscode
