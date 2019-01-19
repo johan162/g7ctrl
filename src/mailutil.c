@@ -185,12 +185,12 @@ send_mail_template(char *subject, char *from, char *to,
     // If we have inline images we assume that there are the corresponding number of [CIDnn] keywords in the templates
     // that we need to substitute with proper references
     // <img src="cid:[CID01]">  =>  <img src="cid:img_cid00">
-    char cidbuff[16];
-    char cidvalbuff[16];
+    char cidbuff[32];
+    char cidvalbuff[32];
     if( NULL != inlineimages) {
         for(int i=0; i < (int)numinline; i++) {
-            snprintf(cidbuff,sizeof(cidbuff),"CID%02d",i+1);
-            snprintf(cidvalbuff,sizeof(cidvalbuff),"img_cid%02d",i);        
+            snprintf(cidbuff, sizeof(cidbuff)-1, "CID%02d",i+1);
+            snprintf(cidvalbuff, sizeof(cidvalbuff)-1, "img_cid%02d",i);        
             add_dict(keyword_dict, cidbuff, cidvalbuff);
         }
     }

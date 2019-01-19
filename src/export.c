@@ -702,7 +702,7 @@ mail_as_attachment(struct client_info *cli_info, char *exportFormat) {
 
     // Add information on disk usage
     char ds_fs[64], ds_size[64], ds_avail[64], ds_used[64];
-    int ds_use;
+    int ds_use=0;
     if (0 == get_diskspace(data_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
         add_dict(rkeys, "DISK_SIZE", ds_size);
         add_dict(rkeys, "DISK_USED", ds_used);

@@ -479,11 +479,11 @@ getwsetsize(const int pid, int *size, char *unit, int *threads) {
  * @param[out] size Store size of file system
  * @param[out] used Store used size
  * @param[out] avail Store available size
- * @param[out] mount Store used mount point
+ * @param[out] fill Percent fill as integer 0-100
  * @return 0 success, -1 failure
  */
 int
-get_diskspace(const char *dir, char *fs, char *size, char *used, char *avail, int *mount) {
+get_diskspace(const char *dir, char *fs, char *size, char *used, char *avail, int *fill) {
     char cmd[512];
     snprintf(cmd, sizeof (cmd), "df -hP %s 2>&1", dir);
     FILE *fp = popen(cmd, "r");
@@ -502,7 +502,7 @@ get_diskspace(const char *dir, char *fs, char *size, char *used, char *avail, in
             // A typical returned string looks like
             // //192.168.0.199/media  4.1T  612G  3.5T  15% /mnt/omega/mm
 
-            int ret = sscanf(buffer, "%64s %8s %8s %8s %d", fs, size, used, avail, mount);
+            int ret = sscanf(buffer, "%64s %8s %8s %8s %d", fs, size, used, avail, fill);
             if (5 != ret) {
                 return -1;
             } else {

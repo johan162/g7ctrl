@@ -197,7 +197,7 @@ chk_actionscript(struct splitfields *flds) {
 static int add_diskspace2dict(dict_t dict) {
     // Add information on disk usage
     char ds_fs[LEN_SMALL], ds_size[LEN_SMALL], ds_avail[LEN_SMALL], ds_used[LEN_SMALL];
-    int ds_use;
+    int ds_use=0;
     if (0 == get_diskspace(data_dir, ds_fs, ds_size, ds_used, ds_avail, &ds_use)) {
         char buf[16];
         add_dict(dict, "DISK_SIZE", ds_size);

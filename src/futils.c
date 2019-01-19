@@ -321,7 +321,7 @@ process_files(const char *dirbuff, char *suffix, size_t maxfiles, size_t *numfil
     // Now loop through all files in 'dirbuff' directory
     DIR *dp;
     struct dirent *dirp;
-    char tmpbuff[255];
+    char tmpbuff[ sizeof(dirp->d_name) + 255];
 
     dp = opendir(dirbuff);
     if (dp == NULL) {
