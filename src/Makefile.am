@@ -87,6 +87,7 @@ if is_osx
     g7ctrl_LDADD += /usr/lib/libiconv.2.dylib
 endif
 
+
 # In order to have access to the build variables and path settings in the the
 # daemon we create an include file where we dump most of the config variables
 # Listed in the same order as the GNU makefile conventions, and
@@ -125,6 +126,7 @@ configmake.h: Makefile
 	  echo '#define PKGINCLUDEDIR "$(pkgincludedir)"'; \
 	  echo '#define PKGLIBDIR "$(pkglibdir)"'; \
 	  echo '#define PKGLIBEXECDIR "$(pkglibexecdir)"'; \
+	  echo '#define SYSTEMDSYSTEMUNITDIR "$(systemdsystemunitdir)"'; \
 	} | sed '/""/d' > $@-t && \
 	mv -f $@-t $@
 
