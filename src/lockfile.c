@@ -52,14 +52,19 @@
  * We use a lockfile with the server PID stored to avoid that multiple
  * daemons are started. Since the lock file is stored in the standard /var/run
  * this also means that if the daemon is running as any other user than "root"
- * the lock file cannot be removed once it has been created (sine the server
+ * the lock file cannot be removed once it has been created (since the server
  * normally changes user it runs as from root to a non privileged user). However
  * this is not terrible since at startup the daemon will check the lockfile and
  * if it exists also verify that the PID stored in the lockfile is a valid PID for a
  * process. If not it is regarded as a stale lockfile and overwritten.
+ * Lockfile can only ever be used when the server is started as explicit daemon
+ * so if we are not daemonized we don't try to remove since it was never
+ * created in the first place.
  */
 void
 delete_lockfile(void) {
+
+    if (!daemonize) return;
 
     logmsg(LOG_NOTICE, "Exiting. Removing lockfile '%s'.", pidfile);
     if (-1 == unlink(pidfile)) {
@@ -68,6 +73,7 @@ delete_lockfile(void) {
         logmsg(LOG_ERR, "Cannot remove lock-file (%s) while running as uid=%d, gid=%d. (%d : %s)",
                 pidfile, uid, gid, errno, strerror(errno));
     }
+
 }
 
 /**
@@ -133,8 +139,13 @@ get_lockfile(void) {
     // always be run as root and will do the necessart cleanup.
     //
     // Changes: Mar 2018
-    // To better suit the Debian/Ubunut startup scripts we always create the
+    // To better suit the Debian/Ubuntu startup scripts we always create the
     // lockfile directly under /var/run and not as previously create a subdirectory
+    //
+    // If we are not started as manual daemon no lockfile is needed/genereated
+
+    if (!daemonize) return;
+
     if (!*pidfile) {
 
         struct passwd *pwe = getpwuid(getuid());
@@ -142,7 +153,7 @@ get_lockfile(void) {
         if (0 == strcmp(pwe->pw_name, "root")) {
 
             snprintf(pidfile, PIDFILE_LEN - 1, "/var/run/%s.pid", PACKAGE);
-            
+
         } else {
             _vsyslogf(LOG_CRIT, "A PID file must be specified as argument when not started as root");
             fprintf(stderr, "No PID file specified. Aborting.\n");
@@ -164,7 +175,7 @@ get_lockfile(void) {
         _exit(EXIT_FAILURE);
     }
     close(fd);
-    
+
     _vsyslogf(LOG_DEBUG, "Created lockfile=\"%s\"", pidfile);
 }
 
