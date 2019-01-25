@@ -39,7 +39,7 @@ rm -rf systest
 mkdir -p systest/var/run
 mkdir -p systest/var/lib
 
-autoreconf && ./configure --enable-stacktrace && make clean &&  make -j8
+autoreconf && ./configure --disable-pie --enable-stacktrace && make clean &&  make CFLAGS="-O0 -g" -j8
 make DESTDIR=`pwd`/systest install
 
 cwd=$(pwd  | sed 's/\//\\\//g') && cu=$(whoami) && \
