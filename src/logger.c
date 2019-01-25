@@ -156,7 +156,8 @@ static int _lastlogcnt = 0;
  * @param msg The message format string
  * @param ... The number of arguments depends on the format string
  */
-void logmsg(int priority, const char *msg, ...) {
+void
+logmsg(int priority, const char *msg, ...) {
     static const int blen = 20 * 1024;
     static int _loginit = 0;
     char *msgbuff, *tmpbuff, *logfilebuff;
@@ -236,6 +237,8 @@ void logmsg(int priority, const char *msg, ...) {
             // Use file
             if (strcmp(logfile_name, "stdout") == 0) {
                 fd = STDOUT_FILENO;
+            } else if (strcmp(logfile_name, "stderr") == 0) {
+                fd = STDERR_FILENO;
             } else {
                 fd = open(logfile_name, O_APPEND | O_CREAT | O_WRONLY, mode);
             }
@@ -280,7 +283,7 @@ void logmsg(int priority, const char *msg, ...) {
                         _lastlogcnt++;
                     }
                 }
-                if (fd != STDOUT_FILENO) {
+                if (fd != STDOUT_FILENO && fd != STDERR_FILENO) {
                     close(fd);
                 }
                 strncpy(last_logmsg, msgbuff, MAX_LASTLOGMSG - 1);
@@ -308,16 +311,20 @@ int
 setup_logger(char *packageName) {
 
     struct passwd *pwe = getpwuid(getuid());
-    strncpy(package_name,packageName,MAX_PACKAGENAME-1);
-    package_name[MAX_PACKAGENAME-1] = '\0';
+    strncpy(package_name, packageName, MAX_PACKAGENAME - 1);
+    package_name[MAX_PACKAGENAME - 1] = '\0';
+
+    if (strcmp(logfile_name, "stdout") == 0 || strcmp(logfile_name, "stderr") == 0) {
+        return 0;
+    }
 
     if (0 == strcmp(pwe->pw_name, "root")) {
         // We are running as root
 
         struct stat dstat;
         const mode_t mode = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-        char *logfile = strdup(logfile_name);
-        char *dirbuff = dirname(logfile);
+        char *tmp_logfile_name = strdup(logfile_name);
+        char *dirbuff = dirname(tmp_logfile_name);
 
         if (-1 == stat(dirbuff, &dstat)) {
             if (-1 == mkdir(dirbuff, mode)) {
@@ -343,26 +350,19 @@ setup_logger(char *packageName) {
             exit(EXIT_FAILURE);
         }
 
-        free(logfile);
+        free(tmp_logfile_name);
 
     } else {
 
-        // Check that the logfile can be written unless its the
-        // reserved name "stdout" which will just write the log to,
-        // you guessed it - stdout
-        
-        if (strcmp(logfile_name, "stdout") != 0) {
-        
-            mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-            int fd = open(logfile_name, O_APPEND | O_CREAT | O_WRONLY, mode);
-            if (fd < 0) {
-                fprintf(stderr, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
-                syslog(LOG_ERR, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
-                exit(EXIT_FAILURE);
-            }
-            close(fd);
-        
+        mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+        int fd = open(logfile_name, O_APPEND | O_CREAT | O_WRONLY, mode);
+        if (fd < 0) {
+            fprintf(stderr, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
+            syslog(LOG_ERR, "Cannot access logfile \"%s\". Check permissions!\n", logfile_name);
+            exit(EXIT_FAILURE);
         }
+        close(fd);
+
     }
     return 0;
 }

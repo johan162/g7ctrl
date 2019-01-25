@@ -300,7 +300,7 @@ parsecmdline(int argc, char **argv) {
                 if (optarg != NULL) {
                     xmb_strncpy(logfile_name, optarg, MAX_LOGFILE_NAME_LEN - 1);
                     logfile_name[MAX_LOGFILE_NAME_LEN - 1] = '\0';
-                    if (strlen(logfile_name) == MAX_LOGFILE_NAME_LEN - 1) {
+                    if (strlen(logfile_name) >= MAX_LOGFILE_NAME_LEN - 1) {
                         fprintf(stderr, "logfile file given as argument is invalid. Too long.");
                         exit(EXIT_FAILURE);
                     }
@@ -356,8 +356,8 @@ parsecmdline(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    if (daemonize && 0 == strcmp(logfile_name, "stdout")) {
-        fprintf(stderr, "Cannot use 'stdout' as logfile when running as daemon");
+    if (daemonize && (0 == strcmp(logfile_name, "stdout") || 0 == strcmp(logfile_name, "stderr")) ) {
+        fprintf(stderr, "Cannot use 'stdout' or 'stderr' as logfile when running as daemon");
         exit(EXIT_FAILURE);
     }
 
@@ -478,7 +478,6 @@ exithandler(void) {
     syslog(LOG_CRIT, "Aborting daemon due to fatal error. See log \"%s\"", logfile_name);
     delete_lockfile();
 }
-
 /**
  * Check what user we are running as and change the user (if allowed) to the
  * specified user.
@@ -493,7 +492,7 @@ chkswitchuser(void) {
             errno = 0;
             pwe = getpwnam(run_as_user);
             if (pwe == NULL) {
-                logmsg(LOG_ERR, "Specified user to run as, '%s', does not exist", run_as_user);
+                logmsg(LOG_CRIT, "Specified user to run as, '%s', does not exist", run_as_user);
                 exit(EXIT_FAILURE);
             }
 
@@ -506,10 +505,9 @@ chkswitchuser(void) {
             snprintf(cmdbuff, sizeof (cmdbuff) - 1, "chown -R %s: %s %s", run_as_user, data_dir, db_dir);
             int ret = system(cmdbuff);
             if (-1 == ret) {
-                logmsg(LOG_ERR, "Cannot execute chown() command for data & db directory (%d : %s)", errno, strerror(errno));
+                logmsg(LOG_CRIT, "Cannot execute chown() command for data & db directory (%d : %s)", errno, strerror(errno));
                 exit(EXIT_FAILURE);
             }
-
 
 
             if (strcmp(logfile_name, "syslog") && strcmp(logfile_name, "stdout")) {
@@ -538,14 +536,14 @@ chkswitchuser(void) {
             groups[0] = pwe->pw_gid;
             groups[1] = gre->gr_gid;
             if (-1 == setgroups(2, groups)) {
-                logmsg(LOG_ERR, "Cannot set groups. Check that '%s' belongs to the '%s' group. ( %d : %s )",
+                logmsg(LOG_CRIT, "Cannot set groups. Check that '%s' belongs to the '%s' group. ( %d : %s )",
                         pwe->pw_name, needed_ttyACM_grp, errno, strerror(errno));
                 exit(EXIT_FAILURE);
             }
 
             // Now switch user that owns this process
             if (-1 == setgid(pwe->pw_gid) || -1 == setuid(pwe->pw_uid)) {
-                logmsg(LOG_ERR, "Cannot set gid and/or uid. (%d : %s)", errno, strerror(errno));
+                logmsg(LOG_CRIT, "Cannot set gid and/or uid. (%d : %s)", errno, strerror(errno));
                 exit(EXIT_FAILURE);
             } else {
                 logmsg(LOG_DEBUG, "Changing user,uid to '%s',%d", pwe->pw_name, pwe->pw_uid);
@@ -558,7 +556,7 @@ chkswitchuser(void) {
         // that no core is dumped in case of a SIGSEGV signal. We want a coredump in case
         // of a memory overwrite so we make sure this is allowed
         if (-1 == prctl(PR_SET_DUMPABLE, 1, 0, 0, 0)) {
-            logmsg(LOG_ERR, "Can not set PR_SET_DUMPABLE for current process");
+            logmsg(LOG_WARNING, "Can not set PR_SET_DUMPABLE for current process. No core dump possible.");
         }
 #endif
     } else {
@@ -605,7 +603,9 @@ main(int argc, char *argv[]) {
     parsecmdline(argc, argv);
         
     if (0 == strcmp("stdout", logfile_name) && daemonize) {
-        syslog(LOG_CRIT, "Aborting. 'stdout' is not a valid logfile when started in daemon mode.");
+        static char * const abortMsg = "Aborting. 'stdout' is not a valid logfile when started in daemon mode." ;
+        syslog(LOG_CRIT,"%s",abortMsg);
+        fprintf(stderr,"%s\n",abortMsg);
         exit(EXIT_FAILURE);
     }    
 
@@ -637,9 +637,11 @@ main(int argc, char *argv[]) {
     setup_inifile();
     read_inisettings_startup();
     
-    // Check for misconfigurations
+    // Check for misconfiguration of missing API key
     if ( strlen(google_api_key) < 15 && (use_address_lookup || include_minimap ) ) {
-        syslog(LOG_CRIT, "Aborting. To use address lookup or minimaps in mail a valid Google API key must be specified.");
+        static char * const abortMsg = "Aborting. To use address lookup or minimaps in mail a valid Google API key must be specified.";
+        syslog(LOG_CRIT,"%s",abortMsg);
+        fprintf(stderr,"%s\n",abortMsg);
         exit(EXIT_FAILURE);
     }
 
@@ -658,13 +660,15 @@ main(int argc, char *argv[]) {
 
     setup_logger(PACKAGE_NAME);
 
-    // Manually start prggram as a daemon NOT RECOMMENDED
+    // Manually start program as a daemon NOT RECOMMENDED
     // Setup lockfile so that we have only one running instance
+    
     if (daemonize) {
         startdaemon();
         get_lockfile(); 
     }
 
+    
     // Get the overall settings from the ini-file
     read_inisettings();
 
