@@ -107,6 +107,13 @@ AC_ARG_ENABLE([stacktrace],
     [enable_stacktrace=${enableval}],
     [enable_stacktrace=no])
 
+AC_ARG_ENABLE([pie],
+    [  --disable-pie    Disable PIE code in executable. Creates old style ELF executable (non shared) ],
+    [enable_pie=${enableval}],
+    [enable_pie=yes])
+
+AM_CONDITIONAL(DISABLE_PIE, [test "x${enable_pie}" = xno])
+
 SYSTEM_NAME=`uname -s`
 if test "x${enable_stacktrace}" = xyes; then
     if test x$SYSTEM_NAME = xDarwin; then
@@ -446,6 +453,12 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
     else
         AC_MSG_NOTICE([  - Text browser \"links\" found. Can generate text version of manual])
     fi
+
+    if test "x${enable_pie}" = xno; then
+        AC_MSG_NOTICE([  - Will disable PIE. Building old style (non shared) ELF executablels ])
+        AC_MSG_NOTICE([ ])
+    fi
+
 else
     AC_MSG_NOTICE([  - Docbook5 setup NOT detected. Documentation can NOT be rebuilt.])
     AC_MSG_NOTICE([    In addition to the Docbooks stylesheets both "xsltproc" and "xml2-config"])

@@ -32,6 +32,11 @@ BUILDNBR_FILE=buildnumber.txt
 # Recurse into there directories
 SUBDIRS = libiniparser libsmtpmail libhpdftbl libxstr . shell etc
 
+
+if DISABLE_PIE
+    AM_CFLAGS += -fno-pie -no-pie
+endif
+
 # For development builds, as indicated by the stack trace flag, we want two
 # additional features:
 # 1) We need to include all symbols for the back trace to give proper function names
