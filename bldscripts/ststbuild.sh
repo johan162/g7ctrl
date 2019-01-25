@@ -55,5 +55,6 @@ sed -e "s/#run_as_user=g7ctrl/run_as_user=$cu/" \
 -e "s/#smtp_server=/smtp_server=$smtp_srv/" \
 -e "s/#smtp_user=/smtp_user=$smtp_uid/" \
 -e "s/#smtp_pwd=/smtp_pwd=$smtp_pwd/" \
+-e "s/#google_api_key=/google_api_key=$api_key/" \
 systest/etc/g7ctrl/g7ctrl.conf.template > systest/g7ctrl.conf
 
