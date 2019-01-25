@@ -55,6 +55,8 @@ tail_logfile(unsigned n, char *buffer, size_t maxlen);
 int
 read_file_buffer(char *name, size_t *readlen, char **buffer);
 
+int
+file_rw(char *fileName);
 
 #ifdef	__cplusplus
 }

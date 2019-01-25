@@ -416,3 +416,15 @@ read_file_buffer(char *name, size_t *readlen, char **buffer) {
     return 0;
     
 }
+
+/**
+ * Check if file exists and have RW permissions for the current user
+ * @param fileName File name
+ * @return 0 exists and have access, -1 otherwise
+ */
+int
+file_rw(char *fileName) {
+    if ( access(fileName, R_OK | W_OK) != -1 ) return 0;
+    else return -1;
+            
+}
