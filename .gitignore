@@ -13,6 +13,10 @@
 # Executables
 *.out
 
+# Compressed releases
+*.gz
+*.xz
+
 # Autoconf/Automake and build files
 INSTALL
 Makefile.in
@@ -56,7 +60,9 @@ src/g7ctrl
 src/buildnumber.txt
 src/shell/buildnumber.txt
 src/configmake.h
-
+systest/usr
+systest/var
+systest/etc
 
 # Misc created files (from .in)
 deb.init.conf
