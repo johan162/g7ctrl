@@ -1,6 +1,0 @@
-#Sleep after 3 minutes and wake up on movement send back event on GPRS
-#During sleep all radios (GMS/GPRS/GPS) are turned off
-#only the accelerometer is enabled to detect movement. When the device
-#is woken up it will send back the event to server.
-comm(4,"","",internet.telenor.se,"","",[SERVER_IP],3400,120,"")
-ps(3,0,2,0,0,0,0)
