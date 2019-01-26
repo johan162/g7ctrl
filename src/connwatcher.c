@@ -190,6 +190,14 @@ update_usb_stat(size_t idx, _Bool connected) {
     }
 }
 
+#define DEVICENAME_LEN 128
+
+// When compiling with -O0 gcc becomes dumb and doesn't realize that
+// local variable buffers are constant 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector"    
+
+
 /**
  * List status for each defined USB device
  * @param cli_info Client context
@@ -204,7 +212,7 @@ list_usb_stat(struct client_info *cli_info) {
     const size_t maxrows = MAX_USB_CONNECTIONS;
 #endif        
 
-    char device_name[128];
+    char device_name[DEVICENAME_LEN];
     int y, m, d, h, min, s;
 
 
@@ -280,6 +288,8 @@ list_usb_stat(struct client_info *cli_info) {
         free(tdata[i]);
     }
 }
+
+#pragma GCC diagnostic pop
 
 /**
  * Check if any USB with specified index connection is active

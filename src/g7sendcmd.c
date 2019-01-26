@@ -119,8 +119,8 @@ cmdqueue_insert(const int user_sockd, const unsigned devid, const char *tag, con
             cmdq[i].ts = time(NULL);
             cmdq[i].devid = devid;
             cmdq[i].user_sockd = user_sockd;
-            xstrlcpy(cmdq[i].tag, tag, sizeof(cmdq[i].tag));
-            xstrlcpy(cmdq[i].cmd, cmdstr, sizeof(cmdq[i].cmd));
+            xstrlcpy(cmdq[i].tag, tag, sizeof (cmdq[i].tag));
+            xstrlcpy(cmdq[i].cmd, cmdstr, sizeof (cmdq[i].cmd));
             logmsg(LOG_DEBUG, "QUEUE: Inserted [%u:%s] cmd %s", devid, tag, cmdstr);
             pthread_mutex_unlock(&cmdqueue_mutex);
             return i;
@@ -342,9 +342,9 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
     // $OK:<COMMAND>+[Tag]=<CMDREPLY>
     const char *p = raw;
     *cmd = '\0';
-    *tag = '\0';    
+    *tag = '\0';
     flds->nf = 0;
-    
+
     if ('$' == *p) {
 
         p++;
@@ -355,12 +355,12 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
             *isok = FALSE;
             p += 4;
             // Some commands just return "$ERR:n" where n is the error code. Check for this case
-            if( *p >= '0' && *p <= '9' )  {
+            if (*p >= '0' && *p <= '9') {
                 flds->nf = 1;
                 flds->fld[0][0] = *p;
                 flds->fld[0][1] = '\0';
                 return 0;
-            } 
+            }
 
         } else {
             return -1;
@@ -403,7 +403,7 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
 
         // p now either points to the end of the string for replies such as "$OK:RESET+0009"
         // or to a '=' when the command reply with data. For that case we extract all the data.
-        if (*p && *p!='\r' && *p!='\n') {
+        if (*p && *p != '\r' && *p != '\n') {
             p++;
             if (xstrsplitfields(p, ',', flds)) {
                 return -1;
@@ -437,6 +437,7 @@ extract_devcmd_reply(const char *raw, _Bool *isok, char *cmd, char *tag, struct 
  * If return code is between [-10, -2] device this indicates device error
  * number.
  */
+#define RESP_LEN 128
 int
 handle_device_reply(const int sockd, const char *reply, const char *tagbuff) {
     char *rbuff = strdup(reply);
@@ -459,8 +460,8 @@ handle_device_reply(const int sockd, const char *reply, const char *tagbuff) {
         logmsg(LOG_ERR, "Incomplete reply from device: \"%s\" ", reply);
     } else {
 
-        if( strcmp(tag,tagbuff) ) {
-            logmsg(LOG_ERR,"Expected tag=\"%s\" in reply but found \"%s\". Trying to flush serial buffer",tagbuff,tag);
+        if (strcmp(tag, tagbuff)) {
+            logmsg(LOG_ERR, "Expected tag=\"%s\" in reply but found \"%s\". Trying to flush serial buffer", tagbuff, tag);
             _writef(sockd, "[ERR] Unexpected reply from device \"%s\"", reply);
             free(rbuff);
             return -1;
@@ -475,15 +476,15 @@ handle_device_reply(const int sockd, const char *reply, const char *tagbuff) {
             rc = -(errcode + 1);
         } else {
             // Device normal response
-            char resp[128];
+            char resp[RESP_LEN];
             if (flds.nf > 0) {
-                xstrlcpy(resp, flds.fld[0], sizeof(resp));
+                xstrlcpy(resp, flds.fld[0], sizeof (resp));
                 for (size_t i = 1; i < flds.nf; i++) {
-                    xstrlcat(resp, ",", sizeof(resp));
-                    xstrlcat(resp, flds.fld[i], sizeof(resp));
+                    xstrlcat(resp, ",", sizeof (resp));
+                    xstrlcat(resp, flds.fld[i], sizeof (resp));
                 }
             } else {
-                xstrlcpy(resp, "OK", sizeof(resp));
+                xstrlcpy(resp, "OK", sizeof (resp));
             }
             _writef(sockd, "%s%s", DEVICE_REPLY_PROMPT, resp);
             if (flds.nf > 0 && translateDeviceReply) {
@@ -519,7 +520,7 @@ int
 set_gprs_device_target_by_index(struct client_info *cli_info, const ssize_t client_nbr) {
 
     const int sockd = cli_info->cli_socket;
-    
+
     if (client_nbr == -1) {
         // Set back to USB communication
         logmsg(LOG_DEBUG, "Target reset to USB");
@@ -566,8 +567,7 @@ set_gprs_device_target_by_index(struct client_info *cli_info, const ssize_t clie
     if (0 == client_info_list[idx].cli_devid) {
         _writef(sockd, "Target set to client %zd. Device ID not yet known.", client_nbr);
         logmsg(LOG_DEBUG, "Target set to client %zd. Device ID not yet known.", client_nbr);
-    }
-    else {
+    } else {
         _writef(sockd, "Target set to client %zd. Device id: [%u]", client_nbr, client_info_list[idx].cli_devid);
         logmsg(LOG_DEBUG, "Target set to client %zd. Device id: [%u]", client_nbr, client_info_list[idx].cli_devid);
     }
@@ -585,7 +585,7 @@ set_gprs_device_target_by_index(struct client_info *cli_info, const ssize_t clie
  */
 int
 set_gprs_device_target_by_nickname(struct client_info *cli_info, const char *nickname) {
-    
+
     const int sockd = cli_info->cli_socket;
     char devid[11];
     if (db_get_devid_from_nick(nickname, devid)) {
@@ -604,7 +604,7 @@ set_gprs_device_target_by_nickname(struct client_info *cli_info, const char *nic
 
     if (idx >= max_clients) {
         logmsg(LOG_ERR, "Device with ID %s is not connected", devid);
-        _writef(sockd, "[ERR] Device with nick %s (ID=%s) is not yet connected", nickname,devid);
+        _writef(sockd, "[ERR] Device with nick %s (ID=%s) is not yet connected", nickname, devid);
         return -1;
     }
 
@@ -637,7 +637,7 @@ set_gprs_device_target_by_nickname(struct client_info *cli_info, const char *nic
  */
 int
 send_rawcmd_reply_over_gprs(struct client_info *cli_info, const char *cmd, const char *tagbuff, char *replybuff, size_t maxreply) {
-    
+
     const int sockd = cli_info->cli_socket;
 
     char cmdbuff[1024];
@@ -653,7 +653,7 @@ send_rawcmd_reply_over_gprs(struct client_info *cli_info, const char *cmd, const
     if (!found) {
         logmsg(LOG_ERR, "Device is no longer connected (%u). Resetting target device to USB", cli_info->target_deviceid);
         _writef(sockd, "[ERR] Device is no longer connected.");
-        set_gprs_device_target_by_index(cli_info,-1);
+        set_gprs_device_target_by_index(cli_info, -1);
         return -1;
     }
 
@@ -721,7 +721,7 @@ send_rawcmd_reply_over_gprs(struct client_info *cli_info, const char *cmd, const
  */
 int
 send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, const char *tagbuff, char *replybuff, size_t maxreply) {
-    
+
     const int sockd = cli_info->cli_socket;
 
     char cmdbuff[1024];
@@ -730,7 +730,7 @@ send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, const 
     // Verify that the device is really connected when a command is executed by a 
     // client. For the case the daemon during connection phase tries to send a command
     // to see if a device is present we ignore the check (egg or chicken problem). 
-    if ( cli_info->cli_socket >= 0 && !is_usb_connected(cli_info->target_usb_idx)) {
+    if (cli_info->cli_socket >= 0 && !is_usb_connected(cli_info->target_usb_idx)) {
         logmsg(LOG_DEBUG, "Device not connected reply from is_usb_connected()");
         _writef(sockd, "[ERR] Command not possible. Device not connected.");
         return -1;
@@ -738,16 +738,16 @@ send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, const 
 
     //const char *device = get_stty_device_name(cli_info->target_usb_idx);
     char *device;
-    if( -1 == get_usb_devicename(cli_info->target_usb_idx, &device) ) {
-        logmsg(LOG_ERR,"Cannot get USB device name for index=%zd",cli_info->target_usb_idx);
+    if (-1 == get_usb_devicename(cli_info->target_usb_idx, &device)) {
+        logmsg(LOG_ERR, "Cannot get USB device name for index=%zd", cli_info->target_usb_idx);
         return -1;
     }
-    
-    logmsg(LOG_DEBUG, "Sending device command : \"%s\" to device \"%s\"", cmd, device);    
-    
+
+    logmsg(LOG_DEBUG, "Sending device command : \"%s\" to device \"%s\"", cmd, device);
+
     int sfd = serial_open(device, DEVICE_BAUD_RATE);
     if (sfd < 0) {
-        _writef(sockd, "[ERR] Failed to open communication with USB device with index = %d",(int)cli_info->target_usb_idx);
+        _writef(sockd, "[ERR] Failed to open communication with USB device with index = %d", (int) cli_info->target_usb_idx);
         return -1;
     }
 
@@ -762,9 +762,9 @@ send_rawcmd_reply_over_usb(struct client_info *cli_info, const char *cmd, const 
 
     char *reply = NULL;
     rc = serial_read_line(sfd, &reply);
-    
+
     serial_close(sfd);
-    
+
     if (-1 == rc || reply == NULL) {
         _writef(sockd, "[ERR] Failed to read reply from device.");
         return -1;
@@ -825,14 +825,14 @@ send_rawcmd_reply(struct client_info *cli_info, const char *cmd, const char *tag
     // There are two ways we can talk to the device, either over GPRS
     // or directly over USB (virtual serial port). If the device_target_socket
     // is valid this means that we have a GPRS connection that we talk over.
-    if (cli_info->target_socket > 0 && cli_info->target_cli_idx >= 0 ) {
-        logmsg(LOG_DEBUG,"Calling send_rawcmd_reply_over_gprs()");
+    if (cli_info->target_socket > 0 && cli_info->target_cli_idx >= 0) {
+        logmsg(LOG_DEBUG, "Calling send_rawcmd_reply_over_gprs()");
         return send_rawcmd_reply_over_gprs(cli_info, cmd, tagbuff, replybuff, maxreply);
-    } else if( cli_info->target_usb_idx >= 0 ) {
-        logmsg(LOG_DEBUG,"Calling send_rawcmd_reply_over_usb()");
+    } else if (cli_info->target_usb_idx >= 0) {
+        logmsg(LOG_DEBUG, "Calling send_rawcmd_reply_over_usb()");
         return send_rawcmd_reply_over_usb(cli_info, cmd, tagbuff, replybuff, maxreply);
     } else {
-        logmsg(LOG_ERR,"Fatal internal error: The device does not exist in send_rawcmd_reply()");
+        logmsg(LOG_ERR, "Fatal internal error: The device does not exist in send_rawcmd_reply()");
         return -1;
     }
 }
@@ -881,21 +881,21 @@ send_cmdquery_reply(struct client_info *cli_info, const char *cmd, char *reply, 
 
     // For the special case of the SETEVT command we also need to specify a event id in the GET command
     // so we use the "reply" argument as input in this special case. This is kludge!!
-    if(0==strcmp("SETEVT",rawcmd) ) {
+    if (0 == strcmp("SETEVT", rawcmd)) {
         snprintf(devcmd, sizeof (devcmd), "$WP+%s+%s=%s,%s,?", rawcmd, tagbuff, pinbuff, reply);
-        logmsg(LOG_DEBUG,"Handle GFEVT in send_cmdquery_reply() %s",devcmd);
+        logmsg(LOG_DEBUG, "Handle GFEVT in send_cmdquery_reply() %s", devcmd);
     } else {
         snprintf(devcmd, sizeof (devcmd), "$WP+%s+%s=%s,?", rawcmd, tagbuff, pinbuff);
     }
-    
+
     // We don't want any output to the user at this level so set sockd to -1 temporarily
     const int old_sockd = cli_info->cli_socket;
     cli_info->cli_socket = -1;
-    logmsg(LOG_DEBUG,"Prepared raw command \"%s\" for USB idx=%zd",devcmd,cli_info->target_usb_idx);
+    logmsg(LOG_DEBUG, "Prepared raw command \"%s\" for USB idx=%zd", devcmd, cli_info->target_usb_idx);
     *reply = '\0';
     int rc = send_rawcmd_reply(cli_info, devcmd, tagbuff, reply, maxreply);
     cli_info->cli_socket = old_sockd;
-    
+
     if (-1 == rc) {
         logmsg(LOG_ERR, "_dev_cmd_help : Failed command \"%s\"", cmd);
         return -1;
@@ -958,9 +958,9 @@ get_numrec(struct client_info *cli_info, int *numrec) {
  */
 int
 get_dlrec_to_db(struct client_info *cli_info) {
-    
+
     const int sockd = cli_info->cli_socket;
-    
+
     time_t t1 = time(NULL);
 
     _writef(sockd, "Preparing, please wait ...\n");
@@ -1001,10 +1001,10 @@ get_dlrec_to_db(struct client_info *cli_info) {
     }
 
     char *device;
-    if( -1 == get_usb_devicename(cli_info->target_usb_idx, &device) ) {
-        logmsg(LOG_ERR,"Cannot get USB device name for index=%zd",cli_info->target_usb_idx);
+    if (-1 == get_usb_devicename(cli_info->target_usb_idx, &device)) {
+        logmsg(LOG_ERR, "Cannot get USB device name for index=%zd", cli_info->target_usb_idx);
         return -1;
-    }    
+    }
     int sfd = serial_open(device, DEVICE_BAUD_RATE);
     if (sfd < 0) {
         free(rbuff);
@@ -1106,13 +1106,13 @@ get_dlrec_to_db(struct client_info *cli_info) {
         _writef(sockd, "[ERR] Corrupt data read from device.");
         return -1;
     }
-    
+
     const time_t t2 = time(NULL);
 
     if (0 == strlen(bptr)) {
         _writef(sockd, "[ERR] No locations in memory.\n");
     } else {
-        if( use_address_lookup )
+        if (use_address_lookup)
             _writef(sockd, "Updating DB. Address lookup used  ...\n");
         else
             _writef(sockd, "Updating DB ...\n");
@@ -1136,22 +1136,22 @@ get_dlrec_to_db(struct client_info *cli_info) {
                     _writef(sockd, "%d locations imported.\n", num);
                 }
                 const time_t t3 = time(NULL);
-                unsigned t_tot = t3-t1;
-                unsigned t_dev = t2-t1;
-                unsigned t_db = t3-t2;
+                unsigned t_tot = t3 - t1;
+                unsigned t_dev = t2 - t1;
+                unsigned t_db = t3 - t2;
 
-                if( t_tot > 120 ) {
+                if (t_tot > 120) {
                     unsigned t_tot_min = t_tot / 60;
                     unsigned t_tot_s = t_tot % 60;
                     unsigned t_dev_min = t_dev / 60;
                     unsigned t_dev_s = t_dev % 60;
                     unsigned t_db_min = t_db / 60;
-                    unsigned t_db_s = t_db % 60;                    
-                    _writef(sockd,"Total time: %u:%02u min (Device read: %u:%02u min, DB Update: %u:%02u min)\n",t_tot_min, t_tot_s, t_dev_min, t_dev_s, t_db_min, t_db_s);
+                    unsigned t_db_s = t_db % 60;
+                    _writef(sockd, "Total time: %u:%02u min (Device read: %u:%02u min, DB Update: %u:%02u min)\n", t_tot_min, t_tot_s, t_dev_min, t_dev_s, t_db_min, t_db_s);
                 } else {
-                    _writef(sockd,"Total time: %us (Device read: %us, DB Update: %us)\n",t_tot, t_dev, t_db);
+                    _writef(sockd, "Total time: %us (Device read: %us, DB Update: %us)\n", t_tot, t_dev, t_db);
                 }
-                
+
             } else {
                 _writef(sockd, "[ERR] Failed to update DB. See log form more information.");
             }
@@ -1163,7 +1163,6 @@ get_dlrec_to_db(struct client_info *cli_info) {
     return 0;
 }
 
-
 /**
  * Return the device id from the device pointed to by the client_info structure
  * This will send the CONFIG raw command to the device and only extract the device is
@@ -1173,16 +1172,16 @@ get_dlrec_to_db(struct client_info *cli_info) {
  */
 int
 get_devid(struct client_info *cli_info, unsigned *device_id) {
-    char _config[48],devid[32];
-    if( -1 == send_cmdquery_reply(cli_info, "CONFIG",_config,sizeof(_config)) ) {
-        logmsg(LOG_DEBUG,"Failed send_cmdquery_reply()");
+    char _config[48], devid[32];
+    if (-1 == send_cmdquery_reply(cli_info, "CONFIG", _config, sizeof (_config))) {
+        logmsg(LOG_DEBUG, "Failed send_cmdquery_reply()");
         return -1;
     }
-    if( -1 == extract_devcmd_reply_first_field(_config,devid,sizeof(devid)) ) {
-        logmsg(LOG_DEBUG,"Failed extract_devcmd_reply_simple()");
+    if (-1 == extract_devcmd_reply_first_field(_config, devid, sizeof (devid))) {
+        logmsg(LOG_DEBUG, "Failed extract_devcmd_reply_simple()");
         return -1;
     }
-    *device_id = xatol(devid); 
+    *device_id = xatol(devid);
     return 0;
 }
 

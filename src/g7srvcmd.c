@@ -473,10 +473,20 @@ _srv_date(int sockd) {
     _writef(sockd,"%s",buff);
 }
 
+
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstack-protector" 
+#pragma GCC diagnostic ignored "-Wunknown-pragmas" 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-folding-constant"
+
 /**
  * Display the geocache hit statistics to the user
  * @param cli_info Client context
  */
+#define VALBUFF_LEN 32
 void
 _srv_cache_stat(struct client_info *cli_info) {
     
@@ -494,21 +504,13 @@ _srv_cache_stat(struct client_info *cli_info) {
 
     get_cache_num(GEOCACHE_ADDR, &addr_cache_num, &addr_cache_max);
     get_cache_num(GEOCACHE_MINIMAP, &minimap_cache_num, &minimap_cache_max);
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgnu-folding-constant"
     
     const size_t nCols = 7;
     const size_t nRows = 3;
     char *tdata[nRows * nCols];
     
-#pragma clang diagnostic pop
-#pragma GCC diagnostic pop
-    
     memset(tdata, 0, sizeof (tdata));
-    char valbuff[32];
+    char valbuff[VALBUFF_LEN];
     int row=0;
     
     /* Header */
@@ -566,7 +568,7 @@ _srv_cache_stat(struct client_info *cli_info) {
     tdata[row * nCols + 6] = strdup(valbuff);
     
     row++;
-    
+       
     /* Setup table */
     table_t *t = utable_create_set(row, nCols, tdata);
     
@@ -584,7 +586,8 @@ _srv_cache_stat(struct client_info *cli_info) {
         free(tdata[i]);
     }
 }
-
+#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 /**
  * Internal sever command
  * @param cli_info Client info structure that holds information about the current
