@@ -17,6 +17,12 @@
 *.gz
 *.xz
 
+# SonarQube
+.scannerwork
+
+# Netbeans
+.idea
+
 # Autoconf/Automake and build files
 INSTALL
 Makefile.in
