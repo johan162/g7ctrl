@@ -152,7 +152,7 @@ if test ! x$SYSTEM_NAME = xDarwin; then
                 [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
     if test "x$with_systemdsystemunitdir" != xno; then
         if test "x$with_systemdsystemunitdir" == x; then
-            with_systemdsystemunitdir=/usr/lib/systemd/system
+            with_systemdsystemunitdir=/lib/systemd/system
         fi
         AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
     fi
