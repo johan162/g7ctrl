@@ -114,7 +114,7 @@ pthread_mutex_t logger_mutex = PTHREAD_MUTEX_INITIALIZER;
  * Setup to handle program start up argument in both short and long format for use with the
  * getopt() library function.
  */
-static const char short_options [] = "d:s:hvi:l:V:p:t:";
+static const char short_options [] = "ds:hvi:l:V:p:t:";
 static const struct option long_options [] = {
     { "daemon", no_argument, NULL, 'd'},
     { "stty", required_argument, NULL, 's'},

@@ -16,7 +16,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="GPS GM7 Tracker handling daemon"
 NAME=@PACKAGE_NAME@
 DAEMON=@prefix@/bin/$NAME
-DAEMON_ARGS=
+DAEMON_ARGS=-d
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
