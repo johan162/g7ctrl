@@ -250,7 +250,11 @@ out/pdf/Manual-A4-duplex.pdf: setup-files $(XML_FILES) xsl_stylesheets/fo.xsl xs
 	set -e;
 	[ -d "out/pdf" ] || mkdir -p "out/pdf" ; \
 	${XSLTPROC} --nonet --xinclude --output out/pdf/Manual.fo xsl_stylesheets/fo.xsl Manual.xml
+if have_javafop2
 	${FOP} -c $(srcdir)/fop.cfg -q out/pdf/Manual.fo $@  2>&1 | grep -v "\[INFO\]"
+else
+	${FOP} -q out/pdf/Manual.fo $@  
+endif
 	@echo "--------------------------------------------------------------------------------------------"
 	@echo "--- It is safe to ignore warnings about fonts and exceeding available area.              ---"
 	@echo "--------------------------------------------------------------------------------------------"

@@ -325,7 +325,16 @@ AM_CONDITIONAL(have_links, test "$LINKS_WWW" = "yes")
 
 AC_CHECK_PROG(JAVAFOP,fop,yes,no)
 AC_PATH_PROG(FOP,fop,fop,)
-AM_CONDITIONAL(have_javafop, test "$JAVAFOP" = "yes")
+AM_CONDITIONAL(have_javafop, test "x$JAVAFOP" = "xyes")
+
+if test "x$JAVAFOP" = "xyes"; then
+    # Rudimentary test for major version of fop
+    JAVAFOP_VERSION=2
+    if test `fop -v 2> /dev/null | cut -c13` = 1 ; then
+        JAVAFOP_VERSION=1        
+    fi
+    AM_CONDITIONAL(have_javafop2, test "x$JAVAFOP_VERSION" = "x2" ) 
+fi
 
 LOCAL_DOCBOOK_XSL_DIR=`xmlcatalog $XML_CATALOG_FILES http://docbook.sourceforge.net/release/xsl-ns/current/`
 AC_SUBST(LOCAL_DOCBOOK_XSL_DIR)
@@ -444,7 +453,7 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
         AC_MSG_NOTICE([  - Working Docbook5 setup detected. Will rebuild documentation. ])
         AC_MSG_NOTICE([  - Using XML catalog \"${XML_CATALOG_FILES}\" ])
 	AC_MSG_NOTICE([  - Docbook resolves to \"${LOCAL_DOCBOOK_XSL_DIR}\" ])
-        AC_MSG_NOTICE([  - fop executable: ${FOP} ])
+        AC_MSG_NOTICE([  - fop executable: ${FOP} (v${JAVAFOP_VERSION}) ])
         AC_MSG_NOTICE([    In case of errors rebuilding PDF regarding missing hyphenation])
         AC_MSG_NOTICE([    please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html ])
     fi
