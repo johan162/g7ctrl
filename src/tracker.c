@@ -174,7 +174,7 @@ chk_actionscript(struct splitfields *flds) {
             xmb_strncpy(nick, flds->fld[GM7_LOC_DEVID], sizeof (nick) - 1);
             //nick[sizeof (nick) - 1] = '\0';
         }
-        const size_t size = 1024;
+        const size_t size = 2048;
         char *cmd = _chk_calloc_exit(size);
         snprintf(cmd, size, "sh %s -t %s -d %s -l \"%s\" -n \"%s\" -m \"%s\"",
                 scriptName,
@@ -385,7 +385,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
 
         // Translate dev id to nick name if it exists
         char nick[16];
-        char nick_devid[32];
+        char nick_devid[512];
         if (db_get_nick_from_devid(flds->fld[GM7_LOC_DEVID], nick)) {
             // No nickname. Put device ID in its place
             xmb_strncpy(nick, flds->fld[GM7_LOC_DEVID], sizeof (nick) - 1);
@@ -482,7 +482,7 @@ chk_sendmail(struct splitfields *flds, int forceSend) {
             add_dict(dict, "APPROX_ADDRESS", "(disabled)");
         }
 
-        char subjectbuff[LEN_SMALL];
+        char subjectbuff[LEN_MEDIUM];
         snprintf(subjectbuff, sizeof (subjectbuff), SUBJECT_EVENTMAIL, 
                 mail_subject_prefix, 
                 use_short_devid ? short_devid : flds->fld[GM7_LOC_DEVID], 

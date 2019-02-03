@@ -315,7 +315,7 @@ init_model_from_device(void *tag, _Bool read_from_file, _Bool include_geofevt) {
     
     if( read_from_file ) {
 
-        char path[1024];
+        char path[2048];
         snprintf(path,sizeof(path),"%s/export.json",pdfreport_dir);
         
         logmsg(LOG_DEBUG,"Trying to read device info from \"%s\"",path);

@@ -329,7 +329,7 @@ open_export_file(const char *fileName, char *newFileName, size_t maxlen) {
         logmsg(LOG_DEBUG, "Cannot use relative paths in export filename \"%s\"", wfileName);
         return -1;
     }
-    char adjFileName[512];
+    char adjFileName[1024];
     if (!isAbsPath) {
         snprintf(adjFileName, sizeof (adjFileName), "%s/%s", data_dir, wfileName);
     } else {
@@ -681,7 +681,7 @@ mail_as_attachment(struct client_info *cli_info, char *exportFormat) {
     } 
 
     char to[128];
-    char subject[128];
+    char subject[256];
 
     // Setup key replacements
     dict_t rkeys = new_dict();

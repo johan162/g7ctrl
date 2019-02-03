@@ -120,7 +120,7 @@ removedir(const char *dir) {
 int
 mv_and_rename(char *from, char *to, char *newname, size_t maxlen) {
     struct stat filestat;
-    char buff1[256], short_filename[128], to_directory[256], suffix[8];
+    char buff1[512], short_filename[128], to_directory[256], suffix[8];
 
     if (-1 == stat(from, &filestat)) {
         logmsg(LOG_ERR, "FATAL: Cannot move and rename file '%s'. (%d : %s)", from, errno, strerror(errno));
@@ -156,7 +156,7 @@ mv_and_rename(char *from, char *to, char *newname, size_t maxlen) {
         int i = 0, ret;
         do {
             i++;
-            snprintf(buff1, 255, "%s/%s_%03d%s", to_directory, short_filename, i, suffix);
+            snprintf(buff1, 512, "%s/%s_%03d%s", to_directory, short_filename, i, suffix);
             ret = stat(buff1, &filestat);
         } while (i < 999 && ret == 0);
         if (i >= 999) {

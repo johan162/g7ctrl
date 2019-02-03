@@ -505,7 +505,7 @@ read_minimap_geocache(void) {
                     fclose(fp);
                     return -1;
                 } else {
-                    char mapfilename[255];
+                    char mapfilename[512];
                     snprintf(mapfilename, sizeof (mapfilename), "%s/%s/%s", db_dir, DEFAULT_MINIMAP_GEOCACHE_DIR, fields.fld[6]);
 
                     int rc = read_file_buffer(mapfilename,

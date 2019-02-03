@@ -981,7 +981,7 @@ mail_lastloc(struct client_info *cli_info) {
     int rc = _db_getlastloc(res);
     if (0 == rc) {
         char dbuff[32];
-        char subjectbuff[128];
+        char subjectbuff[256];
         // Translate dev id to nick name if it exists
         char nick[16];
         char nick_devid[32];

@@ -680,7 +680,7 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
         w -= 1; // Don't include the last border since that remains
 
         const char *txt = t->c[TIDX(row, c)].t;
-        char txtbuff[512], txtbuff2[512];
+        char txtbuff[512], txtbuff2[1024];
 
         // A choice in how to handle the case when the column width is smaller than 
         // what is needed. We can either include the padding chars in the limiting

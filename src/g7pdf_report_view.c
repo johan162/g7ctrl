@@ -1101,7 +1101,7 @@ export_g7ctrl_report(struct client_info *cli_info, char *filename, size_t maxfil
         return -1;
     }
     
-    char buf[1024];
+    char buf[2048];
     
     // Setup the PDF document
     pdf_doc = HPDF_New(error_handler, NULL);

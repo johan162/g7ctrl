@@ -950,6 +950,8 @@ smtp_add_attachment_binary(struct smtp_handle *handle, char *filename) {
     return 0;
 }
 
+
+#define HOSTNAME_MAXLEN 128
 /**
  * Send the mail
  * @param handle SMTP session handle
@@ -975,8 +977,8 @@ smtp_sendmail(struct smtp_handle *handle, char *from, char *subject) {
     handle->subject = strdup(buff);
 
     // Use hostname as part of the unique boundary
-    char hname[255];
-    gethostname(hname, 255);
+    char hname[HOSTNAME_MAXLEN];
+    gethostname(hname, HOSTNAME_MAXLEN);
 
     // Find out how we need to encode this mail. We support three ways
     // 1) The mail contains only plain text. In that case we only
