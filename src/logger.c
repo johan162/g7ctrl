@@ -334,22 +334,25 @@ setup_logger(char *packageName) {
             }
         }
 
-        // We will eventually not run as root and hence must adjust the permissions
-        // on the logfile directory so that we later on can write to the log
-        errno = 0;
-        pwe = getpwnam(run_as_user);
-        if (pwe == NULL) {
-            fprintf(stderr, "Cannot setup logfile directory.");
-            syslog(LOG_ERR, "Cannot setup logfile directory. The daemon user \"%s\" does not exist.\n", run_as_user);
-            exit(EXIT_FAILURE);
-        }
+        // If we eventually will not run as root we must adjust the permissions
+        // on the logfile directory so that we later on can write to the log.
+        
+        // If not run as root change owner
+        if (0 != strcmp(pwe->pw_name, "root")) {
+            errno = 0;
+            pwe = getpwnam(run_as_user);
+            if (pwe == NULL) {
+                fprintf(stderr, "The daemon user \"%s\" does not exist.\n", run_as_user);
+                syslog(LOG_ERR, "The daemon user \"%s\" does not exist.\n", run_as_user);
+                exit(EXIT_FAILURE);
+            }
 
-        if (-1 == chown(dirbuff, pwe->pw_uid, pwe->pw_gid)) {
-            fprintf(stderr, "Cannot change owner of logfile directory %s (%d : %s).", dirbuff, errno, strerror(errno));
-            syslog(LOG_ERR, "Cannot change owner of logfile directory %s (%d : %s).", dirbuff, errno, strerror(errno));
-            exit(EXIT_FAILURE);
+            if (-1 == chown(dirbuff, pwe->pw_uid, pwe->pw_gid)) {
+                fprintf(stderr, "Cannot change owner of logfile directory %s (%d : %s).", dirbuff, errno, strerror(errno));
+                syslog(LOG_ERR, "Cannot change owner of logfile directory %s (%d : %s).", dirbuff, errno, strerror(errno));
+                exit(EXIT_FAILURE);
+            }
         }
-
         free(tmp_logfile_name);
 
     } else {
