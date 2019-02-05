@@ -93,7 +93,7 @@ EVENT_FILES = 0_action.sh.template 2_action.sh.template 40_action.sh.template tr
 
 
 CLEANFILES = *~
-EXTRA_DIST = $(XML_FILES) out src-stat.awk ${CSS_FILES} ${IMAGE_FILES} ${XSL_FILES} ${DBDOC_DIRECTORIES} ${DBDOC_FILES}
+EXTRA_DIST = $(XML_FILES) out src-stat.awk empty-src-stat.sh ${CSS_FILES} ${IMAGE_FILES} ${XSL_FILES} ${DBDOC_DIRECTORIES} ${DBDOC_FILES}
 
 #
 # Hooks to allow us to do the standard "make html" and "make pdf"
@@ -210,8 +210,8 @@ distclean-local:
 		done ;						   	\
         fi
 
-
-if have_gawk
+if have_cloc
+if have_gawk 
 table-src-stats.xml:
 	${CLOC} --autoconf --quiet --progress-rate=0 --force-lang=make,in \
 	--force-lang=make,ac --exclude-lang=D,make  --exclude-ext=txt --csv \
@@ -224,9 +224,14 @@ table-src-stats.xml:
 	../../src/ ../. | ${MAWK} -f $(srcdir)/src-stat.awk > $(builddir)/table-src-stats.xml
 else
 table-src-stats.xml:
-	touch $@
+	$(srcdir)/empty-src-stat.sh > $@
 endif
 endif
+else
+table-src-stats.xml:
+	$(srcdir)/empty-src-stat.sh > $@
+endif
+
 
 out/html/index.html: setup-files $(XML_FILES) css_stylesheets/article.css xsl_stylesheets/html.xsl xsl_stylesheets/common.xsl ../../TODO
 	set -e;
@@ -241,7 +246,7 @@ endif
 
 clean-local:
 	-rm -rf out
-	-rm -f table-src-stats.xml
+	-rm -f table-src-stats.xml empty-src-stat.sh
 	-rm -f setup-files
 
 if have_javafop
