@@ -246,7 +246,7 @@ endif
 
 clean-local:
 	-rm -rf out
-	-rm -f table-src-stats.xml empty-src-stat.sh
+	-rm -f table-src-stats.xml 
 	-rm -f setup-files
 
 if have_javafop
