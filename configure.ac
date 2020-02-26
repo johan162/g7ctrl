@@ -86,6 +86,12 @@ AS_IF([ test "$prefix" = NONE],
 AC_DEFINE_UNQUOTED(DEFAULT_USER,"$PACKAGE",[Default user for running daemon])
 
 # ===============================================================================
+# Avoid warning from newer version of automake since the default is "cru"
+# ===============================================================================
+AC_SUBST(ARFLAGS,"cr")
+AC_SUBST(AR_FLAGS,"cr")
+
+# ===============================================================================
 # Optional ARGS
 #
 # --enable-simulate   Allow the daemon to run on a server with no real connected
