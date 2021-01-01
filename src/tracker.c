@@ -919,7 +919,6 @@ tracker_clientsrv(void *arg) {
                                     *(ptr + 2) = '\0';
                                 } else {
                                     logmsg(LOG_ERR, "Expecting device event to end with '\\r\\n' but found %d %d",(int)(*ptr),(int)(*(ptr+1)));                                    
-                                    rc = -1;
                                     break;
                                 }
 

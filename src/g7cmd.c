@@ -1884,7 +1884,7 @@ cmd_get_dev_batt(struct client_info *cli_info, char *battvolt) {
     // The response string from device is:
     // 3000000001,20140107232526,17.961028,59.366470,0,0,0,0,1,4.20V,0
     char reply[128];
-    *battvolt = '\0';
+    memset(battvolt,0,6);
     int rc = send_cmdquery_reply(cli_info, "loc", reply, sizeof (reply));
     if (!rc) {
         // Extract the 10:th field
@@ -1892,7 +1892,10 @@ cmd_get_dev_batt(struct client_info *cli_info, char *battvolt) {
         rc = xstrsplitfields(reply, ',', &flds);
         if (!rc) {
             if (flds.nf > 9) {
-                strncpy(battvolt, flds.fld[9], 5);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"                
+                strncpy(battvolt, flds.fld[9], 5);                
+#pragma GCC diagnostic pop                
             }
         }
     }
@@ -2297,7 +2300,7 @@ cmd_clientsrv(void *arg) {
             }
         } else {
             logmsg(LOG_CRIT, "KERNEL error. select() claims file ready when it is not!");
-            numCharsFromClient = 1;
+            abort();
         }
     } while (numCharsFromClient > 0);
 

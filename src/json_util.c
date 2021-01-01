@@ -63,7 +63,7 @@ _writef_json(const _Bool err, const int errnum, const _Bool use_json, const int 
     if( fd >= 0 ) {
         const int blen = MAX(1024*20,strlen(buf)+1);
 
-        char *tmpbuff = _chk_calloc_exit(-1,blen);
+        char *tmpbuff = _chk_calloc_exit(blen);
         va_list ap;
         va_start(ap, buf);
 
@@ -110,7 +110,7 @@ _writef_json(const _Bool err, const int errnum, const _Bool use_json, const int 
  */
 int
 _writef_json_msg_ok(const _Bool use_json, int sockd, const char *msg) {
-    _writef_json(FALSE, use_json, sockd, msg);
+    _writef_json(FALSE, 0, use_json, sockd, msg);
     if( use_json ) {
        return _writef(sockd,"{\"status\":\"OK\",\"msg\":\"%s\"}",msg);
     } else {
@@ -128,7 +128,7 @@ _writef_json_msg_ok(const _Bool use_json, int sockd, const char *msg) {
  * @param msg
  */
 int
-_writef_json_msg_err(const _Bool use_json, int sockd, const int errnum, static char *msg) {
+_writef_json_msg_err(const _Bool use_json, int sockd, const int errnum, const char *msg) {
     if( use_json ) {
        return _writef(sockd,"{\"status\":\"ERR\",\"errno\":%d,\"msg\":\"%s\"}",errnum,msg);
     } else {

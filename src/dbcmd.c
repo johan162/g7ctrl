@@ -602,10 +602,10 @@ db_empty_loc(struct client_info *cli_info) {
         } else {
             _writef(sockd, "ALL stored locations deleted.");
         }
+        db_close(sqlDB);
     } else {
         rc = -1;
-    }
-    db_close(sqlDB);
+    }    
     return rc;
 }
 

@@ -714,7 +714,7 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
             for (size_t i = 0; i < w - utf8len(txtbuff); ++i) {
                 rpadstr[i] = ' ';
             }
-        buffused=0;
+    
         if (c == 0) {
             switch (t->c[TIDX(row, c)].halign) {
                 case RIGHTALIGN:
@@ -844,7 +844,7 @@ _utable_stroke_verticals(char *buff, int *buffleft, int totwidth, int eval[], ch
     int buffused=0;
     char pbuff[MAXPBUFF];
     for (int i = 0; i < totwidth - 1; i++) {
-        buffused=0;
+
         if (eval[i] == 0) { // HORIZONTAL
             if (s0 == NULL)
                 buffused = snprintf(pbuff,MAXPBUFF, "#ERR#");
@@ -960,6 +960,10 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     size_t totwidth = 0;
     for (size_t i = 0; i < t->nCol; i++)
         totwidth += t->colwidth[i] + 1;
+    
+    if( 0==totwidth )
+        return -1;
+    
     int eval[totwidth];
 
     char *top_horizontal;

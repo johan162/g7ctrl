@@ -93,9 +93,6 @@ _chk_calloc_OLD(const size_t num, const size_t size) {
 
 /**
  * Allocate a memory block of size "size" and return a pointer to it.
- * If allocation fails write a message to the socket pointed to by "sockd"
- * and terminate program
- * @param sockd Socket to write error message on
  * @param size Size in bytes to allocate
  * @return <> NULL pointer to newly allocated memory,
  * @note: This is a possible exit point in the program.
@@ -185,16 +182,15 @@ _writef(const int fd, const char *buf, ...) {
  * @return -1 on failure, 0 on success
  */
 int
-matchcmd(const char *regex, const char *cmd, char ***field) { //, const char *func, int line) {
+matchcmd(const char *regex, const char *cmd, char ***field) {
     pcre *cregex;
     int ovector[100];
     const char *errptr;
     int erroff, ret;
-    //logmsg(LOG_DEBUG, "matchcmd() called from '%s()' at line #%05d",func,line);
+
     cregex = pcre_compile(regex, PCRE_CASELESS | PCRE_MULTILINE | PCRE_NEWLINE_CRLF | PCRE_UTF8,
             &errptr, &erroff, NULL);
 
-    //cregex = pcre_compile(regex,PCRE_CASELESS|PCRE_UTF8,&errptr,&erroff,NULL);
     if (cregex) {
         ret = pcre_exec(cregex, NULL, cmd, strlen(cmd), 0, 0, ovector, 90);
         pcre_free(cregex);
