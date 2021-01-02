@@ -1,3 +1,46 @@
+v3.5.1 (Jan 2021)
+=================
+
+EOL - Notification
+-------------------
+This is the last planned release for this daemon.
+
+
+General notes for this release
+------------------------------
+*Note* Due too Google policy change an API key is now mandatory to be able to use the
+reverse Geo-lookup.
+
+This is an update to keep the daemon current with the latest GCC compiler changes as
+well as better adherence to the systemd demonization guidelines. Some minor clean up in 
+the build system has also been made for better compatibility between different system.
+In addition this release has been scanned through SonarQube for possible problems.
+
+OSX Note: This release has not yet been verified with the Big Sur release.
+
+Detailed user visible changes
+-----------------------------
+- If no option is given the daemon by default starts in foreground (previously the default was to start in the background).
+This change is for better harmonization with systemd that assume applications starts in foreground and systemd handles all 
+the necessary magic to put the application in the background as a daemon.
+
+
+Bugs fixed
+----------
+- None (None reported).
+
+
+Internal changes (visible for developers and packagers)
+-------------------------------------------------------
+- Build system now handles both fop v1 & fop v2 in the change of path handling
+- Build system now correctly identifies both gawk and mawk
+- Support for upstart is removed
+- Both gcc v8 and gcc v9 is fully supported with maximum warnings enabled
+- Libtool bug compensated for
+- More graceful handling of systems missing 'cloc'
+- Added option to create non-pic code to enable debugging with Netbeans (bug in Netbeans makes PIC code not
+recognized as an executable but as a shared library)
+- All remaining specific SuSE support have been removed (since this is not an officially supported platform)
 
 
 v3.4.6 (nov 2018)
