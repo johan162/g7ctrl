@@ -31,6 +31,7 @@ sudo apt-get -y -qq install docbook-xsl-ns
 sudo apt-get -y -qq install libxml2-utils
 sudo apt-get -y -qq install libxml2-dev
 sudo apt-get -y -qq install fop
+sudo apt-get -y -qq install libavalon-framework-java
 sudo apt-get -y -qq install xsltproc
 sudo apt-get -y -qq install cloc
 sudo apt-get -y -qq install links
