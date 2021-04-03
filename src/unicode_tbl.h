@@ -45,7 +45,11 @@ typedef enum {
     /* Almost no border */
     TSTYLE_SIMPLE_V1,       /**< A simple single horizontal line under the header */
     TSTYLE_SIMPLE_V2,       /**< A simple double horizontal line under the header */
-    TSTYLE_SIMPLE_V3,       /**< No border just a blank line under the header */                
+    TSTYLE_SIMPLE_V3,       /**< A simple bold horizontal line under the header */      
+    TSTYLE_SIMPLE_V4,       /**< A simple single horizontal line under the header, and single line at table bottom */
+    TSTYLE_SIMPLE_V5,       /**< A simple double horizontal line under the header, and single line at and table bottom */
+    TSTYLE_SIMPLE_V6,       /**< A simple bold horizontal line under the header, and single line at and table bottom */      
+            
 
     /* ASCII Styles */
     TSTYLE_ASCII_V1,    /**< Plain ASCII only horizontal lines, double lines top and bottom */

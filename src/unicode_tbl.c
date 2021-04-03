@@ -41,9 +41,9 @@
 #include "logger.h"
 #endif
 
+#include "utils.h"
 #include "libxstr/xstr.h"
 #include "unicode_tbl.h"
-#include "utils.h"
 
 // Shortcut names for the individual characters for easy of use
 
@@ -140,7 +140,10 @@
 tblstyle_t table_styles[] = {
     TSTYLE_SIMPLE_V1,   
     TSTYLE_SIMPLE_V2,   
-    TSTYLE_SIMPLE_V3,           
+    TSTYLE_SIMPLE_V3,
+    TSTYLE_SIMPLE_V4,
+    TSTYLE_SIMPLE_V5,
+    TSTYLE_SIMPLE_V6,
     TSTYLE_ASCII_V1,    
     TSTYLE_ASCII_V2,    
     TSTYLE_ASCII_V3,            
@@ -900,7 +903,6 @@ utable_set_interior(table_t *t, _Bool v, _Bool h) {
     t->interior_h = h;
 }
 
-
 /**
  * Stroke the entire table in the specified style to specified file descriptor
  * @param t     Table pointer
@@ -918,7 +920,12 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
         free(buff);
         return -1;
     }
-    _writef(fd,"%s\n",buff);
+#ifndef TABLE_UNIT_TEST
+     _writef(fd,"%s\n",buff);
+#else
+     printf("%s\n",buff);
+#endif
+   
     free(buff);
     return 0;
 }
@@ -1184,7 +1191,8 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         middle_horizontal_down = BDL_DH;
         middle_cross = BDL_X;
                         
-    } else if( style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V3 )  {
+    } else if( style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V3 || 
+               style==TSTYLE_SIMPLE_V4 || style==TSTYLE_SIMPLE_V5 || style==TSTYLE_SIMPLE_V6 )  {
         
         top_left = " ";
         top_horizontal = " ";
@@ -1193,7 +1201,7 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         top_middle_left = " ";
         top_middle_right = " ";
         top_middle_cross = " ";
-        top_middle_horizontal = style==TSTYLE_SIMPLE_V3 ? " " : style==TSTYLE_SIMPLE_V1 ? BDL_H : BDL_DL_H;
+        top_middle_horizontal = style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V5 ? BDL_HB_H : style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V4 ? BDL_H : BDL_DL_H;
         middle_left = " ";
         middle_horizontal = " ";
         middle_right = " ";
@@ -1203,7 +1211,7 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         middle_vertical = " ";
         border_vertical = " ";
         bottom_left = " ";
-        bottom_horizontal = " ";
+        bottom_horizontal = style==TSTYLE_SIMPLE_V4 || style==TSTYLE_SIMPLE_V5 || style==TSTYLE_SIMPLE_V6 ?  BDL_H : " ";
         bottom_right = " ";
         bottom_up = " ";
         
@@ -1506,9 +1514,21 @@ ut3(void) {
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
 
     printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V4", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V4);    
+    
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V5", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V5);
+
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V6", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V6);        
+    
+    printf("\n");
     utable_set_headerline(tbl,FALSE);
     utable_set_table_cellpadding(tbl,1,1);
-    utable_set_title(tbl, "TSTYLE_SIMPLE_V3", TITLESTYLE_LINE);
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE)", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
     
     printf("\n");
