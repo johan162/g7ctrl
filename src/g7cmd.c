@@ -1892,14 +1892,18 @@ cmd_get_dev_batt(struct client_info *cli_info, char *battvolt) {
         rc = xstrsplitfields(reply, ',', &flds);
         if (!rc) {
             if (flds.nf > 9) {
+
 #if __GNUC__ > 7
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-warning-option"        
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-truncation"                
                 strncpy(battvolt, flds.fld[9], 5);                
-#pragma GCC diagnostic pop                
+#pragma GCC diagnostic pop
+#pragma clang diagnostic pop                 
 #else
                 strncpy(battvolt, flds.fld[9], 5);                
-#endif                
+#endif
             }
         }
     }
