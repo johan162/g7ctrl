@@ -36,13 +36,6 @@
 #include <string.h>
 #include <sys/param.h> // To get MIN/MAX
 
-#ifndef TABLE_UNIT_TEST
-#include "config.h"
-#include "logger.h"
-#endif
-
-#include "utils.h"
-#include "libxstr/xstr.h"
 #include "unicode_tbl.h"
 
 // Shortcut names for the individual characters for easy of use
@@ -165,6 +158,117 @@ tblstyle_t table_styles[] = {
 // Utility macro to index table matrix
 #define TIDX(_r,_c) ((_r)*t->nCol+(_c))
 
+#define LOGPREFIXSIZE 80
+#define LOGBUFFERSIZE 256
+
+static t_log_func _logmsg=NULL;
+static int _loglevel=0;
+static char _logprefix[LOGPREFIXSIZE];
+static char _logbuffer[LOGBUFFERSIZE];
+
+/**
+ * Set the fucntion to be used to log messages
+ * @param f Logfunction, takes an inte and char *
+ * @param loglevel, The log level, always added as first argument when calling logger
+ * @param prefix, An optional prefix string to the log message
+ */
+void
+utable_set_logfunc(t_log_func f, int loglevel, char *prefix) {
+    _logmsg = f;
+    _loglevel = loglevel;
+    *_logprefix=0;
+    strncpy(_logprefix, prefix, LOGPREFIXSIZE-1);
+    _logprefix[LOGPREFIXSIZE-1] = 0;
+}
+
+/**
+ * Internal helper function to call the externally defined log function to use
+ * @param msg Log message
+ */
+static void
+logmsg(char *msg) {
+    if( NULL != _logmsg ) {
+        snprintf(_logbuffer, LOGBUFFERSIZE-1,  "%s : %s", _logprefix, msg);
+        _logmsg(_loglevel,_logbuffer);
+    }
+}
+
+#ifdef __APPLE__
+
+static void *
+mempcpy(void *to, const void *from, size_t size) {
+    memcpy(to, from, size);
+    return ((void *) ((char *) to + size));
+}
+#endif
+
+// Internal string helper function with extra protection
+/**
+ * Copy the string src to dst, but no more than size - 1 bytes, and
+ * null-terminate dst. NOTE that this is not UTF8 safe. Please see
+ * xmbstrncpy() for a UTF8 safe version.
+ *
+ * This function is the same as BSD strlcpy().
+ *
+ * @param dst destination buffer
+ * @param src source string
+ * @param size copy at maximum this number of bytes
+ * @return the length of src
+ */
+static size_t
+xstrlcpy(char *dst, const char *src, size_t size) {
+    *dst = '\0';
+    if (size == 0)
+        return 0;
+    const size_t size2 = strnlen(src,size)+1; // Must include terminating 0   
+    if (size2 == 1)
+        return 0;
+    *((char *) mempcpy(dst, src, (size < size2 ? size : size2) - 1)) = '\0';
+    return strnlen(dst, size);
+}
+
+/**
+ * String concatenation with extra safety. Note that this is not UTF8 safe
+ * @param dst Target string buffer
+ * @param src Source string buffer
+ * @param size Maximum new total size (in bytes)
+ * @return final length of string
+ */
+static size_t
+xstrlcat(char *dst, const char *src, size_t size) {
+
+    if (size == 0)
+        return 0;
+
+    if (strnlen(dst, size - 1) == size - 1)
+        return size - 1;
+    if (strlen(src) + strlen(dst) < size) {
+        strncat(dst, src, size - 1 - strlen(dst));
+        dst[size - 1] = '\0';
+    }
+    return strnlen(dst, size);
+}
+
+// The start of a UTF8 sequence always have the top two bits set
+// This macro tests if we are at the start of a UTF character
+#define isutf(c) (((c)&0xc0)!=0x80)
+
+/**
+ * Find the byte offset in buffer for the charnum:th multibyte character
+ * @param s
+ * @param charnum
+ * @return Offset
+ */
+static size_t
+xmb_offset(const char *s, int charnum) {
+    size_t offs = 0;
+    while (charnum > 0 && s[offs]) {
+        (void) (isutf(s[++offs]) || isutf(s[++offs]) || isutf(s[++offs]) || ++offs);
+        charnum--;
+    }
+    return offs;
+}
+
 /**
  * Find the number of Unicode code point (characters) in the byte sequence pointed to
  * by 's'
@@ -200,9 +304,9 @@ utf8len(const char *s) {
 static int
 _utable_rc_chk(table_t *t, size_t row, size_t col) {
     if (row >= t->nRow || col >= t->nCol) {
-#ifndef TABLE_UNIT_TEST
-        logmsg(LOG_ERR, "Table cell specified is out of range [%zu, %zu]", row, col);
-#endif
+        char buffer[80];
+        snprintf(buffer,79,"Table cell specified is out of range [%zu, %zu]", row, col);
+        logmsg(buffer);
         return -1;
     }
     return 0;
@@ -263,9 +367,7 @@ utable_create(size_t nRow, size_t nCol) {
     return t;
 
 tbl_err:
-#ifndef TABLE_UNIT_TEST
-    logmsg(LOG_ERR, "Failed to create layout table");
-#endif
+    logmsg("CRITICAL : Failed to create table. Out of memory.");
     free(t->c);
     free(t->colwidth);
     free(t->mincolwidth);
@@ -884,9 +986,7 @@ _utable_stroke_verticals(char *buff, int *buffleft, int totwidth, int eval[], ch
         }
     }
     if( *buffleft < 1 ) {
-#ifndef TABLE_UNIT_TEST 
-        logmsg(LOG_CRIT,"Out of buffer space in _utable_stroke_verticals()");
-#endif                
+        logmsg("Out of buffer space in _utable_stroke_verticals()");
         exit(EXIT_FAILURE);
     }
 }
@@ -920,14 +1020,11 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
         free(buff);
         return -1;
     }
-#ifndef TABLE_UNIT_TEST
-     _writef(fd,"%s\n",buff);
-#else
-     printf("%s\n",buff);
-#endif
+    
+     int ret = write(fd, buff, strlen(buff));
    
     free(buff);
-    return 0;
+    return ret;
 }
 
 #pragma GCC diagnostic push

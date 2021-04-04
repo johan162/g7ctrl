@@ -117,6 +117,10 @@ typedef struct tcont_t {
     _Bool headerLine;   //!<  Should the header line be added
 } table_t;
 
+typedef void (*t_log_func)(int,char*);
+
+void
+utable_set_logfunc(t_log_func f, int loglevel, char *prefix);
 
 int
 utable_set_cell_colspan(table_t *t, size_t row, size_t col, size_t cspan);
