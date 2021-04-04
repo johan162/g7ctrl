@@ -49,7 +49,7 @@
 #include "utils.h"
 #include "nicks.h"
 #include "wreply.h"
-#include "unicode_tbl.h"
+#include "libunitbl/unicode_tbl.h"
 #include "geoloc.h"
 #include "geoloc_cache.h"
 #include "mailutil.h"

@@ -1634,7 +1634,7 @@ ut3(void) {
 
 
 // Some rudimentary unit-test
-// gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c xstr.c 
+// gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c 
 
 int
 main(int argc, char **argv) {

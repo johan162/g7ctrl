@@ -61,7 +61,7 @@
 #include "serial.h"
 #include "sighandling.h"
 #include "g7sendcmd.h"
-#include "unicode_tbl.h"
+#include "libunitbl/unicode_tbl.h"
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + NAME_MAX + 1 ) )

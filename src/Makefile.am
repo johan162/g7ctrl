@@ -30,7 +30,7 @@ bin_PROGRAMS = g7ctrl
 BUILDNBR_FILE=buildnumber.txt
 
 # Recurse into there directories
-SUBDIRS = libiniparser libsmtpmail libhpdftbl libxstr . shell etc
+SUBDIRS = libiniparser libsmtpmail libhpdftbl libxstr libunitbl . shell etc
 
 
 if DISABLE_PIE
@@ -58,11 +58,11 @@ mail_templates/mail_lastloc_img.html mail_templates/mail_lastloc_img.txt
 # All sources
 g7ctrl_SOURCES = g7ctrl.c g7config.c futils.c utils.c lockfile.c logger.c pcredmalloc.c \
 socklistener.c serial.c g7cmd.c tracker.c connwatcher.c dbcmd.c presets.c dict.c mailutil.c gpsdist.c \
-g7srvcmd.c g7sendcmd.c sighandling.c nicks.c export.c geoloc.c wreply.c unicode_tbl.c \
+g7srvcmd.c g7sendcmd.c sighandling.c nicks.c export.c geoloc.c wreply.c \
 g7pdf_report_model.c g7pdf_report_view.c geoloc_cache.c \
 g7ctrl.h g7config.h futils.h utils.h logger.h lockfile.h pcredmalloc.h build.h socklistener.h \
 serial.h g7cmd.h tracker.h connwatcher.h dbcmd.h presets.h dict.h mailutil.h gpsdist.h \
-g7srvcmd.h g7sendcmd.h sighandling.h nicks.h export.h geoloc.h wreply.h unicode_tbl.h \
+g7srvcmd.h g7sendcmd.h sighandling.h nicks.h export.h geoloc.h wreply.h  \
 g7pdf_report_model.h g7pdf_report_view.h geoloc_cache.h
 
 
@@ -80,11 +80,11 @@ endif
 # If the system already have iniparser we use the system version. Otherwise we use our
 # own version included with the daemon.
 if have_iniparser
-    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a
-    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a
+    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a libunitbl/libunitbl.a
+    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a libunitbl/libunitbl.a
 else
-    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a
-    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a
+    g7ctrl_LDADD = $(LIBUSB_1_0) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a libunitbl/libunitbl.a
+    g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a libunitbl/libunitbl.a
 endif
 
 # In Linux iconv() exists in glibc but in OSX we must add the iconv.dylib library to get that function

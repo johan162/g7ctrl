@@ -52,7 +52,7 @@
 #include "nicks.h"
 #include "export.h"
 #include "geoloc.h"
-#include "unicode_tbl.h"
+#include "libunitbl/unicode_tbl.h"
 
 #define ERR_DB_READ_EVENT "[ERR] Can not read number of events in DB."
 #define ERR_DB_READING "[ERR] Problem reading DB"

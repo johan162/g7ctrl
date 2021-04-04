@@ -3,7 +3,7 @@
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
 AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.5.1],[johan162@gmail.com])
+AC_INIT([g7ctrl],[3.5.2],[johan162@gmail.com])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2021 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
@@ -22,6 +22,7 @@ src/libiniparser/Makefile
 src/libsmtpmail/Makefile
 src/libhpdftbl/Makefile
 src/libxstr/Makefile
+src/libunitbl/Makefile
 src/shell/Makefile
 src/emul/Makefile
 src/etc/g7ctrl.conf.template
