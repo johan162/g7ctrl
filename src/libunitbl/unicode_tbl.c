@@ -1145,6 +1145,11 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         middle_vertical = "|";
         bottom_horizontal = "-";
         bottom_up = "+";
+        bottom_left = bottom_horizontal;
+        bottom_right = bottom_horizontal;
+        top_middle_left = top_middle_horizontal;
+        top_middle_right = top_middle_horizontal;
+        
         if( style == TSTYLE_ASCII_V0 )
             have_bottom_border = FALSE;
         
