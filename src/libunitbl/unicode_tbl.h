@@ -165,6 +165,9 @@ int
 utable_set_colwidth(table_t *t, size_t col, size_t width);
 
 void
+utable_reset_table_colwidth(table_t *t);
+
+void
 utable_set_table_mincolwidth(table_t *t, size_t width);
 
 void

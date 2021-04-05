@@ -599,7 +599,7 @@ utable_set_col_halign(table_t *t, int col, halign_t halign) {
  * @param t Table pointer
  * @param row 
  * @param col
- * @param txt
+ * @param val
  * @return 0 on success, -1 on failure
  */
 int
@@ -697,6 +697,15 @@ utable_set_table_colwidth(table_t *t, size_t width) {
     for (size_t c = 0; c < t->nCol; c++) {
         utable_set_colwidth(t, c, width);
     }
+}
+
+/**
+ * Reset column widths for entire table to auto
+ * @param t Table pointer
+ */
+void
+utable_reset_table_colwidth(table_t *t) {
+    utable_set_table_colwidth(t,0);
 }
 
 /**
@@ -1052,6 +1061,8 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     _utable_set_autocolwidth(t);
 
     if (t->title) {
+        // We need to check if this has already been done since it is perfectly
+        // legal to stroke the same table objct multiple times
         if(!t->titleCopied) {
             // Insert the title as the top row by moving existing row down one step
             memmove(&t->c[t->nCol], &t->c[0], (t->nRow * t->nCol) * sizeof (tcell_t));
@@ -1665,7 +1676,7 @@ ut3(void) {
     printf("\n");
     utable_set_headerline(tbl,FALSE);
     utable_set_table_cellpadding(tbl,2,2);
-    utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE)", TITLESTYLE_LINE);
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE, + Vert Interior)", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
     
     printf("\n");
