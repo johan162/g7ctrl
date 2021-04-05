@@ -75,7 +75,7 @@
 #define BDL_DL_UL  "\u255d"
 #define BDL_DL_VR  "\u2560"
 #define BDL_DL_VL  "\u2563"
-#define BDL_DL_UH  "\2569u"
+#define BDL_DL_UH  "\u2569"
 #define BDL_DL_DH  "\u2566"
 #define BDL_DL_X   "\u256c"
 
@@ -805,10 +805,7 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
             xstrlcpy(txtbuff, txtbuff2, len + 1); // +1 since the length also must include the terminating 0  
         }
 
-        // We need these values to center the text
-        const int w_half = w / 2;
-        const int len_half = (utf8len(txtbuff) + totpad) / 2;
-        int padlen;
+        
 
         // We reuse the rpadstr buffer to use for padding the cell to the
         // assigned width in order to make the text left, right or center aligned
@@ -819,7 +816,12 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
             for (size_t i = 0; i < w - utf8len(txtbuff); ++i) {
                 rpadstr[i] = ' ';
             }
-    
+
+        // We need these values to center the text
+        const int w_half = w / 2;
+        const int len_half = (utf8len(txtbuff) /*+ totpad*/) / 2;
+        int padlen;
+        
         if (c == 0) {
             switch (t->c[TIDX(row, c)].halign) {
                 case RIGHTALIGN:
@@ -884,7 +886,12 @@ _utable_set_autocolwidth(table_t *t) {
     for (size_t c = 0; c < t->nCol; c++) {
         if (t->colwidth[c] == 0) {
             // User has not yet set column width so find the widest text
-            for (size_t r = 0; r < t->nRow; r++) {
+            // If the table has a header row we must ignore that since it
+            // a) only has one column allocated, and b) will be as wide as the table
+            size_t startrow=0;
+            if( t->title && t->titleCopied )
+                startrow=1;
+            for (size_t r = startrow; r < t->nRow; r++) {
                 size_t lpad, rpad;
                 _utable_get_cp(t, r, c, &lpad, &rpad);
                 if (utf8len(t->c[TIDX(r, c)].t) + lpad + rpad > t->colwidth[c]) {
@@ -1297,7 +1304,7 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         top_right = " ";
         top_middle_left = " ";
         top_middle_right = " ";
-        top_middle_cross = " ";
+        top_middle_cross = style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V5 ? BDL_HB_X : style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V4 ? BDL_X : BDL_DH_X;;
         top_middle_horizontal = style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V5 ? BDL_HB_H : style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V4 ? BDL_H : BDL_DL_H;
         middle_left = " ";
         middle_horizontal = " ";
@@ -1305,12 +1312,12 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
         middle_horizontal_up = " ";
         middle_horizontal_down = " ";
         middle_cross = " ";
-        middle_vertical = " ";
+        middle_vertical = BDL_V;
         border_vertical = " ";
         bottom_left = " ";
         bottom_horizontal = style==TSTYLE_SIMPLE_V4 || style==TSTYLE_SIMPLE_V5 || style==TSTYLE_SIMPLE_V6 ?  BDL_H : " ";
         bottom_right = " ";
-        bottom_up = " ";
+        bottom_up = style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V3 ? BDL_V : BDL_UH;
         
     }
     
@@ -1521,7 +1528,7 @@ ut3(void) {
 
 
     char *data[] = {
-        "Titel 1", "Titel 2", "Titel 3", "Titel 4", "Titel 5", "Titel 6",
+        "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6",
         "2012-12-12 12:12", "3000000001", "30.345678", "17.676767", "ÖVERJÄRVÅ TÅRNE 32, 134 34 LÅNGJÄRVI NUMÅENDE", "olle",
         "2012-12-12 12:12", "3000000001", "30.345678", "17.676767", "ÖVERJÄRVÅ TÅRNE 32, 134 34 LÅNGJÄRVI NUMÅENDE", "olle"
     };
@@ -1547,15 +1554,17 @@ ut3(void) {
     utable_set_title(tbl, "Table title", TITLESTYLE_LINE);
 
     utable_set_row_halign(tbl, 0, CENTERALIGN);
-
-    utable_set_interior(tbl, 0, 0);
+    utable_set_table_cellpadding(tbl,2,2);
+   // utable_set_interior(tbl, TRUE, FALSE);
 
     utable_set_title(tbl, "TSTYLE_ASCII_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V1);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_ASCII_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V2);
+    
+    
 
     printf("\n");
     utable_set_title(tbl, "TSTYLE_ASCII_V3", TITLESTYLE_LINE);
@@ -1617,19 +1626,50 @@ ut3(void) {
     printf("\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V5", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V5);
-
+    
     printf("\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V6", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V6);        
+
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V1 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V1);
+    
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V2 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V2);
+    
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);
+
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V4 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V4);
+
+    printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V5 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V5);
+
+     printf("\n");
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V6 (+ Vert Interior)", TITLESTYLE_LINE);
+    utable_set_interior(tbl, TRUE, FALSE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V6);
+    
     
     printf("\n");
     utable_set_headerline(tbl,FALSE);
-    utable_set_table_cellpadding(tbl,1,1);
+    utable_set_table_cellpadding(tbl,2,2);
     utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE)", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
     
     printf("\n");
-    
+  
 }
 
 
