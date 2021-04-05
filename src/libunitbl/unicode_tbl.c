@@ -1019,14 +1019,25 @@ utable_set_interior(table_t *t, _Bool v, _Bool h) {
     t->interior_h = h;
 }
 
+
+/**
+ * Stroke the entire table to STDOUT
+ * @param t     Table pointer
+  * @param style Table layout style to use
+ *              Possible styles are: TSTYLE_TOP_DL, TSTYLE_FULL_DL, TSTYLE_SL, TSTYLE_TOPBOTTOM_DL
+  * @return -1 on failure, 0 on success
+ */
+int
+utable_stroke_stdout(table_t *t, tblstyle_t style) {
+    return utable_stroke(t,STDOUT_FILENO,style);
+}
+
 /**
  * Stroke the entire table in the specified style to specified file descriptor
  * @param t     Table pointer
  * @param fd    File descriptor to write to
  * @param style Table layout style to use
- *              Possible styles are: TSTYLE_TOP_DL, TSTYLE_FULL_DL, TSTYLE_SL, TSTYLE_TOPBOTTOM_DL
- * @param col_lines Separate columns with lines
- * @return -1 on failure, 0 on success
+   * @return -1 on failure, 0 on success
  */
 int
 utable_stroke(table_t *t, int fd, tblstyle_t style) {
@@ -1037,7 +1048,7 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
         return -1;
     }
     
-     int ret = write(fd, buff, strlen(buff));
+    int ret = write(fd, buff, strlen(buff));
    
     free(buff);
     return ret;
@@ -1049,11 +1060,10 @@ utable_stroke(table_t *t, int fd, tblstyle_t style) {
 /**
  * Stroke the entire table in the specified style to specified string buffer
  * @param t     Table pointer
- * @param fd    File descriptor to write to
+ * @param buff  String buffer to write to
+ * @param bufflen Length of string byffer in bytes
  * @param style Table layout style to use
- *              Possible styles are: TSTYLE_TOP_DL, TSTYLE_FULL_DL, TSTYLE_SL, TSTYLE_TOPBOTTOM_DL
- * @param col_lines Separate columns with lines
- * @return -1 on failure, 0 on success
+  * @return -1 on failure, 0 on success
  */
 int
 utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
@@ -1432,9 +1442,9 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     if(buffleft < 1) return -1;
     
     _utable_stroke_verticals(buff, &buffleft, totwidth, eval, bottom_horizontal, bottom_up, bottom_up, NULL);
-    len=snprintf(pbuff, MAXPBUFF, "%s", bottom_right);
+    len=snprintf(pbuff, MAXPBUFF, "%s\n", bottom_right);
     xstrlcat(buff,pbuff,buffleft);
-    buffleft -= len;
+    buffleft -= (len+1);
     if(buffleft < 1) return -1;
 
     return 0;
@@ -1498,7 +1508,7 @@ void ut1(void) {
     return;
 
 tbl_err:
-    printf("\n");
+    printf("\n\n");
     printf("Failed!\n");
     exit(EXIT_FAILURE);
 
@@ -1565,121 +1575,121 @@ ut3(void) {
     utable_set_title(tbl, "Table title", TITLESTYLE_LINE);
 
     utable_set_row_halign(tbl, 0, CENTERALIGN);
-    utable_set_table_cellpadding(tbl,2,2);
+    utable_set_table_cellpadding(tbl,1,1);
    // utable_set_interior(tbl, TRUE, FALSE);
 
     utable_set_title(tbl, "TSTYLE_ASCII_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V1);
 
-    printf("\n\n");
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_ASCII_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V2);
     
     
 
-    printf("\n");
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_ASCII_V3", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V3);
 
-    printf("\n");
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_DOUBLE_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_DOUBLE_V1);
 
-    printf("\n");
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_DOUBLE_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_DOUBLE_V2);
 
-    printf("\n");
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_DOUBLE_V3", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_DOUBLE_V3);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_DOUBLE_V4", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_DOUBLE_V4);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SINGLE_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SINGLE_V1);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SINGLE_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SINGLE_V2);
     
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_HEAVY_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_HEAVY_V1);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_HEAVY_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_HEAVY_V2);    
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_HEAVY_V3", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_HEAVY_V3);    
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V1);    
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V2", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V2);    
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V3", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V4", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V4);    
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V5", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V5);
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V6", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V6);        
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V1 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V1);
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V2 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V2);
     
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V4 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V4);
 
-    printf("\n");
+    printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V5 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V5);
 
-     printf("\n");
+     printf("\n\n");
     utable_set_title(tbl, "TSTYLE_SIMPLE_V6 (+ Vert Interior)", TITLESTYLE_LINE);
     utable_set_interior(tbl, TRUE, FALSE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V6);
     
     
-    printf("\n");
+    printf("\n\n");
     utable_set_headerline(tbl,FALSE);
     utable_set_table_cellpadding(tbl,2,2);
     utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE, + Vert Interior)", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
     
-    printf("\n");
+    printf("\n\n");
   
 }
 
@@ -1694,7 +1704,7 @@ main(int argc, char **argv) {
     //ut1();
     ut3();
 
-    printf("\n");
+    printf("\n\n");
 
     exit(EXIT_SUCCESS);
 }

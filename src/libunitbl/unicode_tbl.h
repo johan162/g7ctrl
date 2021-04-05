@@ -183,6 +183,9 @@ void
 utable_set_interior(table_t *t, _Bool v, _Bool h);
 
 int
+utable_stroke_stdout(table_t *t, tblstyle_t style);
+
+int
 utable_stroke(table_t *t, int fd, tblstyle_t style);
 
 int
