@@ -768,7 +768,7 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
         const size_t cspan = t->c[TIDX(row, c)].cspan;
         size_t lpad, rpad;
         _utable_get_cp(t, row, c, &lpad, &rpad);
-        const size_t totpad = lpad + rpad;
+        //const size_t totpad = lpad + rpad;
         char lpadstr[MAXPADCHARS], rpadstr[MAXPADCHARS];
 
         for (size_t i = 0; i < lpad; ++i) {
