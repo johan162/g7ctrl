@@ -52,6 +52,8 @@ typedef enum {
             
 
     /* ASCII Styles */
+    TSTYLE_ASCII_V0,    /**< Plain ASCII only one horizontal double line under header row */            
+    TSTYLE_ASCII_V4,   /**< Plain ASCII one horizontal double line under header row, single bottom line */              
     TSTYLE_ASCII_V1,    /**< Plain ASCII only horizontal lines, double lines top and bottom */
     TSTYLE_ASCII_V2,    /**< Plain ASCII with border, double lines top and bottom */
     TSTYLE_ASCII_V3,    /**< Plain ASCII with border, only single lines */ 

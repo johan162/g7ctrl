@@ -137,6 +137,8 @@ tblstyle_t table_styles[] = {
     TSTYLE_SIMPLE_V4,
     TSTYLE_SIMPLE_V5,
     TSTYLE_SIMPLE_V6,
+    TSTYLE_ASCII_V0,
+    TSTYLE_ASCII_V4,
     TSTYLE_ASCII_V1,    
     TSTYLE_ASCII_V2,    
     TSTYLE_ASCII_V3,            
@@ -1114,6 +1116,7 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     char *border_vertical;
     char *bottom_horizontal;
     char *bottom_left, *bottom_right, *bottom_up;
+    int have_bottom_border = TRUE;
     
     top_left = " ";
     top_horizontal = " ";
@@ -1136,7 +1139,16 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     bottom_right = " ";
     bottom_up = " ";
     
-    if (style == TSTYLE_ASCII_V2 || style == TSTYLE_ASCII_V1 || style == TSTYLE_ASCII_V3) {
+    if ( style == TSTYLE_ASCII_V0 || style == TSTYLE_ASCII_V4 ) {        
+        top_middle_horizontal = "=";
+        top_middle_cross = "+";
+        middle_vertical = "|";
+        bottom_horizontal = "-";
+        bottom_up = "+";
+        if( style == TSTYLE_ASCII_V0 )
+            have_bottom_border = FALSE;
+        
+    } else if (style == TSTYLE_ASCII_V2 || style == TSTYLE_ASCII_V1 || style == TSTYLE_ASCII_V3 ) {
         // The very top outer border line
         top_horizontal = style==TSTYLE_ASCII_V3 ? "-" : "=";
         top_down = "+";
@@ -1319,6 +1331,9 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
     } else if( style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V3 || 
                style==TSTYLE_SIMPLE_V4 || style==TSTYLE_SIMPLE_V5 || style==TSTYLE_SIMPLE_V6 )  {
         
+        if( style==TSTYLE_SIMPLE_V1 || style==TSTYLE_SIMPLE_V2 || style==TSTYLE_SIMPLE_V3 )
+            have_bottom_border = FALSE;
+        
         top_left = " ";
         top_horizontal = " ";
         top_down = " ";
@@ -1436,16 +1451,19 @@ utable_strstroke(table_t *t, char *buff, size_t bufflen, tblstyle_t style) {
             }
         }
     }
-    len=snprintf(pbuff, MAXPBUFF, "%s", bottom_left);
-    xstrlcat(buff,pbuff,buffleft);
-    buffleft -= len;
-    if(buffleft < 1) return -1;
     
-    _utable_stroke_verticals(buff, &buffleft, totwidth, eval, bottom_horizontal, bottom_up, bottom_up, NULL);
-    len=snprintf(pbuff, MAXPBUFF, "%s\n", bottom_right);
-    xstrlcat(buff,pbuff,buffleft);
-    buffleft -= (len+1);
-    if(buffleft < 1) return -1;
+    if( have_bottom_border ) {
+        len=snprintf(pbuff, MAXPBUFF, "%s", bottom_left);
+        xstrlcat(buff,pbuff,buffleft);
+        buffleft -= len;
+        if(buffleft < 1) return -1;
+
+        _utable_stroke_verticals(buff, &buffleft, totwidth, eval, bottom_horizontal, bottom_up, bottom_up, NULL);
+        len=snprintf(pbuff, MAXPBUFF, "%s\n", bottom_right);
+        xstrlcat(buff,pbuff,buffleft);
+        buffleft -= (len+1);
+        if(buffleft < 1) return -1;
+    }
 
     return 0;
 }
@@ -1576,8 +1594,27 @@ ut3(void) {
 
     utable_set_row_halign(tbl, 0, CENTERALIGN);
     utable_set_table_cellpadding(tbl,1,1);
-   // utable_set_interior(tbl, TRUE, FALSE);
+  
+    utable_set_title(tbl, "TSTYLE_ASCII_V0", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V0);
+    
+    printf("\n\n\n");
+    utable_set_title(tbl, "TSTYLE_ASCII_V4", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V4);
+    
+    utable_set_interior(tbl, TRUE, FALSE);
+    
+    printf("\n\n\n");
+    utable_set_title(tbl, "TSTYLE_ASCII_V0 + Vert interior", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V0);
 
+    printf("\n\n\n");
+    utable_set_title(tbl, "TSTYLE_ASCII_V4  + Vert interior", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V4);
+   
+    
+    utable_set_interior(tbl, FALSE, FALSE);
+    printf("\n\n\n");
     utable_set_title(tbl, "TSTYLE_ASCII_V1", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V1);
 
@@ -1687,6 +1724,14 @@ ut3(void) {
     utable_set_headerline(tbl,FALSE);
     utable_set_table_cellpadding(tbl,2,2);
     utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE, + Vert Interior)", TITLESTYLE_LINE);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
+    
+    
+    printf("\n\n");
+    utable_set_interior(tbl, FALSE, FALSE);
+    utable_set_headerline(tbl,FALSE);
+    utable_set_table_cellpadding(tbl,2,2);
+    utable_set_title(tbl, "TSTYLE_SIMPLE_V3 (HEADER_LINE=FALSE)", TITLESTYLE_LINE);
     utable_stroke(tbl, STDOUT_FILENO, TSTYLE_SIMPLE_V3);    
     
     printf("\n\n");
