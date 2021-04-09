@@ -92,9 +92,19 @@ typedef enum {
 } titlestyle_t;
 
 /**
+ * Type for cell callback function to set the text in a cell
+ * The callback is populated with the row, column and table 'tag'
+ * to be able to differentiate from which table the callback came
+ * from. The string to be used should be used in the cell is returned
+ * as a pointer. The cell will make its own copy of the string as needed
+ */
+typedef char* (*t_cell_cb)(int,int,void*);
+
+/**
  * Data structure that represents one cell in the table
  */
 typedef struct {
+    t_cell_cb cb;       //!< Cell callback as an alternative way to set the text
     char *t;            //!< A pointer to the text in te cell
     halign_t halign;    //!<  What horizontal alignment to use for text
     int pRow, pCol;     //!<  Parent row and column
@@ -107,7 +117,8 @@ typedef struct {
 /**
  * Data structure that represents the table
  */
-typedef struct tcont_t {
+typedef struct {
+    void *tag;          //!< Arbitrary pointer to a "tag" used to identify the table in callbacks
     size_t nRow, nCol;  //!< Number of rows and columns in the table
     tcell_t *c;         //!< Pointer to the data matrix
     size_t *colwidth;   //!< A vector with comuted or forced column widths
@@ -201,6 +212,15 @@ utable_set_headerline(table_t *t, _Bool headerLine);
 
 void
 utable_set_padding_policy(_Bool cutInPadding);
+
+int
+utable_set_cellcallback(table_t *t, int row, int col, t_cell_cb cb);
+
+void
+utable_set_table_cellcallback(table_t *t, t_cell_cb cb);
+
+int
+utable_set_coltitles(table_t *t, char *titles[]);
 
 #ifdef	__cplusplus
 }

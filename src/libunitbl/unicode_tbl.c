@@ -288,6 +288,8 @@ xmb_offset(const char *s, int charnum) {
 
 size_t
 utf8len(const char *s) {
+    if( NULL == s )
+        return 0;
     size_t len = 0;
     for (; *s; ++s) {
         if ((*s & 0xC0) != 0x80)
@@ -414,6 +416,27 @@ utable_create_set(size_t nRow, size_t nCol, char *data[]) {
         return NULL;
     }
     return t;
+}
+
+
+/**
+ * Set the title row
+ * @param t Table pointer
+ * @param nRow Number of rows
+ * @param nCol Number of cols
+ * @param data A matrix of data to be used as initialization
+ * @return NULL on failure, pointer to new table otherwise
+ */
+int
+utable_set_coltitles(table_t *t, char *titles[]) {
+    int row=0;
+    if( t->titleCopied )
+       row=1;
+    for (size_t c = 0; c < t->nCol; c++) {
+        if ( utable_set_cell(t, row, c, titles[c]) )
+            return -1;
+     }
+    return 0;
 }
 
 /** 
@@ -626,7 +649,41 @@ void
 utable_set_table_cellpadding(table_t *t, size_t lpad, size_t rpad) {
     for (size_t r = 0; r < t->nRow; r++) {
         for (size_t c = 0; c < t->nCol; c++) {
-            utable_set_cellpadding(t, r, c, lpad, rpad);
+            (void)utable_set_cellpadding(t, r, c, lpad, rpad);
+        }
+    }
+}
+
+/**
+ * Set callback function for cell used to populate the cell with text
+ * @param t Table pointer
+ * @param r row
+ * @param c column
+ * @param cb Callback function
+ */
+int
+utable_set_cellcallback(table_t *t, int row, int col, t_cell_cb cb) {
+    if (_utable_rc_chk(t, row, col) || t->c[TIDX(row, col)].merged)
+        return -1;
+    // Only set callback if there is not already any text set
+    if( ! t->c[TIDX(row, col)].t )
+        t->c[TIDX(row, col)].cb = cb;
+    return 0;
+}
+
+
+/**
+ * Set callback function for all cells in the table used to populate the cell 
+ * with text. If the callback returns NULL then no change to the cells 
+ * current text will be made.
+ * @param t Table pointer
+ * @param cb Callback function
+ */
+void
+utable_set_table_cellcallback(table_t *t, t_cell_cb cb) {
+    for (size_t r = 0; r < t->nRow; r++) {
+        for (size_t c = 0; c < t->nCol; c++) {
+            utable_set_cellcallback(t, r, c, cb);
         }
     }
 }
@@ -773,6 +830,8 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
     while (c < t->nCol) {
         int w = 0;
 
+        //tcell_t *cell = &t->c[TIDX(row, c)];
+        
         // Determine the total width of this cell. This needs to take
         // into account the fact that this could be a cell that is spanning
         // multiple other cells.
@@ -794,6 +853,16 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
             w += t->colwidth[c + cs] + 1;
         }
         w -= 1; // Don't include the last border since that remains
+        
+        if( NULL != t->c[TIDX(row, c)].cb ) {
+            char *cb_str = t->c[TIDX(row, c)].cb(row - (t->title ? 1 : 0), c, t->tag);
+            if( NULL != cb_str ) {
+                if (t->c[TIDX(row, c)].t) {
+                    free(t->c[TIDX(row, c)].t);
+                }
+                t->c[TIDX(row, c)].t = strdup(cb_str);
+            }
+        }
 
         const char *txt = t->c[TIDX(row, c)].t;
         char txtbuff[512], txtbuff2[1024];
@@ -815,8 +884,6 @@ _utable_draw_cellcontent_row(char *buff, int *buffleft, table_t *t, size_t row, 
             len = xmb_offset(txtbuff2, w)+1; // Offset starts at 0
             xstrlcpy(txtbuff, txtbuff2, len + 1); // +1 since the length also must include the terminating 0  
         }
-
-        
 
         // We reuse the rpadstr buffer to use for padding the cell to the
         // assigned width in order to make the text left, right or center aligned
@@ -1743,6 +1810,35 @@ ut3(void) {
   
 }
 
+char *cell_cb(int r, int c, void *tag) {
+    static char buff[80];
+    snprintf(buff,80,"(%d, %d)",r,c);
+    return buff;
+}
+
+void
+ut4(void) {
+
+    char *coltitles[] = {
+        "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+    };
+
+    table_t *tbl = utable_create(5, 6);
+
+    if (NULL == tbl) {
+        printf("Cannot create table\n");
+        exit(EXIT_FAILURE);
+    }
+    utable_set_coltitles(tbl,coltitles);
+    utable_set_table_mincolwidth(tbl,10);
+    //utable_set_row_halign(tbl, 0, CENTERALIGN);
+    
+    utable_set_title(tbl, "Table title", TITLESTYLE_LINE);
+
+    utable_set_table_cellcallback(tbl,cell_cb);
+    utable_stroke(tbl, STDOUT_FILENO, TSTYLE_ASCII_V4);  
+    
+}
 
 // Some rudimentary unit-test
 // gcc -std=c99 -DTABLE_UNIT_TEST unicode_tbl.c 
@@ -1752,7 +1848,8 @@ main(int argc, char **argv) {
 
     //ut2();
     //ut1();
-    ut3();
+    //ut3();
+    ut4();
 
     printf("\n\n");
 
