@@ -109,6 +109,8 @@ struct smtp_handle {
     struct smtp_reply * cap[64];
     /** Subject of mail */
     char *subject;
+    /** RFC5322 formatted date string for mail*/
+    char *date;
     /** All "To:" recipients */
     char *to[MAX_RCPT];
     /** All "To:" recipients as one string */

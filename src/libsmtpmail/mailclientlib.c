@@ -95,6 +95,36 @@ transfer_encoding[] = {
 };
 static const size_t NumTransEnc = sizeof (transfer_encoding) / sizeof (char *);
 
+
+/**
+ * Return date formatted according to RFC5322
+ * @return A pointer to a dynamically allocated string. It is the
+ * calling routines responsibility to free after usage. 
+ * Return NULL on failure.
+ * 
+ */
+static char *
+get_RFC5322_datetime(void) {
+    const int RFC5322_TIME_LEN = 32;
+    const char* RFC5322_FORMAT_STR = "%a, %d %b %Y %H:%M:%S %z";
+    char tbuff[RFC5322_TIME_LEN];
+    time_t t;
+    struct tm *tm;
+    
+    t = time(NULL);
+    tm = localtime(&t);
+    if( tm == NULL ) {
+        return NULL;
+    }
+    
+    if (strftime(tbuff, RFC5322_TIME_LEN, RFC5322_FORMAT_STR, tm) == 0) {
+         return NULL;     
+    }
+    
+    return strdup(tbuff);
+}
+
+
 /**
  * Insert "\r\n" pair after specified number of characters. If the input contains
  * a single "\n" it is translated to a "\r\n" pair
@@ -187,6 +217,7 @@ _free_smtp_handle(struct smtp_handle **handle) {
         return;
     _free_smtplist((*handle)->cap, 64);
     _smtp_chkfree((*handle)->from);
+    _smtp_chkfree((*handle)->date);
     _smtp_chkfree((*handle)->returnpath);
     _smtp_chkfree((*handle)->subject);
     _smtp_chkfree((*handle)->mimeversion);
@@ -583,6 +614,7 @@ smtp_dump_handle(struct smtp_handle * handle, FILE *fp) {
     _print_reply(handle->cap, 64);
     fprintf(fp, "Subject: %s\n", handle->subject);
     fprintf(fp, "From: %s\n", handle->from);
+    fprintf(fp, "Date: %s\n", handle->date);
     fprintf(fp, "DATA:\n%s\n", handle->databuff);
 }
 
@@ -971,7 +1003,9 @@ smtp_sendmail(struct smtp_handle *handle, char *from, char *subject) {
 
     handle->from = strdup(from);
     handle->returnpath = strdup(from);
-
+    handle->date = get_RFC5322_datetime();
+    if (NULL == handle->date) return -1;   
+    
     char *buff = calloc(1, 1024);
     qprint_encode_word(subject, buff, 1024);
     handle->subject = strdup(buff);
@@ -1166,8 +1200,10 @@ smtp_sendmail(struct smtp_handle *handle, char *from, char *subject) {
         }
     }
     if (-1 == _sendchk(handle, "DATA", "", 354)) return -1;
-    if (-1 == _senddata(handle, "From: ", from)) return -1;
+    if (-1 == _senddata(handle, "Date: ", handle->date)) return -1;
+    if (-1 == _senddata(handle, "From: ", handle->from)) return -1;
     if (-1 == _senddata(handle, "To: ", handle->to_concatenated)) return -1;
+  
 
     if (handle->cc_concatenated && *handle->cc_concatenated) {
         if (-1 == _senddata(handle, "Cc: ", handle->cc_concatenated)) {
@@ -1179,19 +1215,6 @@ smtp_sendmail(struct smtp_handle *handle, char *from, char *subject) {
     if (-1 == _senddata(handle, "MIME-Version: ", handle->mimeversion)) return -1;
     if (-1 == _senddata(handle, handle->contenttype, "")) return -1;
 
-    /*
-    if( -1 == _sendchk(handle,"DATA", "", 354) ||
-        -1 == _senddata(handle,"From: ", from) ||
-        -1 == _senddata(handle,"To: ", handle->to_concatenated) ||
-        -1 == _senddata(handle,"Cc: ", handle->cc_concatenated) ||
-        -1 == _senddata(handle,"Subject: ", handle->subject) ||
-        -1 == _senddata(handle,"MIME-Version: ", handle->mimeversion) ||
-        -1 == _senddata(handle,handle->contenttype,"") ) {
-        logmsg(LOG_DEBUG, "smtp_sendmail #10.1");
-        return -1;
-    }
-     */
-
     if (handle->contenttransferencoding) {
         if (-1 == _senddata(handle, handle->contenttransferencoding, "")) {
             return -1;
@@ -1199,7 +1222,7 @@ smtp_sendmail(struct smtp_handle *handle, char *from, char *subject) {
     }
 
     if (-1 == _senddata(handle, "\r\n", "") ||
-            -1 == _senddata(handle, handle->databuff, "")) {
+        -1 == _senddata(handle, handle->databuff, "")) {
         return -1;
     }
 
@@ -1349,6 +1372,7 @@ smtp_setup(char *server_ip, char *user, char *pwd, int port) {
             smtp_cleanup(&handle);
         }
     }
+        
     return handle;
 }
 
