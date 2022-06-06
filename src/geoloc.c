@@ -233,8 +233,7 @@ get_geocode_url(char *lat, char *lon) {
         logmsg(LOG_DEBUG,"G Reverse lookup: %s",url);
 
     } else {
-        // Anonymous lookup. WIthout a key we are not allowed to set location_type
-        snprintf(url, sizeof (url), "https://maps.googleapis.com/maps/api/geocode/xml?latlng=%s,%s", lat, lon);
+        logmsg(LOG_ERR, "Anonymous Geocoding is no longer allowed with Google API");
     }
 
     return url;
