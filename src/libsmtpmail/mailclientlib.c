@@ -38,11 +38,15 @@
 #include <ctype.h>
 #include <syslog.h>
 #include <libgen.h>
+#include <limits.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include <poll.h>
+
+#include <netdb.h>
+#include <arpa/inet.h>
 
 #include "mailclientlib.h"
 #include "base64ed.h"
@@ -345,24 +349,51 @@ _read_sock_timeout(const int sfd, char * const buffer, const size_t maxlen) {
     return 0;
 }
 
+
+/**
+ * Return primary IP address for the supplied FQDN
+ * @param fqdn The domain name to lookup its IP address
+ * @return A dynamic allocated string in dot-notation if found, NULL otherwise
+ * It is the calling routines responsibility to free memory after usage.
+ */
+static char *
+_get_ip(const char* fqdn) {
+    struct hostent *server;
+
+    server = gethostbyname(fqdn);
+    if (server == NULL) {
+        return NULL;
+    }
+    return strdup(inet_ntoa( *( struct in_addr*)(server->h_addr_list[0])));
+}
+
+
 /**
  * Open a connection to the SMTP server (no authentication is done at this stage)
- * @param server_ip
+ * @param server_name_or_ip Either FQDN or IP address of SMTP server
  * @param service
  * @return NULL on failure, pointer to smtp_handle otherwise
  */
 #define MAX_REPLYLIST_LEN 128
 
 static struct smtp_handle *
-_smtp_connect(char *server_ip, char *service) {
+_smtp_connect(char *server_name_or_ip, char *service) {
     int status;
     struct addrinfo hints;
     struct addrinfo *servinfo; // will point to the results
     struct smtp_reply * reply_list[MAX_REPLYLIST_LEN];
+    char server_ip[16];
 
     CLEAR(hints);
     hints.ai_family = AF_UNSPEC; // don't care IPv4 or IPv6
     hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+    
+    char *ip = _get_ip(server_name_or_ip);
+    if( NULL == ip ) {
+        return NULL;
+    }
+    xstrlcpy(server_ip, ip, sizeof server_ip);
+    free(ip);
 
     if ((status = getaddrinfo(server_ip, service, &hints, &servinfo))) {
         return NULL;
@@ -454,6 +485,54 @@ _smtp_send_command(struct smtp_handle *handle, char *cmd, char *arg, struct smtp
         }
     }
     return -1;
+}
+
+/**
+ * Construct a uniq:ish message ID based on local time and the
+ * subject header 
+ * @param subject The subject of mail
+ * @param domain The FQDN of the server
+ * @return A string allocated on the heap representing the message id. 
+ * It is the calling routines responsibility to free the memory after usage.
+ */
+char *
+get_message_id(const char *subject, const char *domain) {
+    time_t t;
+    struct tm *tm;
+    char idbuff[128];
+    char tbuff[64];
+    char *LIBSMTP_MAGIC_CONSTANT = "18618J.B189618";
+    
+    t = time(NULL);
+    tm = localtime(&t);
+    if( tm == NULL ) {
+        return NULL;
+    }
+    
+    if (strftime(tbuff, sizeof idbuff, "%Y%m%d%H%M%S", tm) == 0) {
+         return NULL;
+    }
+    
+    unsigned long code = ULONG_MAX >> 4;
+    for( unsigned int i=0; i < strlen(subject); i++) {
+        code ^= (unsigned long)subject[i] << ((4*i+1) % 63);
+    }
+    
+    char code_str[64];
+    snprintf(code_str, 64,"%lu", code);
+    
+    idbuff[0] = '\0';
+    xstrlcat(idbuff, "<", sizeof idbuff);
+    xstrlcat(idbuff, tbuff, sizeof idbuff);
+    xstrlcat(idbuff, ".", sizeof idbuff);
+    xstrlcat(idbuff, code_str, sizeof idbuff);
+    xstrlcat(idbuff, ".", sizeof idbuff);
+    xstrlcat(idbuff, LIBSMTP_MAGIC_CONSTANT, sizeof idbuff);
+    xstrlcat(idbuff, "@", sizeof idbuff);
+    xstrlcat(idbuff, domain, sizeof idbuff);
+    xstrlcat(idbuff, ">", sizeof idbuff);
+    
+    return strdup(idbuff);
 }
 
 /**
@@ -1264,21 +1343,21 @@ smtp_server_support(struct smtp_handle *handle, size_t feature) {
  * @return -1 on failure , 0 on success
  */
 struct smtp_handle *
-smtp_setup(char *server_ip, char *user, char *pwd, int port) {
+smtp_setup(char *server_ip_or_fqdn, char *user, char *pwd, int port) {
 
     srand(time(NULL));
     struct smtp_handle *handle;
 
     if (port <= 0) {
         // Use system standard port number
-        handle = _smtp_connect(server_ip, "smtp");
+        handle = _smtp_connect(server_ip_or_fqdn, "smtp");
     } else {
         char numbuff[8];
         if (port > 1023) {
             return NULL;
         }
         snprintf(numbuff, sizeof(numbuff), "%d", port);
-        handle = _smtp_connect(server_ip, numbuff);
+        handle = _smtp_connect(server_ip_or_fqdn, numbuff);
     }
 
     if (NULL != handle) {
