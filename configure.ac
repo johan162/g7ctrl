@@ -2,8 +2,8 @@
 # Autoconf script for the g7ctrl daemon
 # Use autoreconf to rebuild the build environment
 # ===============================================================================
-AC_PREREQ([2.69])
-AC_INIT([g7ctrl],[3.5.2],[johan162@gmail.com])
+AC_PREREQ([2.71])
+AC_INIT([g7ctrl],[3.6.0-beta],[johan162@gmail.com])
 AC_COPYRIGHT([Part of configure script Copyright Johan Persson 2014-2021 (johan162@gmail.com)])
 AC_PREFIX_DEFAULT(/usr)
 AC_CANONICAL_TARGET
@@ -11,8 +11,8 @@ AM_INIT_AUTOMAKE([dist-xz silent-rules])
 AM_SILENT_RULES
 AM_PROG_AR
 AC_PROG_LN_S
-AC_PROG_CC_C99
-AC_CONFIG_HEADER([src/config.h])
+# AC_REQUIRE(AC_PROG_CC)
+AC_CONFIG_HEADERS([src/config.h])
 
 
 AC_CONFIG_FILES([
@@ -136,9 +136,13 @@ fi
 AM_CONDITIONAL(STACKTRACE, [test "x${enable_stacktrace}" = xyes])
 
 # Add the system type (Linux or OS X) in config.h
+# Also take the opportunity to add iconv as a separate lib on OSX
 if test x$SYSTEM_NAME = xDarwin; then
     AC_DEFINE(IS_OSX,1,[True if system type is Apple OSX])
     AC_SUBST(DEFAULT_STTY_DEVICE,1411)
+	# For OSX this is a separate library and we should check that it really works.
+	# For Linux iconv is included in glibc-6 and is not a separate library we can check for
+    AC_CHECK_LIB(iconv, iconv_open,,AC_MSG_ERROR([No iconv library found. Please install iconv (or similar)]))
 else
     AC_DEFINE(IS_OSX,0,[True if system type is Apple OSX])
     AC_SUBST(DEFAULT_STTY_DEVICE,0)
@@ -213,11 +217,10 @@ AM_CONDITIONAL(has_opt_readline, test -d /usr/local/opt/readline)
 # ===============================================================================
 # Standard checks for headers and C-compiler
 # ===============================================================================
-AC_LANG_C
+AC_LANG([C])
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
-AC_HEADER_STDC
 #AC_CHECK_HEADERS(libusb-1.0/libusb.h,,AC_MSG_ERROR([libusb.h not available. Please install "libusb-1.0-dev" package]))
 AC_CHECK_HEADERS(readline/readline.h,[have_readline_h=yes],AC_MSG_ERROR([libreadline not available. Please install "libreadline-dev" ]))
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h stdlib.h string.h strings.h sys/param.h sys/socket.h sys/stat.h sys/ioctl.h syslog.h unistd.h])
@@ -433,13 +436,13 @@ if test x$SYSTEM_NAME = xDarwin; then
         AC_MSG_NOTICE([  - System seems to be OSX and has the recommended GNU readline. ])
     else
         AC_MSG_NOTICE([  - System seems to be OSX but GNU readline does not seem to be installed.])
-        AC_MSG_NOTICE([    Please install GNU readline to get full functionality for \"g7sh\"])
+        AC_MSG_NOTICE([    Please install GNU readline to get full functionality for "g7sh"])
     fi
 fi
 AC_MSG_NOTICE([ ])
 AC_MSG_NOTICE([  - Directory for config file: ${sysconfdir}/g7ctrl])
-AC_MSG_NOTICE([  - Directory for static data files: \"${DEFAULT_CONF_DATA_DIR}\" ])
-AC_MSG_NOTICE([  - Directory for dynamic data files: \"${DEFAULT_CONF_DB_DIR}\" ])
+AC_MSG_NOTICE([  - Directory for static data files: "${DEFAULT_CONF_DATA_DIR}" ])
+AC_MSG_NOTICE([  - Directory for dynamic data files: "${DEFAULT_CONF_DB_DIR}" ])
 AC_MSG_NOTICE([ ])
 
 if test "x${enable_stacktrace}" = xyes; then
@@ -458,16 +461,16 @@ if  test "$XSLTPROC_WORKS" = "yes"; then
         AC_MSG_NOTICE([    To also build PDF versions please install 'fop'])
     else
         AC_MSG_NOTICE([  - Working Docbook5 setup detected. Will rebuild documentation. ])
-        AC_MSG_NOTICE([  - Using XML catalog \"${XML_CATALOG_FILES}\" ])
-	AC_MSG_NOTICE([  - Docbook resolves to \"${LOCAL_DOCBOOK_XSL_DIR}\" ])
+        AC_MSG_NOTICE([  - Using XML catalog "${XML_CATALOG_FILES}" ])
+	AC_MSG_NOTICE([  - Docbook resolves to "${LOCAL_DOCBOOK_XSL_DIR}" ])
         AC_MSG_NOTICE([  - fop executable: ${FOP} (v${JAVAFOP_VERSION}) ])
         AC_MSG_NOTICE([    In case of errors rebuilding PDF regarding missing hyphenation])
         AC_MSG_NOTICE([    please refer to: http://offo.sourceforge.net/hyphenation/binary/installation.html ])
     fi
     if test "$LINKS_WWW" = "no"; then
-        AC_MSG_NOTICE([  - Text browser \"links\" not found. Can not generate text version of manual])
+        AC_MSG_NOTICE([  - Text browser "links" not found. Can not generate text version of manual])
     else
-        AC_MSG_NOTICE([  - Text browser \"links\" found. Can generate text version of manual])
+        AC_MSG_NOTICE([  - Text browser "links" found. Can generate text version of manual])
     fi
 
     if test "x${enable_pie}" = xno; then

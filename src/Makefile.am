@@ -87,10 +87,13 @@ else
     g7ctrl_DEPENDENCIES=$(BUILDNBR_FILE) libsmtpmail/libsmtpmail.a libiniparser/libiniparser.a libhpdftbl/libhpdftbl.a libxstr/libxstr.a libunitbl/libunitbl.a
 endif
 
+# Removed since from OSX 12 this is inlcuded as a stub in the linker cache and no need for a
+# separate library any more.
 # In Linux iconv() exists in glibc but in OSX we must add the iconv.dylib library to get that function
-if is_osx
-    g7ctrl_LDADD += /usr/lib/libiconv.2.dylib
-endif
+#if is_osx
+#   g7ctrl_LDADD += /usr/lib/libiconv.2.dylib
+#    g7ctrl_LDADD += /usr/local/opt/libiconv/lib/libiconv.dylib
+#endif
 
 
 # In order to have access to the build variables and path settings in the the
