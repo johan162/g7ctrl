@@ -1,3 +1,34 @@
+v3.5.3 (Dec 2021)
+=================
+
+General notes for this release
+------------------------------
+This release has no visible changes apart from an update to the SMTP library
+to improve on the compatibility with more SMTP servers.
+
+Detailed user visible changes
+-----------------------------
+- No changes
+
+Bugs fixed
+----------
+- Better compatibility with SMTP servers to lower risk of being classified
+  as Spam.
+
+
+Internal changes (visible for developers and packagers)
+-------------------------------------------------------
+- None
+
+
+v3.5.2 (Oct 2021)
+=================
+
+General notes for this release
+------------------------------
+No changes only for Debian/Ubuntu packaging purposes.
+
+
 v3.5.1 (Jan 2021)
 =================
 
