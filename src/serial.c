@@ -84,7 +84,7 @@ get_stty_device_name(const size_t idx) {
 
     static char *serial_udb_modem_basename = "/dev/cu.usbmodem";
     static char constructed_name[32];
-    if (idx > 1000 && idx < 3000) {
+    if (idx > 1000 && idx < 999999) {
         snprintf(constructed_name, sizeof (constructed_name), "%s%04zu", serial_udb_modem_basename, idx);
         logmsg(LOG_DEBUG, "Constructed  serial device name \"%s\"", constructed_name);
         return constructed_name;
