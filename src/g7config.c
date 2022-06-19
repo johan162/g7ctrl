@@ -306,7 +306,7 @@ read_inisettings(void) {
         }
         for( size_t i=0; i < sfields.nf; i++) {
             cu_usbmodem_list[i] = xatoi(sfields.fld[i]);
-            if( cu_usbmodem_list[i] < 1000 || cu_usbmodem_list[i] > 9999 ) {
+            if( cu_usbmodem_list[i] < 1000 || cu_usbmodem_list[i] > 999999 ) {
                 logmsg(LOG_ERR,"Index for STTY devices specified in STTY list in config file is out of range");
                 exit(EXIT_FAILURE);                                
             }
