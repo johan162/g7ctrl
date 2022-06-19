@@ -107,9 +107,9 @@ static const size_t NumTransEnc = sizeof (transfer_encoding) / sizeof (char *);
  * Return NULL on failure.
  * 
  */
+#define RFC5322_TIME_LEN 32
 static char *
 get_RFC5322_datetime(void) {
-    const int RFC5322_TIME_LEN = 32;
     const char* RFC5322_FORMAT_STR = "%a, %d %b %Y %H:%M:%S %z";
     char tbuff[RFC5322_TIME_LEN];
     time_t t;
