@@ -3,7 +3,7 @@
 # Boostrap script for autoconfif/automake setup assuming environment is in place
 # ------------------------------------------------------------------------------------------------------------
 touch ChangeLog 
-autoreconf --install --symlink
+autoreconf --install 
 
 if [ "$?" = 0 ]; then 
 
