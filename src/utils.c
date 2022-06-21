@@ -938,6 +938,34 @@ convert_decgrad(const char *dec, char *grad) {
 }
 
 /**
+ * Return a basic european date.
+ *
+ * Example is: "220618 13:23:19"
+ * @return A pointer to an allocated string. It is the callers responsibility to free the
+ * string after usage.
+ */
+char *
+get_short_datetime(void) {
+    const char* SHORT_DATE_FORMAT_STR = "%y%m%d %H:%M:%S";
+    char tbuff[32];
+    time_t t;
+    struct tm *tm;
+
+    t = time(NULL);
+    tm = localtime(&t);
+    if( tm == NULL ) {
+        return NULL;
+    }
+
+    if (strftime(tbuff, 32, SHORT_DATE_FORMAT_STR, tm) == 0) {
+        return NULL;
+    }
+
+    return strdup(tbuff);
+}
+
+
+/**
  * Get the current local date time in format YYYY-MM-DD HH:MM[:SS]
  * It is the calling routines responsibility that the result
  * buffer can hold 20 chars

@@ -166,6 +166,9 @@ convert_decgrad(const char *dec, char *grad) __attribute__ ((pure));
 int
 get_datetime(char *res,int sec);
 
+char *
+get_short_datetime(void);
+
 int 
 mtime(unsigned long *t);
 
