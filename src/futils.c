@@ -333,7 +333,7 @@ process_files(const char *dirbuff, char *suffix, size_t maxfiles, size_t *numfil
         if ((strcmp(dirp->d_name, ".") != 0) && (strcmp(dirp->d_name, "..") != 0)) {
 
             // Only read files with suffix
-            unsigned len = strnlen(dirp->d_name, 512);
+            unsigned len = strnlen(dirp->d_name, 256);
             _Bool sflag = TRUE;
             if (suffix && strlen(suffix) > 1) {
                 sflag = len > strlen(suffix) && (strncmp(suffix, dirp->d_name + len - strlen(suffix), 9) == 0);
