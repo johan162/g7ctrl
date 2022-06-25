@@ -88,6 +88,8 @@ update_nick_callback(void *NotUsed, int nColumns, char **vals, char **names) {
 }
 #pragma GCC diagnostic pop
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
 /**
  * Update the nick name and device information. If any of the supplied arguments is NULL or empty string then the existing value
  * in the DB will be untouched.
@@ -104,7 +106,7 @@ db_update_nick(const char *nick, const char *devid, const char *imei, const char
     sqlite3 *sqlDB;
     int rc = 0;
     if (0 == db_setup(&sqlDB)) {
-        char q[512];
+        char q[2048];
         char *errMsg;
 
         // First check if this device is already registered
@@ -189,6 +191,7 @@ db_update_nick(const char *nick, const char *devid, const char *imei, const char
     }
     return rc;
 }
+#pragma GCC diagnostic pop
 
 /**
  * Return the nickname (if defined) for the supplied device id. It is the
