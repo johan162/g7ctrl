@@ -937,6 +937,7 @@ convert_decgrad(const char *dec, char *grad) {
     return 0;
 }
 
+#define SHORT_DATE_FORMAT_STR "%Y%m%d %H:%M:%S"
 /**
  * Return a basic european date.
  *
@@ -946,7 +947,6 @@ convert_decgrad(const char *dec, char *grad) {
  */
 char *
 get_short_datetime(void) {
-    const char* SHORT_DATE_FORMAT_STR = "%y%m%d %H:%M:%S";
     char tbuff[32];
     time_t t;
     struct tm *tm;
